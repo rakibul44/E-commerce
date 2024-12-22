@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store/store';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import FuncProvider from './Providers/FuncProvider';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,11 +16,12 @@ root.render(
   <React.StrictMode>
      <Provider store={store}>
      <AuthProvider>
-       <RouterProvider router={router} />
-       <ToastContainer />
+      <FuncProvider>
+      <RouterProvider router={router} />
+      <ToastContainer />
+      </FuncProvider>
        </AuthProvider>
      </Provider>
-
   </React.StrictMode>
 );
 

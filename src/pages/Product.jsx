@@ -1,24 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import  { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GiSelfLove } from 'react-icons/gi';
 import { FaCartPlus } from 'react-icons/fa';
 // import winter from '../assets/winter.jpg';
 import { productApi } from '../redux/apis/productApi';
-import { handleAddToCart } from '../utils/handleAddToCart';
+import useFunc from '../hooks/useFunc';
+import { cartsApi } from '../redux/apis/cartsApi';
+import useAuth from '../hooks/useAuth';
+import { categoryApi } from '../redux/apis/categoryApi';
 
 function Product() {
   const [expandedFilter, setExpandedFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    type: [],
+    category: [],
     price: [],
     size: [],
     colors: [],
     brand: [],
   });
+  const { handleAddToCart } = useFunc();
+  const { data: filtersOptions } = categoryApi.useGetFiltreOptionsByCategoriesBrandsAndOthersQuery();
+  const filters = filtersOptions?.data || [];
   const filterParams = new URLSearchParams();
+  
   // Add filters to query params
-  if (selectedFilters.type.length) {
-    filterParams.append('type', selectedFilters.type.join(','));
+  if (selectedFilters.category.length) {
+    filterParams.append('category', selectedFilters.category.join(','));
   }
   if (selectedFilters.price.length) {
     filterParams.append('price', selectedFilters.price.map((range) => `${range[0]}-${range[1]}`).join(','));
@@ -26,15 +34,17 @@ function Product() {
   if (selectedFilters.size.length) {
     filterParams.append('size', selectedFilters.size.join(','));
   }
-  if (selectedFilters.colors.length) {
+  if (selectedFilters.colors.length){
     console.log(selectedFilters.colors)
     filterParams.append('colors', selectedFilters.colors.join(','));
   }
   if (selectedFilters.brand.length) {
     filterParams.append('brand', selectedFilters.brand.join(','));
   }
-  console.log("Filter Query String: ", filterParams.toString());
-
+ const { loggedInUser } = useAuth();
+ // eslint-disable-next-line no-unused-vars
+ const { data: cartsData , refetch: refetchCarts} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+  
   const { data: productData, isLoading, refetch } = productApi.useGetAllProductsQuery(filterParams.toString());
 
  useEffect(()=> { refetch()}, [selectedFilters])
@@ -43,71 +53,11 @@ function Product() {
     return <p>Loading..</p>
   }
 
-  console.log("productData: ", productData)
+
+
+
 
   const products = productData?.data || [];
-
-  const filters = [
-    {
-      name: 'PRODUCT TYPE',
-      key: 'type',
-      items: [
-        { label: 'Blouses', count: 4 },
-        { label: 'Denim', count: 2 },
-        { label: 'Dresses', count: 3 },
-        { label: 'Jacket', count: 4 },
-        { label: 'T-Shirt', count: 4 },
-        { label: 'Trousers', count: 7 },
-      ],
-    },
-    {
-      name: 'PRICE',
-      key: 'price',
-      items: [
-        { label: '0-20', range: [0, 20] },
-        { label: '21-50', range: [21, 50] },
-        { label: '51-100', range: [51, 100] },
-      ],
-    },
-    {
-      name: 'SIZE',
-      key: 'size',
-      items: [
-        { label: 'S', count: 10 },
-        { label: 'M', count: 8 },
-        { label: 'L', count: 6 },
-        { label: 'XL', count: 2 },
-        { label: 'XXL', count: 1 },
-      ],
-    },
-    {
-      name: 'COLOR',
-      key: 'colors',
-      items: [
-        { label: 'Red', count: 3 },
-        { label: 'Blue', count: 5 },
-        { label: 'Green', count: 4 },
-      ],
-    },
-    {
-      name: 'BRAND NAME',
-      key: 'brand',
-      items: [
-        { label: 'Brand A', count: 6 },
-        { label: 'Brand B', count: 4 },
-        { label: 'Brand C', count: 3 },
-      ],
-    },
-  ];
-
-  // const products = [
-  //   { id: 1, name: 'Blouses', price: 10, img: winter, type: 'Blouses', size: 'S', colors: 'Red', brand: 'Brand A' },
-  //   { id: 2, name: 'Denim', price: 20, img: winter, type: 'Denim', size: 'M', colors: 'Blue', brand: 'Brand B' },
-  //   { id: 3, name: 'Dresses', price: 30, img: winter, type: 'Dresses', size: 'L', colors: 'Green', brand: 'Brand C' },
-  //   { id: 4, name: 'Jacket', price: 40, img: winter, type: 'Jacket', size: 'S', colors: 'Red', brand: 'Brand A' },
-  //   { id: 5, name: 'T-Shirt', price: 50, img: winter, type: 'T-Shirt', size: 'M', colors: 'Blue', brand: 'Brand B' },
-  //   { id: 6, name: 'Trousers', price: 60, img: winter, type: 'Trousers', size: 'L', colors: 'Green', brand: 'Brand C' },
-  // ];
 
 
   
@@ -128,9 +78,9 @@ function Product() {
   };
 
   const filteredProducts = products.filter((product) => {
-    const { type, price, size, colors, brand } = selectedFilters;
+    const { category, price, size, colors, brand } = selectedFilters;
 
-    const matchesType = !type.length || type.includes(product.type);
+    const matchesCategory = !category.length || category.includes(product.category);
     const matchesPrice =
       !price.length ||
       price.some((range) => product.price >= range[0] && product.price <= range[1]);
@@ -138,7 +88,7 @@ function Product() {
     const matchesColor = !colors.length || colors.includes(product.colors);
     const matchesBrand = !brand.length || brand.includes(product.brand);
 
-    return matchesType && matchesPrice && matchesSize && matchesColor && matchesBrand;
+    return matchesCategory && matchesPrice && matchesSize && matchesColor && matchesBrand;
   });
 
   return (
@@ -147,7 +97,7 @@ function Product() {
       <aside className="w-full md:w-1/4 p-4 border-r">
         <h2 className="font-bold text-lg mb-4">FILTER BY</h2>
         <button
-          onClick={() => setSelectedFilters({ type: [], price: [], size: [], colors: [], brand: [] })}
+          onClick={() => setSelectedFilters({ category: [], price: [], size: [], colors: [], brand: [] })}
           className="text-red-500 mb-2"
         >
           CLEAR ALL
@@ -218,14 +168,14 @@ function Product() {
                       handleAddToCart({
                         product: product?._id,
                         quantity: 1,
+                        price: product?.price,
                         size: product?.sizes[0],
                         color: product?.colors[0],
-                      })
+                      }, refetchCarts)
                     }
                   >
                     <FaCartPlus />
                   </button>
-
                 </div>
               </div>
               <h4 className="mt-2 font-bold">{product.name}</h4>
@@ -233,7 +183,7 @@ function Product() {
               <div className="flex flex-col gap-2 md:flex-row md:justify-center">
                 <Link
                   to={`/payment`}
-                  className="bg-orange-700 hover:bg-orange-400 text-white px-4 py-2 rounded text-sm sm:text-base"
+                  className="bg-btnbg hover:bg-btnbghover text-white px-4 py-2 rounded text-sm sm:text-base"
                 >
                   Buy Now
                 </Link>

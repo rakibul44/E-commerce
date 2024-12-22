@@ -21,6 +21,14 @@ export const productApi = apiService.injectEndpoints({
      }),
    }),
 
+    // Get new-featured-best-deal-on-sell-products
+    getNewFeaturedBestDealAndOnSellProducts: builder.query({
+      query: () => ({
+        url: `products/new-featured-best-deal-on-sell-products`,
+        method: "GET",
+      }),
+    }),
+    
     // Get product by ID
     getProductById: builder.query({
       query: (id) => ({

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import winter from '../assets/winter.jpg';
 import TNF from '../assets/TNF.jpg';

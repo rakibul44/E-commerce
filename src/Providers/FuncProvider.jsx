@@ -1,0 +1,113 @@
+/* eslint-disable react-refresh/only-export-components */
+import { createContext } from "react";
+import { toast } from "react-toastify";
+import { cartsApi } from "../redux/apis/cartsApi";
+import useAuth from "../hooks/useAuth";
+import Swal from "sweetalert2";
+
+
+export const FuncContext = createContext(null);
+
+
+const FuncProvider = ({ children }) => {    
+const { loggedInUser } = useAuth();
+const [ addToCart ] = cartsApi.useAddToCartMutation();
+const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
+const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation()
+
+
+
+// handle add to cart func
+ const handleAddToCart = async(data, refetch) => {
+ if(!loggedInUser){
+  toast.error("Please login !");
+  return;
+ }
+
+ try{
+    const cartData = {
+        user: loggedInUser?._id,
+        product: data?.product,
+        price: data?.price,
+        quantity: data?.quantity,
+        size: data?.size,
+        color: data?.color
+      }    
+    const res =  await addToCart(cartData);
+ 
+    if(res?.data?.success){
+        refetch()
+        toast.success(res?.data?.message)
+    } else if(res?.error?.data){
+      toast.error(res?.error?.data?.message)
+    }
+
+ } catch(error){
+    console.log(error)
+    toast.error(error);
+ }
+}
+
+
+// handle delete cart
+const handleDeleteCart = async(id, refetch ) => {
+    try{
+
+            Swal.fire({
+              title: "Are you sure?",
+              text: `You won't be able to revert !`,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                deleteCartById(id).then((res) => {
+                  console.log(res)
+                  if (res?.data?.success){
+                    refetch();
+                    Swal.fire({
+                      title: "Deleted!",
+                      text: `Product has been deleted from cart`,
+                      icon: "success",
+                    });
+                  }
+        
+                });
+              }
+            });
+  
+    } catch(error){
+        toast.error(error.message)
+    }
+}
+
+  // handle quantity change
+  const handleCartProductQuantityChange = async(id, quantityChange, refetch) => {
+    console.log(quantityChange)
+     try{
+        const res = await updateQuantityById({id, quantityChange});
+        if(res?.data?.success){
+            refetch();
+            toast.success(res?.data?.message)
+        }
+     } catch(err){
+        console.log(err)
+        toast.error(err?.data?.message)
+     }
+  };
+
+
+    const functions = {
+        handleAddToCart,
+        handleDeleteCart,
+        handleCartProductQuantityChange,
+        
+    }
+    return (
+     <FuncContext.Provider value={functions}>{children}</FuncContext.Provider>      
+    );
+};
+
+export default FuncProvider;

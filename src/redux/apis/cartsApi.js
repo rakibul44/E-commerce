@@ -36,10 +36,10 @@ export const cartsApi = apiService.injectEndpoints({
 
         // Update quantity by ID
         updateQuantityById: builder.mutation({
-            query: ({ id, quantity }) => ({
+            query: ({ id, quantityChange }) => ({
                 url: `carts/update/${id}/quantity`,
                 method: "PATCH",
-                body: { quantity },
+                body: { quantityChange },
             }),
         }),
 

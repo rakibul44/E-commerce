@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { usersApi } from "../../redux/apis/usersApi";
@@ -36,10 +37,21 @@ const AddProduct = () => {
   const handleAddNewProduct = async(data) => {
     const formData = new FormData();
     
+    // Extract brandId and brandName if brand exists
+    if (data?.brand) {
+      const [brandId, brandName] = data?.brand?.split(",");
+      formData.append("brand", brandId);
+      formData.append("brandName", brandName);
+    }
+
+    // Extract categoryId and categoryName if brand exists
+    if (data?.category){
+      const [categoryId, categoryName] = data?.category?.split(",");
+      formData.append("category", categoryId);
+      formData.append("categoryName", categoryName);
+    }
     formData.append("name", data?.name);
     formData.append("description", data?.description);
-    formData.append("brand", data?.brand);
-    formData.append("category", data?.category);
     formData.append("price", data?.price);
     formData.append("discountPrice", data?.discountPrice);
     formData.append("stock", data?.stock);
@@ -52,16 +64,9 @@ const AddProduct = () => {
     formData.forEach((value, key) => {
       console.log(`${key}: ${value}`);
     });
-      console.log({
-      ...data,
-      colors,
-      images,
-      sizes: selectedSizes,
-      author: currentUser?._id
-    });
 
     try{
-      const res = await postNewProduct(formData).unwrap();
+      const res = await postNewProduct(formData);
       if(res?.data?.success){
          reset();
          toast.success(res?.data?.message);
@@ -134,7 +139,7 @@ const AddProduct = () => {
           >
             <option value="">Choose category</option>
             {
-              categories?.length > 0 && categories?.map((cat) => <option key={cat?._id} value={cat?._id}>{cat?.name}</option>  )
+              categories?.length > 0 && categories?.map((cat) => <option key={cat?._id} value={`${cat?._id},${cat?.name}`}>{cat?.name}</option>  )
             }
    
           </select>
@@ -150,26 +155,45 @@ const AddProduct = () => {
           >
             <option value="">Choose brand</option>
             {
-              brands?.length > 0 && brands?.map((brand) =>  <option key={brand?._id} value={brand?._id}>{brand?.name}</option> )
+              brands?.length > 0 && brands?.map((brand) =>  <option key={brand?._id} value={ `${brand?._id},${brand.name}` }>{brand?.name}</option> )
             }
 
           </select>
           {errors.brand && <p className="text-red-500 text-sm">{errors.brand.message}</p>}
         </div>
 
-        {/* Regular Price, Discount Price, Stock */}
-        {["price", "discountPrice", "stock"].map((field, idx) => (
+         {/* Regular Price, Stock */}
+        {["price", "stock"].map((field, idx) => (
           <div key={idx} className="mb-4">
             <label className="block font-medium text-sm capitalize">{field.replace(/([A-Z])/g, " $1")} *</label>
             <input
               type="number"
               placeholder={`Enter ${field}`}
-              {...register(field, { required: `${field.replace(/([A-Z])/g, " $1")} is required` })}
+              {...register(field, {
+                required: `${field.replace(/([A-Z])/g, " $1")} is required`,
+                min: { value: 1, message: `${field.replace(/([A-Z])/g, " $1")} must be a positive value` },
+              })}
               className="w-full border p-2 rounded-md"
             />
             {errors[field] && <p className="text-red-500 text-sm">{errors[field]?.message}</p>}
           </div>
         ))}
+        
+        {/* Discount Price */}
+        <div className="mb-4">
+          <label className="block font-medium text-sm capitalize">Discount Price *</label>
+          <input
+            type="number"
+            placeholder="Enter discountPrice"
+            {...register("discountPrice", {
+              required: "Discount Price is required",
+              min: { value: 1, message: "Discount Price must be a positive value" },
+            })}
+            className="w-full border p-2 rounded-md"
+          />
+          {errors.discountPrice && <p className="text-red-500 text-sm">{errors.discountPrice?.message}</p>}
+        </div>
+
 
         {/* Colors */}
         <div className="mb-4">
