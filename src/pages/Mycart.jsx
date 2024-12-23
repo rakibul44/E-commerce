@@ -13,6 +13,16 @@ const Cart = () => {
       quantity: 1,
       image: "https://via.placeholder.com/80x80", // Replace with actual image link
     },
+    {
+      id: 1,
+      name: "Denim Regular Fit Shorts",
+      price: 15.0,
+      size: "S",
+      color: "Outer Space",
+      material: "Denim",
+      quantity: 1,
+      image: "https://via.placeholder.com/80x80", // Replace with actual image link
+    },
   ]);
 
   const handleQuantityChange = (id, delta) => {
@@ -30,6 +40,10 @@ const Cart = () => {
     setCartItems(cartItems.filter((item) => item.id !== id));
   };
 
+  const handleClearAll = () => {
+    setCartItems([]); // Clears all items
+  };
+
   const calculateSubtotal = () => {
     return cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -40,16 +54,24 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="container mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-20 text-center">
-          Your Shopping Cart
-        </h2>
+        {/* Title and Clear All Button */}
+        <div className="flex mt-10 justify-between items-center mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center">
+            Your Shopping Cart
+          </h2>
+          <button
+            onClick={handleClearAll}
+            className="text-red-500 border border-red-500 px-4 py-2 rounded hover:bg-red-500 hover:text-white"
+          >
+            Clear All
+          </button>
+        </div>
 
         {/* Cart Table Header */}
-        <div className="hidden md:grid grid-cols-5 gap-4 text-gray-700 mt-20 font-semibold uppercase text-sm border-b pb-2">
+        <div className="hidden md:grid grid-cols-5 gap-4 text-gray-700 mt-4 font-semibold uppercase text-sm border-b pb-2">
           <span className="col-span-2">Product</span>
           <span>Quantity</span>
           <span>Total</span>
-          
         </div>
 
         {/* Cart Items */}

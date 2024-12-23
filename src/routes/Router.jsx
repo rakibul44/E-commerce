@@ -11,7 +11,7 @@ import Register from "../pages/Register";
 import Wishlist from "../pages/Wishlist";
 import Mycart from "../pages/Mycart";
 import DashboardLayout from "../layout/DashboardLayout";
-import Dashboard from "../dashboard/pages/Dashboard";
+// import Dashboard from "../dashboard/pages/Dashboard";
 import ProfileUpdate from "../dashboard/pages/ProfileUpdate";
 import PaymentMethod from "../dashboard/pages/PaymentMethod";
 import OrderList from "../dashboard/pages/Orderlist";
@@ -24,12 +24,7 @@ import Message from "../dashboard/pages/Message";
 import ScrollNotice from "../dashboard/pages/ScrollNotice";
 import ProductList from "../dashboard/pages/ProductList";
 import AddProduct from "../dashboard/pages/AddProduct";
-import Categories from "../dashboard/pages/categoryAndBrand/Categories";
-import AddCategory from "../dashboard/pages/categoryAndBrand/AddCategory";
-import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
-import AllBrands from "../dashboard/pages/categoryAndBrand/AllBrands";
-import AddBrand from "../dashboard/pages/categoryAndBrand/AddBrand";
-import EditBrand from "../dashboard/pages/categoryAndBrand/EditBrand";
+import Dashboard1 from "../dashboard/pages/Dashboard1";
 
 
 
@@ -79,7 +74,7 @@ const mainRoutes = [
 const dashboardRoute = [
     {
         path:'',
-        element:<Dashboard />,
+        element:<Dashboard1 />,
     },
     {
         path:'profileupdate',
@@ -126,33 +121,14 @@ const dashboardRoute = [
         element: <ProductList />
     },
     {
-        path:'add-product',
+        path:'update',
         element: <AddProduct />
     },
-    {
-        path:'categories',
-        element: <Categories />
-    },
-    {
-        path:'add-category',
-        element: <AddCategory />
-    },
-    {
-        path:'edit-category/:id',
-        element: <EditCategory />
-    },
-    {
-        path:'brands',
-        element: <AllBrands />
-    },
-    {
-        path:'add-brand',
-        element: <AddBrand />
-    },
-    {
-        path:'edit-brand/:id',
-        element: <EditBrand />
-    },
+    // {
+    //     path:'admin',
+    //     element: <Dashboard1 />
+    // },
+    
 ]
 
 const router = createBrowserRouter([

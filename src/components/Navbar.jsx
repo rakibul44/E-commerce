@@ -1,10 +1,9 @@
-import  { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaSearch, FaShoppingCart, FaRegUser, FaTrashAlt } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import cloth from "../assets/cloth.jpg";
 import denim from "../assets/denim.jpg";
-import { usersApi } from "../redux/apis/usersApi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,12 +13,6 @@ const Navbar = () => {
     { id: 1, name: "Versatile Shacket", price: 7.7, quantity: 1, image: cloth },
     { id: 2, name: "Classic Jacket", price: 7.84, quantity: 1, image: denim },
   ]);
-  const location = useLocation();
-  const email = localStorage.getItem("email");
-  const { data: userData  } = usersApi.useGetUserByEmailQuery(email);
-  const currentUser = userData?.data;
-
-  useEffect(()=> { setIsDropdownOpen(false)}, [location])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -71,7 +64,7 @@ const Navbar = () => {
                   {/* Column II */}
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">Column II</h4>
-                    <ul className="space-y-2 text-gray-600 ">
+                    <ul className="space-y-2 text-gray-600">
                       <li><Link to="/shop-list-view" className="hover:text-black">Shop List View</Link></li>
                       <li><Link to="/add-to-cart-button" className="hover:text-black">Add To Cart Button</Link></li>
                       <li><Link to="/add-to-cart-icon" className="hover:text-black">Add To Cart Icon</Link></li>
@@ -114,47 +107,26 @@ const Navbar = () => {
           {/* User Dropdown */}
           <div className="relative">
             <button onClick={toggleDropdown} className="p-2 relative flex items-center justify-center">
-             { 
-              !email ? 
               <span className="relative inline-flex text-lg rounded-full h-4 w-4 bg-red">
-              <span className="animate-ping absolute inline-flex h-full w-full bg-red rounded-full"></span>
-              <FaRegUser className="text-midnight text-2xl" />
-            </span>
-            : 
-            <img src={currentUser?.profilePicture} alt={currentUser?.name} className="w-8 h-8 rounded-full object-cover" />
-          }
+                <span className="animate-ping absolute inline-flex h-full w-full bg-red rounded-full"></span>
+                <FaRegUser className="text-midnight text-2xl" />
+              </span>
             </button>
             {isDropdownOpen && (
-              !currentUser ?
               <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
-              <Link
-                to="/login"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Signup
-              </Link>
-            </div>
-            :
-            <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
-            <h2
-          
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              { currentUser?.name}
-            </h2>
-            <Link
-              to="/dashboard"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              Dashboard
-            </Link>
-          </div>
+                <Link
+                  to="/login"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Signup
+                </Link>
+              </div>
             )}
           </div>
 
@@ -163,7 +135,7 @@ const Navbar = () => {
             <button className="h-10 w-7" onClick={toggleCartModal}>
               <FaShoppingCart />
             </button>
-            <span className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] rounded-full px-1">
+            <span className="absolute top-0 right-0 bg-orange-500 text-white text-xs rounded-full px-1">
               {cartItems.length}
             </span>
           </div>

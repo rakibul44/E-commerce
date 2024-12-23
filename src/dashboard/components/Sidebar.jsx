@@ -14,7 +14,7 @@ const Sidebar = () => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // State for Product Update Sub-menu
   const isAdmin = true;
   const isUser = true;
-
+  
   // Menu items data
   const menuItems = [
     isAdmin && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
@@ -38,6 +38,8 @@ const Sidebar = () => {
         { name: "Add Brand ", link: "/dashboard/add-brand" },
       ]
     },
+    // isAdmin && { name: "Dashboard", icon: <FaHome />, link: "/dashboard/admin" },
+    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
     isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
     { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
     isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
@@ -49,6 +51,21 @@ const Sidebar = () => {
     { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
     { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
 
+    isAdmin && { 
+      name: "Product Update", 
+      icon: <AiOutlineProduct />, 
+      isSubMenu: true, // Flag for submenu
+      subMenu: [
+        { name: "Add Product", link: "/dashboard/update" },
+        { name: "Product List", link: "/dashboard/productlist" },
+      ]
+    },
+    { name: "Order", icon: <BsBoxFill />, link: "/dashboard/order" },
+    { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
+    { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
+    { name: "Address", icon: <FaMapMarkerAlt />, link: "/dashboard/address" },
+    { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
+    { name: "Support", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
     { name: "Logout", icon: <LuLogOut />, link: "/logout" },
   ];
 

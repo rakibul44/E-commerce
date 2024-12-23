@@ -1,49 +1,50 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
 
 const AddProduct = () => {
   const sizes = ["S - 38.5", "M - 39", "L - 40", "XL - 41.5", "XXL - 42", "3XL - 43"];
   const [images, setImages] = useState([]);
-  const [colors, setColors] = useState([]);
+  const [productDetails, setProductDetails] = useState({
+    regularPrice: "",
+    discountPrice: "",
+    stock: "",
+    colors: [],
+  });
   const [colorInput, setColorInput] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (data) => {
-    console.log({
-      ...data,
-      colors,
-      images,
-    });
-    // Add your submission logic here
-  };
-
+  // Image Upload
   const handleImageUpload = (e) => {
     const uploadedFiles = Array.from(e.target.files);
     setImages([...images, ...uploadedFiles]);
   };
 
+  // Image Delete
   const handleImageDelete = (index) => {
     setImages(images.filter((_, idx) => idx !== index));
   };
 
+  // Handle Input Change for Product Details
+  const handleInputChange = (field, value) => {
+    setProductDetails({ ...productDetails, [field]: value });
+  };
+
+  // Add Color
   const handleAddColor = () => {
-    if (colorInput.trim() && !colors.includes(colorInput)) {
-      setColors([...colors, colorInput]);
+    if (colorInput.trim() && !productDetails.colors.includes(colorInput)) {
+      setProductDetails({ ...productDetails, colors: [...productDetails.colors, colorInput] });
       setColorInput("");
     }
   };
 
+  // Delete Color
   const handleDeleteColor = (color) => {
-    setColors(colors.filter((c) => c !== color));
+    setProductDetails({
+      ...productDetails,
+      colors: productDetails.colors.filter((c) => c !== color),
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="md:p-8 flex flex-col lg:flex-row gap-6">
+    <div className="md:p-8 flex flex-col lg:flex-row gap-6">
       {/* Left Section */}
       <div className="w-full lg:w-1/2 bg-white p-6 rounded-md shadow-sm">
         <h2 className="text-lg font-semibold mb-4">Add Product</h2>
@@ -54,39 +55,33 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Enter product name"
-            {...register("productName", { required: "Product name is required", maxLength: 20 })}
+            maxLength="20"
             className="w-full border p-2 rounded-md"
           />
-          {errors.productName && <p className="text-red-500 text-sm">{errors.productName.message}</p>}
+          <p className="text-xs text-gray-500 mt-1">Do not exceed 20 characters.</p>
         </div>
 
         {/* Category */}
-        <div className="mb-4">
-          <label className="block font-medium text-sm">Category *</label>
-          <select
-            {...register("category", { required: "Category is required" })}
-            className="w-full border p-2 rounded-md"
-          >
-            <option value="">Choose category</option>
-            <option>Winter Jacket</option>
-            <option>Denim Jacket</option>
-            <option>Denim Jeans</option>
-          </select>
-          {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
+        <div className="flex gap-4 mb-4">
+          <div className="w-full">
+            <label className="block  font-medium text-sm">Category *</label>
+            <select className="w-full border p-2 rounded-md">
+              <option>Choose category</option>
+              <option>Winter Jacket</option>
+              <option>Denim Jacket</option>
+              <option>Denim Jeans</option>
+            </select>
+          </div>
         </div>
 
         {/* Brand */}
         <div className="mb-4">
           <label className="block font-medium text-sm">Brand *</label>
-          <select
-            {...register("brand", { required: "Brand is required" })}
-            className="w-full border p-2 rounded-md"
-          >
-            <option value="">Choose brand</option>
+          <select className="w-full border p-2 rounded-md">
+            <option>Choose category</option>
             <option>The North Face</option>
             <option>Gant</option>
           </select>
-          {errors.brand && <p className="text-red-500 text-sm">{errors.brand.message}</p>}
         </div>
 
         {/* Regular Price, Discount Price, Stock */}
@@ -96,10 +91,10 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder={`Enter ${field}`}
-              {...register(field, { required: `${field.replace(/([A-Z])/g, " $1")} is required` })}
+              value={productDetails[field]}
+              onChange={(e) => handleInputChange(field, e.target.value)}
               className="w-full border p-2 rounded-md"
             />
-            {errors[field] && <p className="text-red-500 text-sm">{errors[field]?.message}</p>}
           </div>
         ))}
 
@@ -114,20 +109,15 @@ const AddProduct = () => {
               placeholder="Enter color"
               className="w-full border p-2 rounded-md"
             />
-            <button
-              type="button"
-              onClick={handleAddColor}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Add
-            </button>
           </div>
           <div className="flex gap-2 mt-2 flex-wrap">
-            {colors.map((color, idx) => (
-              <div key={idx} className="flex items-center bg-gray-100 px-3 py-1 rounded-md">
+            {productDetails.colors.map((color, idx) => (
+              <div
+                key={idx}
+                className="flex items-center bg-gray-100 px-3 py-1 rounded-md"
+              >
                 {color}
                 <button
-                  type="button"
                   onClick={() => handleDeleteColor(color)}
                   className="ml-2 text-red-500"
                 >
@@ -142,11 +132,11 @@ const AddProduct = () => {
         <div>
           <label className="block font-medium text-sm">Description *</label>
           <textarea
-            {...register("description")}
             placeholder="Description"
+            maxLength="100"
             className="w-full border p-2 rounded-md"
           ></textarea>
-          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+          <p className="text-xs text-gray-500 mt-1">Do not exceed 100 characters.</p>
         </div>
       </div>
 
@@ -158,12 +148,7 @@ const AddProduct = () => {
           <div className="flex gap-4 mt-2 flex-wrap">
             {images.length < 4 && (
               <label className="border-2 border-dashed flex items-center justify-center w-28 h-28 rounded-md cursor-pointer">
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
+                <input type="file" multiple onChange={handleImageUpload} className="hidden" />
                 <span className="text-blue-500">+ Upload</span>
               </label>
             )}
@@ -175,7 +160,6 @@ const AddProduct = () => {
                   className="w-full h-full rounded-md object-cover"
                 />
                 <button
-                  type="button"
                   onClick={() => handleImageDelete(idx)}
                   className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs"
                 >
@@ -184,6 +168,9 @@ const AddProduct = () => {
               </div>
             ))}
           </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Add at least 4 images. Ensure they meet dimension requirements.
+          </p>
         </div>
 
         {/* Sizes */}
@@ -191,7 +178,7 @@ const AddProduct = () => {
           <h3 className="text-sm font-medium">Add size</h3>
           <div className="grid grid-cols-3 gap-2 mt-2">
             {sizes.map((size, idx) => (
-              <button key={idx} type="button" className="border p-2 rounded-md hover:bg-gray-100">
+              <button key={idx} className="border p-2 rounded-md hover:bg-gray-100">
                 {size}
               </button>
             ))}
@@ -200,12 +187,12 @@ const AddProduct = () => {
 
         {/* Buttons */}
         <div className="flex gap-4 mt-4">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-            Add product
-          </button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md">Add product</button>
+          <button className="bg-gray-300 px-4 py-2 rounded-md">Save product</button>
+          <button className="bg-gray-300 px-4 py-2 rounded-md">Schedule</button>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

@@ -1,122 +1,100 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
 
-// Navigation Buttons Data
-const navButtons = [{ name: "Go Home", link: "/" }];
+// Import missing components
+import SearchModal from '../components/ModalSearch';
+import DropdownNotifications from '../components/DropdownNotifications';
+import DropdownHelp from '../components/DropdownHelp';
+import DropdownProfile from '../components/DropdownProfile';
+import ThemeToggle from '../components/ThemeToggle';
 
-// Profile Images (Dynamic Example)
-const profileImages = [{ src: "https://via.placeholder.com/40", alt: "Profile 1" }];
-
-const Header = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Toggle Dark Mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  // Add/remove 'dark' class from root HTML
-  useEffect(() => {
-    const htmlElement = document.documentElement;
-    if (isDarkMode) {
-      htmlElement.classList.add("dark");
-    } else {
-      htmlElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
-
-  // Toggle Profile Dropdown
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+function Header({
+  sidebarOpen,
+  setSidebarOpen,
+  variant = 'default',
+}) {
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   return (
-    <header className="flex flex-col sm:flex-row justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-md">
-      {/* Left Section: Search Input & Navigation Buttons */}
-      <div className="flex items-center space-x-4 w-full sm:w-auto sm:flex-1 mb-4 sm:mb-0">
-        {/* Search Bar */}
-        <div className="relative w-full max-w-xs">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-          />
-          <span className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-300">🔍</span>
-        </div>
-
-        {/* Navigation Buttons (Only show on larger screens) */}
-        {navButtons.map((button, index) => (
-          <Link
-            key={index}
-            to={button.link}
-            className="bg-orange-500 text-white w-60 p-2 rounded hover:bg-orange-600 transition hidden sm:flex items-center justify-center"
-          >
-            {button.name}
-          </Link>
-        ))}
-      </div>
-
-      {/* Right Section: Dark Mode Toggle and Profile Images */}
-      <div className="flex items-center space-x-4 sm:space-x-6">
-        {/* Dark Mode Toggle */}
-        <button
-          onClick={toggleDarkMode}
-          className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-700 transition"
+    <header
+      className={`sticky top-0 before:absolute before:inset-0 before:backdrop-blur-md max-lg:before:bg-white/90 dark:max-lg:before:bg-gray-800/90 before:-z-10 z-30 ${variant === 'v2' || variant === 'v3'
+        ? 'before:bg-white after:absolute after:h-px after:inset-x-0 after:top-full after:bg-gray-200 dark:after:bg-gray-700/60 after:-z-10'
+        : 'max-lg:shadow-sm lg:before:bg-gray-100/90 dark:lg:before:bg-gray-900/90'
+      } ${variant === 'v2' ? 'dark:before:bg-gray-800' : ''} ${variant === 'v3' ? 'dark:before:bg-gray-900' : ''}`}
+    >
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div
+          className={`flex items-center justify-between h-16 ${variant === 'v2' || variant === 'v3' ? '' : 'lg:border-b border-gray-200 dark:border-gray-700/60'}`}
         >
-          {isDarkMode ? (
-            <span className="text-yellow-400">☀️</span>
-          ) : (
-            <span className="text-gray-800 dark:text-gray-200">🌙</span>
-          )}
-        </button>
-
-        {/* Profile Image */}
-        {profileImages.map((profile, index) => (
-          <div key={index} className="relative">
-            <img
-              src={profile.src}
-              alt={profile.alt}
-              className="w-10 h-10 rounded-full border-2 border-gray-300 dark:border-gray-600 cursor-pointer"
-              onClick={toggleDropdown} // Toggle dropdown on click
-            />
-
-            {/* Dropdown Menu */}
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg">
-                <ul className="py-2 text-gray-700 dark:text-gray-200">
-                  <li>
-                    <Link
-                      to="/dashboard/profileupdate"
-                      className="block px-4 py-2 text-sm text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-                    >
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-sm text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-                    >
-                      Settings
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/logout"
-                      className="block px-4 py-2 text-sm text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-                    >
-                      Logout
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            )}
+          {/* Header: Left side */}
+          <div className="flex">
+            {/* Hamburger button */}
+            <button
+              className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 lg:hidden"
+              aria-controls="sidebar"
+              aria-expanded={sidebarOpen}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSidebarOpen(!sidebarOpen);
+              }}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <svg
+                className="w-6 h-6 fill-current"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="4" y="5" width="16" height="2" />
+                <rect x="4" y="11" width="16" height="2" />
+                <rect x="4" y="17" width="16" height="2" />
+              </svg>
+            </button>
           </div>
-        ))}
+
+          {/* Header: Right side */}
+          <div className="flex items-center space-x-3">
+            {/* Search Button */}
+            <div>
+              <button
+                className={`w-8 h-8 flex items-center justify-center hover:bg-gray-100 lg:hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ml-3 ${searchModalOpen && 'bg-gray-200 dark:bg-gray-800'}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearchModalOpen(true);
+                }}
+                aria-controls="search-modal"
+              >
+                <span className="sr-only">Search</span>
+                <svg
+                  className="fill-current text-gray-500/80 dark:text-gray-400/80"
+                  width={16}
+                  height={16}
+                  viewBox="0 0 16 16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7ZM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5Z" />
+                  <path d="m13.314 11.9 2.393 2.393a.999.999 0 1 1-1.414 1.414L11.9 13.314a8.019 8.019 0 0 0 1.414-1.414Z" />
+                </svg>
+              </button>
+              <SearchModal
+                id="search-modal"
+                modalOpen={searchModalOpen}
+                setModalOpen={setSearchModalOpen}
+              />
+            </div>
+            {/* Notifications Dropdown */}
+            <DropdownNotifications align="right" />
+            {/* Help Dropdown */}
+            <DropdownHelp align="right" />
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            {/* Divider */}
+            <hr className="w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
+            {/* Profile Dropdown */}
+            <DropdownProfile align="right" />
+          </div>
+        </div>
       </div>
     </header>
   );
-};
+}
 
 export default Header;

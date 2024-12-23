@@ -1,3 +1,4 @@
+import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../dashboard/components/Sidebar";
 import Header from "../dashboard/components/Header";
@@ -9,6 +10,7 @@ const DashboardLayout = () => {
       <Header />
 
       <div className="flex flex-1">
+        {/* Sidebar */}
         <Sidebar />
 
         {/* Children Pages (Main Content) */}
