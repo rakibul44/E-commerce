@@ -147,7 +147,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="mt-10 text-center text-sm border-t border-gray-200 pt-4">
-        <p>2023-24 copyright by Elans</p>
+        <p>2023-{`${ new Date().getFullYear()}`} copyright by Elans</p>
         {/* <div className="mt-4 flex justify-center space-x-4">
           {footerData.paymentMethods.map((method) => (
             <img

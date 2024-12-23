@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import winter from '../assets/winter.jpg';
 import TNF from '../assets/TNF.jpg';
@@ -28,7 +27,7 @@ const HeaderSection = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-screen bg-white text-white">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-screen bg-white text-white ">
       {/* Left Section */}
       <div className="flex flex-col justify-center items-center bg-midnight px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">

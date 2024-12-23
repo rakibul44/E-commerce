@@ -1,8 +1,7 @@
-import React from 'react';
 import ChartCard from '../chart/ChartCard';
 import ChartCard1 from '../chart/ChartCard1';
 
-function Dashboard1() {
+function AdminDashboardHome() {
   return (
     <div className="">
 
@@ -15,4 +14,4 @@ function Dashboard1() {
   );
 }
 
-export default Dashboard1;
+export default AdminDashboardHome;

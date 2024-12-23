@@ -27,13 +27,13 @@ const AddBrand = () => {
 
 
   return (
-    <div className=" container bg-white shadow-lg rounded-lg p-6 mt-3">
+    <div className=" container p-6 mt-3">
        <div className=" flex justify-between px-5">
        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add brand</h2>
        <Link to={"/dashboard/brands"} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover rounded ">All Brands</Link>
 
        </div>
-      <form onSubmit={handleSubmit(handleAddBrand)} className=" max-w-lg mx-auto">
+      <form onSubmit={handleSubmit(handleAddBrand)} className=" bg-white shadow-lg p-6  max-w-lg mx-auto">
         {/* Brand Name */}
         <div className="mb-4 grid grid-cols-4 gap-2">
           <label htmlFor="name" className="block text-gray-700 font-medium mb-2 col-span-1">

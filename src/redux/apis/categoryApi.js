@@ -52,6 +52,13 @@ export const categoryApi = apiService.injectEndpoints({
                 url: `categories/delete/${id}`,
                 method: "DELETE"
             })
+        }),
+
+        // delete a category
+        getFiltreOptionsByCategoriesBrandsAndOthers: builder.query({
+            query: () => ({
+                url: `categories/filters-options`,
+            })
         })
     }),
 })

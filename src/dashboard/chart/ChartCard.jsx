@@ -1,4 +1,3 @@
-import React from "react";
 import { FaShoppingBag, FaDollarSign, FaFileInvoice, FaUsers } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
 import {
