@@ -9,13 +9,9 @@ export default withMT({
     colors: {
       'midnight': '#101111',
       'midmorning': '#212F3C',
-      // Add default violet and gray colors here
-      violet: {
-        500: '#6B4E91', // Define violet[500] color
-      },
-      gray: {
-        500: '#6B7280', // Define gray[500] color
-      },
+      'btnbg': '#ff9800',
+      'btnbghover':'#fb8c00',
+      'inputfocus':'#ffcc80',
     },
     extend: {
       screens: {
