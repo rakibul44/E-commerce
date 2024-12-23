@@ -13,7 +13,6 @@ const AllBrands = () => {
    const location = useLocation();
    const brands = brandData?.data || [];
 
-
    useEffect(()=> {  refetch()}, [location])
 
 // handle delete brand 

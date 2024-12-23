@@ -1,50 +1,119 @@
-import React, { useState } from "react";
+/* eslint-disable no-unsafe-optional-chaining */
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { usersApi } from "../../redux/apis/usersApi";
+import { categoryApi } from "../../redux/apis/categoryApi";
+import { brandApi } from "../../redux/apis/brandApi";
+import { productApi } from "../../redux/apis/productApi";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
-  const sizes = ["S - 38.5", "M - 39", "L - 40", "XL - 41.5", "XXL - 42", "3XL - 43"];
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const sizes = ["S", "M", "L", "XL", "XXL", "3XL"];
   const [images, setImages] = useState([]);
-  const [productDetails, setProductDetails] = useState({
-    regularPrice: "",
-    discountPrice: "",
-    stock: "",
-    colors: [],
-  });
+  const [colors, setColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const [colorInput, setColorInput] = useState("");
+  const [ postNewProduct ] = productApi.usePostNewProductMutation();
 
-  // Image Upload
+  // api calling
+  const email = localStorage.getItem("email");
+  const { data: userData } = usersApi.useGetUserByEmailQuery(email);
+  const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
+  const { data: brandData } =  brandApi.useGetAllBrandsQuery ();
+
+  const currentUser = userData?.data;
+  const categories = categoryData?.data || [];
+  const brands = brandData?.data || [];
+
+
+
+  // handel add new product function
+  const handleAddNewProduct = async(data) => {
+    const formData = new FormData();
+    
+    // Extract brandId and brandName if brand exists
+    if (data?.brand) {
+      const [brandId, brandName] = data?.brand?.split(",");
+      formData.append("brand", brandId);
+      formData.append("brandName", brandName);
+    }
+
+    // Extract categoryId and categoryName if brand exists
+    if (data?.category){
+      const [categoryId, categoryName] = data?.category?.split(",");
+      formData.append("category", categoryId);
+      formData.append("categoryName", categoryName);
+    }
+    formData.append("name", data?.name);
+    formData.append("description", data?.description);
+    formData.append("price", data?.price);
+    formData.append("discountPrice", data?.discountPrice);
+    formData.append("stock", data?.stock);
+    formData.append("sizes", JSON.stringify(selectedSizes));
+    formData.append("colors", JSON.stringify(colors));  
+    images.forEach((image) => formData.append("images", image));
+    formData.append("author", currentUser?._id);
+
+    console.log("FormData content: ");
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
+    try{
+      const res = await postNewProduct(formData);
+      if(res?.data?.success){
+         reset();
+         toast.success(res?.data?.message);
+         setColorInput("");
+         setSelectedSizes([]);
+         setColors([]);
+         setImages([]);
+      }
+    } catch(error){
+      console.log(error),
+      toast.error(error?.data?.message)
+    }
+    // Add your submission logic here
+  };
+
   const handleImageUpload = (e) => {
     const uploadedFiles = Array.from(e.target.files);
     setImages([...images, ...uploadedFiles]);
   };
 
-  // Image Delete
   const handleImageDelete = (index) => {
     setImages(images.filter((_, idx) => idx !== index));
   };
 
-  // Handle Input Change for Product Details
-  const handleInputChange = (field, value) => {
-    setProductDetails({ ...productDetails, [field]: value });
-  };
-
-  // Add Color
   const handleAddColor = () => {
-    if (colorInput.trim() && !productDetails.colors.includes(colorInput)) {
-      setProductDetails({ ...productDetails, colors: [...productDetails.colors, colorInput] });
+    if (colorInput.trim() && !colors.includes(colorInput)) {
+      setColors([...colors, colorInput]);
       setColorInput("");
+
     }
   };
 
-  // Delete Color
   const handleDeleteColor = (color) => {
-    setProductDetails({
-      ...productDetails,
-      colors: productDetails.colors.filter((c) => c !== color),
-    });
+    setColors(colors.filter((c) => c !== color));
   };
 
+    // Toggle size selection
+    const toggleSize = (size) => {
+      setSelectedSizes((prev) =>
+        prev.includes(size)
+          ? prev.filter((s) => s !== size) // Remove if already selected
+          : [...prev, size] // Add if not selected
+      );
+    };
+
   return (
-    <div className="md:p-8 flex flex-col lg:flex-row gap-6">
+    <form onSubmit={handleSubmit(handleAddNewProduct)} className="md:p-8 flex flex-col lg:flex-row gap-6">
       {/* Left Section */}
       <div className="w-full lg:w-1/2 bg-white p-6 rounded-md shadow-sm">
         <h2 className="text-lg font-semibold mb-4">Add Product</h2>
@@ -55,48 +124,76 @@ const AddProduct = () => {
           <input
             type="text"
             placeholder="Enter product name"
-            maxLength="20"
+            {...register("name", { required: "Product name is required", maxLength: 20 })}
             className="w-full border p-2 rounded-md"
           />
-          <p className="text-xs text-gray-500 mt-1">Do not exceed 20 characters.</p>
+          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
         {/* Category */}
-        <div className="flex gap-4 mb-4">
-          <div className="w-full">
-            <label className="block  font-medium text-sm">Category *</label>
-            <select className="w-full border p-2 rounded-md">
-              <option>Choose category</option>
-              <option>Winter Jacket</option>
-              <option>Denim Jacket</option>
-              <option>Denim Jeans</option>
-            </select>
-          </div>
+        <div className="mb-4">
+          <label className="block font-medium text-sm">Category *</label>
+          <select
+            {...register("category", { required: "Category is required" })}
+            className="w-full border p-2 rounded-md"
+          >
+            <option value="">Choose category</option>
+            {
+              categories?.length > 0 && categories?.map((cat) => <option key={cat?._id} value={`${cat?._id},${cat?.name}`}>{cat?.name}</option>  )
+            }
+   
+          </select>
+          {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
         </div>
 
         {/* Brand */}
         <div className="mb-4">
           <label className="block font-medium text-sm">Brand *</label>
-          <select className="w-full border p-2 rounded-md">
-            <option>Choose category</option>
-            <option>The North Face</option>
-            <option>Gant</option>
+          <select
+            {...register("brand", { required: "Brand is required" })}
+            className="w-full border p-2 rounded-md"
+          >
+            <option value="">Choose brand</option>
+            {
+              brands?.length > 0 && brands?.map((brand) =>  <option key={brand?._id} value={ `${brand?._id},${brand.name}` }>{brand?.name}</option> )
+            }
+
           </select>
+          {errors.brand && <p className="text-red-500 text-sm">{errors.brand.message}</p>}
         </div>
 
-        {/* Regular Price, Discount Price, Stock */}
-        {["regularPrice", "discountPrice", "stock"].map((field, idx) => (
+         {/* Regular Price, Stock */}
+        {["price", "stock"].map((field, idx) => (
           <div key={idx} className="mb-4">
             <label className="block font-medium text-sm capitalize">{field.replace(/([A-Z])/g, " $1")} *</label>
             <input
               type="number"
               placeholder={`Enter ${field}`}
-              value={productDetails[field]}
-              onChange={(e) => handleInputChange(field, e.target.value)}
+              {...register(field, {
+                required: `${field.replace(/([A-Z])/g, " $1")} is required`,
+                min: { value: 1, message: `${field.replace(/([A-Z])/g, " $1")} must be a positive value` },
+              })}
               className="w-full border p-2 rounded-md"
             />
+            {errors[field] && <p className="text-red-500 text-sm">{errors[field]?.message}</p>}
           </div>
         ))}
+        
+        {/* Discount Price */}
+        <div className="mb-4">
+          <label className="block font-medium text-sm capitalize">Discount Price *</label>
+          <input
+            type="number"
+            placeholder="Enter discountPrice"
+            {...register("discountPrice", {
+              required: "Discount Price is required",
+              min: { value: 1, message: "Discount Price must be a positive value" },
+            })}
+            className="w-full border p-2 rounded-md"
+          />
+          {errors.discountPrice && <p className="text-red-500 text-sm">{errors.discountPrice?.message}</p>}
+        </div>
+
 
         {/* Colors */}
         <div className="mb-4">
@@ -109,15 +206,20 @@ const AddProduct = () => {
               placeholder="Enter color"
               className="w-full border p-2 rounded-md"
             />
+            <button
+              type="button"
+              onClick={handleAddColor}
+              className="bg-btnbg  hover:bg-btnbghover   text-white px-4 py-2 rounded-md"
+            >
+              Add
+            </button>
           </div>
           <div className="flex gap-2 mt-2 flex-wrap">
-            {productDetails.colors.map((color, idx) => (
-              <div
-                key={idx}
-                className="flex items-center bg-gray-100 px-3 py-1 rounded-md"
-              >
+            {colors.map((color, idx) => (
+              <div key={idx} className="flex items-center bg-gray-100 px-3 py-1 rounded-md">
                 {color}
                 <button
+                  type="button"
                   onClick={() => handleDeleteColor(color)}
                   className="ml-2 text-red-500"
                 >
@@ -132,11 +234,11 @@ const AddProduct = () => {
         <div>
           <label className="block font-medium text-sm">Description *</label>
           <textarea
+            {...register("description")}
             placeholder="Description"
-            maxLength="100"
             className="w-full border p-2 rounded-md"
           ></textarea>
-          <p className="text-xs text-gray-500 mt-1">Do not exceed 100 characters.</p>
+          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
         </div>
       </div>
 
@@ -148,7 +250,12 @@ const AddProduct = () => {
           <div className="flex gap-4 mt-2 flex-wrap">
             {images.length < 4 && (
               <label className="border-2 border-dashed flex items-center justify-center w-28 h-28 rounded-md cursor-pointer">
-                <input type="file" multiple onChange={handleImageUpload} className="hidden" />
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
                 <span className="text-blue-500">+ Upload</span>
               </label>
             )}
@@ -160,6 +267,7 @@ const AddProduct = () => {
                   className="w-full h-full rounded-md object-cover"
                 />
                 <button
+                  type="button"
                   onClick={() => handleImageDelete(idx)}
                   className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs"
                 >
@@ -168,9 +276,6 @@ const AddProduct = () => {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Add at least 4 images. Ensure they meet dimension requirements.
-          </p>
         </div>
 
         {/* Sizes */}
@@ -178,7 +283,14 @@ const AddProduct = () => {
           <h3 className="text-sm font-medium">Add size</h3>
           <div className="grid grid-cols-3 gap-2 mt-2">
             {sizes.map((size, idx) => (
-              <button key={idx} className="border p-2 rounded-md hover:bg-gray-100">
+              <button 
+              key={idx}
+              type="button" 
+              onClick={() => toggleSize(size)}
+              className={`border p-2 rounded-md ${
+                selectedSizes.includes(size) ? "bg-btnbg hover:bg-btnbghover text-white" : "hover:bg-gray-100"
+              }`}
+              >
                 {size}
               </button>
             ))}
@@ -187,12 +299,12 @@ const AddProduct = () => {
 
         {/* Buttons */}
         <div className="flex gap-4 mt-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md">Add product</button>
-          <button className="bg-gray-300 px-4 py-2 rounded-md">Save product</button>
-          <button className="bg-gray-300 px-4 py-2 rounded-md">Schedule</button>
+          <button type="submit" className="bg-btnbg hover:bg-btnbghover text-white px-4 py-2 rounded-md">
+            Add product
+          </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

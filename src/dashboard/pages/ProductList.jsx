@@ -1,52 +1,17 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Link } from "react-router-dom";
+import { productApi } from "../../redux/apis/productApi";
 
 const ProductList = () => {
-  // Sample product data
-  const products = [
-    {
-      id: 1,
-      name: "Dog Food, Chicken & Chicken Liver Recipe...",
-      image: "https://via.placeholder.com/60",
-      productID: "#7712309",
-      price: "$1,452.500",
-      quantity: "1,638",
-      sale: "20",
-      stock: "Out of stock",
-    },
-    {
-      id: 2,
-      name: "Grain Free Dry Dog Food | Rachael Ray® Nutrish®",
-      image: "https://via.placeholder.com/60",
-      productID: "#7712309",
-      price: "$1,452.500",
-      quantity: "1,638",
-      sale: "20",
-      stock: "Out of stock",
-    },
-    {
-      id: 3,
-      name: "Weruva Pumpkin Patch Up! Pumpkin With Ginger...",
-      image: "https://via.placeholder.com/60",
-      productID: "#7712309",
-      price: "$1,452.500",
-      quantity: "1,638",
-      sale: "20",
-      stock: "Out of stock",
-    },
-    {
-      id: 4,
-      name: "Milk-Bone Mini's Flavor Snacks Dog Treats, 15 Ounce",
-      image: "https://via.placeholder.com/60",
-      productID: "#7712309",
-      price: "$1,452.500",
-      quantity: "1,638",
-      sale: "20",
-      stock: "Out of stock",
-    },
-  ];
-
   const [currentPage, setCurrentPage] = useState(1);
+  const { data: productData, isLoading } = productApi.useGetAllProductsQuery();
+
+
+  if(isLoading){
+    return <p>Loading..</p>
+  }
+ 
+  const products = productData?.data || [];
   const itemsPerPage = 3;
 
   // Pagination Logic
@@ -92,19 +57,24 @@ const ProductList = () => {
               >
                 <td className="py-2 px-4 flex items-center space-x-2">
                   <img
-                    src={product.image}
-                    alt={product.name}
+                    src={product?.images[0]}
+                    alt={product?.name}
                     className="w-10 h-10 object-cover rounded"
                   />
-                  <span>{product.name}</span>
+                  <span>{product?.name}</span>
                 </td>
-                <td className="py-2 px-4 text-center">{product.productID}</td>
-                <td className="py-2 px-4 text-center">{product.price}</td>
-                <td className="py-2 px-4 text-center">{product.quantity}</td>
-                <td className="py-2 px-4 text-center">{product.sale}</td>
+                <td className="py-2 px-4 text-center">
+                {(() => {
+                  const splitId = product.id.split('-');
+                  return splitId[1];
+                })()}
+                </td>
+                <td className="py-2 px-4 text-center">{product?.price}</td>
+                <td className="py-2 px-4 text-center">{product?.quantity}</td>
+                <td className="py-2 px-4 text-center">{product?.sale}</td>
                 <td className="py-2 px-4 text-center">
                   <span className="text-red-500 bg-red-100 px-2 py-1 rounded">
-                    {product.stock}
+                    {product?.stock}
                   </span>
                 </td>
               </tr>

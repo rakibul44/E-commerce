@@ -18,16 +18,23 @@ import {
 import app from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import { authApi } from "../redux/apis/authApi";
+import { usersApi } from "../redux/apis/usersApi";
 
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
+  const email = localStorage.getItem('email');
+  const { data: userData } = usersApi.useGetUserByEmailQuery(email);
+  const loggedInUser = userData?.data;
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const googleProvider = new GoogleAuthProvider();
   const [createJwtToken ] = authApi.useCreateJwtTokenMutation();
   const [logoutUser ] = authApi.useLogoutUserMutation();
+
+
 
   // Create user with email and password
   const createUser = async (email, password) => {
@@ -148,6 +155,7 @@ const AuthProvider = ({ children }) => {
 
   // auth information
   const authInfo = {
+    loggedInUser,
     user,
     loading,
     createUser,

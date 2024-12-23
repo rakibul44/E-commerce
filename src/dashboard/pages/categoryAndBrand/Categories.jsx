@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { categoryApi } from "../../../redux/apis/categoryApi";
 import { FaEdit } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 
 const Categories = () => {
    const { data: categoryData, isLoading, refetch } = categoryApi.useGetAllCategoryQuery();
    const [deleteCategory ] = categoryApi.useDeleteCategoryMutation();
+   const location = useLocation();
+
+   useEffect(()=> {  refetch()}, [location])
 
    const categories = categoryData?.data || [];
 

@@ -1,29 +1,38 @@
-import React, { useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaSearch, FaShoppingCart, FaRegUser, FaTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
-import cloth from "../assets/cloth.jpg";
-import denim from "../assets/denim.jpg";
+import { usersApi } from "../redux/apis/usersApi";
+import useAuth from "../hooks/useAuth";
+import { cartsApi } from "../redux/apis/cartsApi";
+import useFunc from "../hooks/useFunc";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Versatile Shacket", price: 7.7, quantity: 1, image: cloth },
-    { id: 2, name: "Classic Jacket", price: 7.84, quantity: 1, image: denim },
-  ]);
+  const { loggedInUser } = useAuth();
+  const { handleDeleteCart } = useFunc();
+  const { data: cartsData , refetch} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+
+  const location = useLocation();
+  const email = localStorage.getItem("email");
+  const { data: userData  } = usersApi.useGetUserByEmailQuery(email);
+  const currentUser = userData?.data;
+
+
+  useEffect(()=> { setIsDropdownOpen(false)}, [location])
+
+  const carts = cartsData?.data?.result || [];
+  const subTotalPrice = cartsData?.data?.subTotalPrice || 0;
+
+  console.log(carts)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleCartModal = () => setIsCartModalOpen(!isCartModalOpen);
 
-  const handleDeleteItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-  };
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50 w-full">
@@ -64,7 +73,7 @@ const Navbar = () => {
                   {/* Column II */}
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">Column II</h4>
-                    <ul className="space-y-2 text-gray-600">
+                    <ul className="space-y-2 text-gray-600 ">
                       <li><Link to="/shop-list-view" className="hover:text-black">Shop List View</Link></li>
                       <li><Link to="/add-to-cart-button" className="hover:text-black">Add To Cart Button</Link></li>
                       <li><Link to="/add-to-cart-icon" className="hover:text-black">Add To Cart Icon</Link></li>
@@ -107,26 +116,47 @@ const Navbar = () => {
           {/* User Dropdown */}
           <div className="relative">
             <button onClick={toggleDropdown} className="p-2 relative flex items-center justify-center">
+             { 
+              !email ? 
               <span className="relative inline-flex text-lg rounded-full h-4 w-4 bg-red">
-                <span className="animate-ping absolute inline-flex h-full w-full bg-red rounded-full"></span>
-                <FaRegUser className="text-midnight text-2xl" />
-              </span>
+              <span className="animate-ping absolute inline-flex h-full w-full bg-red rounded-full"></span>
+              <FaRegUser className="text-midnight text-2xl" />
+            </span>
+            : 
+            <img src={currentUser?.profilePicture} alt={currentUser?.name} className="w-8 h-8 rounded-full object-cover" />
+          }
             </button>
             {isDropdownOpen && (
+              !currentUser ?
               <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
-                <Link
-                  to="/login"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
-                  Signup
-                </Link>
-              </div>
+              <Link
+                to="/login"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Signup
+              </Link>
+            </div>
+            :
+            <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
+            <h2
+          
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              { currentUser?.name}
+            </h2>
+            <Link
+              to="/dashboard"
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              Dashboard
+            </Link>
+          </div>
             )}
           </div>
 
@@ -135,8 +165,8 @@ const Navbar = () => {
             <button className="h-10 w-7" onClick={toggleCartModal}>
               <FaShoppingCart />
             </button>
-            <span className="absolute top-0 right-0 bg-orange-500 text-white text-xs rounded-full px-1">
-              {cartItems.length}
+            <span className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] rounded-full px-1">
+              {carts?.length}
             </span>
           </div>
         </div>
@@ -192,26 +222,27 @@ const Navbar = () => {
       {/* Cart Modal */}
       {isCartModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[450px] max-h-96 overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-2">
-              <h2 className="text-lg font-semibold">My Cart ({cartItems.length})</h2>
+              <h2 className="text-lg font-semibold">My Cart ({carts?.length})</h2>
               <button onClick={toggleCartModal} className="text-gray-500 hover:text-gray-700">
                 ✕
               </button>
             </div>
-            {cartItems.length === 0 ? (
+            {carts?.length === 0 ? (
               <p className="text-center text-gray-500 mt-4">Your cart is empty.</p>
             ) : (
               <>
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-4 my-4">
-                    <img src={item.image} alt={item.name} className="w-14 h-14 rounded object-cover" />
+                {carts?.map((item) => (
+                  <div key={item?._id} className="flex items-center space-x-4 my-4">
+                    <img src={item?.images[0]} alt={item?.productName} className="w-14 h-14 rounded object-cover" />
                     <div className="flex-grow">
-                      <h3 className="font-semibold text-sm">{item.name}</h3>
-                      <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
+                      <h3 className="font-semibold text-sm">{item?.productName}</h3>
+                      <p className="text-gray-600 text-sm">${item?.price.toFixed(2)}</p>
                     </div>
+                    <p> {item?.quantity} </p>
                     <button
-                      onClick={() => handleDeleteItem(item.id)}
+                      onClick={() => handleDeleteCart(item?._id, refetch)}
                       className="text-gray-400 hover:text-red-500"
                     >
                       <FaTrashAlt />
@@ -220,13 +251,13 @@ const Navbar = () => {
                 ))}
                 <div className="flex justify-between items-center mt-4">
                   <span className="font-semibold text-gray-700">Sub Total:</span>
-                  <span className="font-semibold text-orange-500">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-orange-500">${subTotalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between mt-4">
-                  <Link to='/mycart' className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                  <Link to='/mycart' onClick={() => setIsCartModalOpen(false)} className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
                     View Cart
                   </Link>
-                  <Link to='/payment' className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                  <Link to='/payment' onClick={() => setIsCartModalOpen(false)} className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
                     Checkout
                   </Link>
                 </div>

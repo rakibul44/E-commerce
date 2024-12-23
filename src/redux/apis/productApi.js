@@ -1,6 +1,7 @@
 import apiService from "../api-service/api-service";
 
 export const productApi = apiService.injectEndpoints({
+
   endpoints: (builder) => ({
     // Post a new product
     postNewProduct: builder.mutation({
@@ -11,14 +12,31 @@ export const productApi = apiService.injectEndpoints({
       }),
     }),
 
-    // Get all products
-    getAllProducts: builder.query({
+
+    // Get all products with filters
+   getAllProducts: builder.query({
+     query: (filters) => ({
+         url: `${filters ? `products/all-products?${filters}` : 'products/all-products'}`,
+         method: 'GET',
+     }),
+   }),
+
+    // Get tranding-products
+    getTrandingProducts: builder.query({
       query: () => ({
-        url: `products/all-products`,
+        url: `products/tranding-products`,
         method: "GET",
       }),
     }),
 
+    // Get new-featured-best-deal-on-sell-products
+    getNewFeaturedBestDealAndOnSellProducts: builder.query({
+      query: () => ({
+        url: `products/new-featured-best-deal-on-sell-products`,
+        method: "GET",
+      }),
+    }),
+    
     // Get product by ID
     getProductById: builder.query({
       query: (id) => ({
