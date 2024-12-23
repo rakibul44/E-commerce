@@ -21,6 +21,14 @@ export const productApi = apiService.injectEndpoints({
      }),
    }),
 
+    // Get tranding-products
+    getTrandingProducts: builder.query({
+      query: () => ({
+        url: `products/tranding-products`,
+        method: "GET",
+      }),
+    }),
+
     // Get new-featured-best-deal-on-sell-products
     getNewFeaturedBestDealAndOnSellProducts: builder.query({
       query: () => ({

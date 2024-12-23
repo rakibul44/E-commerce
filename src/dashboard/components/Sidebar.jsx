@@ -39,6 +39,7 @@ const Sidebar = () => {
       ]
     },
     isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
+    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
     { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
     isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
     isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -7,7 +7,7 @@ import { BiCartAdd } from 'react-icons/bi';
 import { GiSelfLove } from 'react-icons/gi';
 import { GrGallery } from 'react-icons/gr';
 import { Link } from 'react-router-dom';
-import { Dialog, DialogBody, DialogFooter } from '@material-tailwind/react';
+import { Dialog, DialogBody } from '@material-tailwind/react';
 import { IoClose } from 'react-icons/io5'; // Close Icon
 import TNF from '../assets/TNF.jpg';
 

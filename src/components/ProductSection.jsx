@@ -10,6 +10,8 @@ const ProductSection = () => {
     return <p>Loading...</p>
   }
   const productData = productsData?.data || [];
+  
+  console.log
 
   return (
     <section className="py-8 px-4 bg-gray-100">

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaCartPlus } from "react-icons/fa";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import cloth from "../assets/cloth.jpg";
 import TNF from "../assets/TNF.jpg";
 import denim from "../assets/denim.jpg";
 import woman from "../assets/woman.jpg";
+import { productApi } from "../redux/apis/productApi";
 
 const products = [
   {
@@ -52,6 +53,16 @@ const TrandSection = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
+  const { data: productData, isLoading } = productApi.useGetTrandingProductsQuery();
+  
+
+  if(isLoading){
+    return <p>Loading..</p>
+  }
+  
+  const trandingProducts = productData?.data || [];
+  console.log(trandingProducts)
+
   const filteredProducts =
     filter === "all"
       ? products
@@ -79,7 +90,7 @@ const TrandSection = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Section Title */}
       <h2 className="text-center text-3xl font-bold mb-4">
-        Trendsetter's Picks
+        {"Trendsetter's Picks"}
       </h2>
 
       {/* Categories */}
@@ -174,7 +185,7 @@ const TrandSection = () => {
               </button>
             </div>
             {/* Product Details */}
-            <h3 className="text-lg font-semibold mt-4 text-sm sm:text-lg">{product.name}</h3>
+            <h3 className="text-lg font-semibold mt-4  sm:text-lg">{product.name}</h3>
             <p className="text-gray-500 text-xs sm:text-sm">{product.category}</p>
             <p className="text-black font-bold text-sm sm:text-base">{product.price}</p>
           </div>
