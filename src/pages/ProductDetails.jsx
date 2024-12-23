@@ -7,17 +7,23 @@ import DescriptionTabs from "../components/DescriptionTabs";
 
 const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+
   const images = Array(4).fill(denim);
-//   const texts = [
-//     { label: "Tags:", value: "Accessories, Burberry, Jacket, Men, Vendor Levi's, Women" },
-//     { label: "SKU:", value: "YX160-15" },
-//     { label: "Category:", value: "Featured Products, Jackets, Outerwear (For him)" },
-//     { label: "Size:", value: "S , M , L , XL , XXL" },
-//   ];
   const sizes = ["S", "M", "L", "XL", "XXL"];
+  const colors = [
+    { name: "Black", code: "#000000" },
+    { name: "Blue", code: "#0000FF" },
+    { name: "Red", code: "#FF0000" },
+    { name: "Green", code: "#008000" },
+  ];
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
+  };
+
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
   };
 
   return (
@@ -51,6 +57,7 @@ const ProductDetails = () => {
             it does in the backyard. The real mother of pearl buttons and embroidered crocodile...
           </p>
 
+          {/* Size Selection */}
           <div className="mb-6">
             <span className="text-sm text-gray-500 block mb-2">Select Size:</span>
             <div className="flex gap-2">
@@ -69,6 +76,31 @@ const ProductDetails = () => {
             {selectedSize && (
               <p className="text-sm text-gray-600 mt-2">
                 Selected Size: <span className="font-bold">{selectedSize}</span>
+              </p>
+            )}
+          </div>
+
+          {/* Color Selection */}
+          <div className="mb-6">
+            <span className="text-sm text-gray-500 block mb-2">Select Color:</span>
+            <div className="flex gap-2">
+              {colors.map((color) => (
+                <div
+                  key={color.name}
+                  onClick={() => handleColorClick(color)}
+                  className={`w-10 h-10 rounded-full border-2 cursor-pointer ${
+                    selectedColor?.name === color.name
+                      ? "border-orange-600"
+                      : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color.code }}
+                ></div>
+              ))}
+            </div>
+            {selectedColor && (
+              <p className="text-sm text-gray-600 mt-2">
+                Selected Color:{" "}
+                <span className="font-bold">{selectedColor.name}</span>
               </p>
             )}
           </div>
@@ -92,7 +124,7 @@ const ProductDetails = () => {
 
           <Link
             to="/payment"
-            className="bg-orange-500 text-white px-6 py-2 rounded w-full animate-pulse hover:bg-orange-700"
+            className="bg-orange-500 text-white px-6 py-2 inline-block text-center rounded w-full animate-pulse hover:bg-orange-700"
           >
             Buy Now
           </Link>
@@ -114,7 +146,6 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      
       <DescriptionTabs />
     </div>
   );

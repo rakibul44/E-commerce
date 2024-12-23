@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 const footerData = {
   categories: [
@@ -11,7 +11,7 @@ const footerData = {
   ],
   usefulLinks: [
     { id: 1, name: "My Account", link: "/login" },
-    { id: 2, name: "My Orders", link: "#" },
+    { id: 2, name: "My Cart", link: "/mycart" },
     { id: 3, name: "Wishlist", link: "/wishlist" },
     { id: 4, name: "FAQ's", link: "#" },
     { id: 5, name: "Contact Us", link: "/contact" },

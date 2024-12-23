@@ -23,3 +23,28 @@
     }
   }
   
+.marquee-container {
+    position: relative;
+    overflow: hidden; /* Ensures content doesn't overflow outside the container */
+    white-space: nowrap;
+    width: 100%;
+    background: #101111;
+    color: #ffff;
+    padding: 15px;
+  }
+  
+  .marquee {
+    display: inline-block;
+    white-space: nowrap; /* Prevents text from wrapping */
+    animation: scroll 20s linear infinite; /* 10 seconds for full scroll */
+  }
+  
+  @keyframes scroll {
+    from {
+      transform: translateX(100%); /* Start outside the right edge */
+    }
+    to {
+      transform: translateX(-100%); /* End outside the left edge */
+    }
+  }
+  

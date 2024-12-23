@@ -15,7 +15,7 @@ import Mycart from "../pages/Mycart";
 
 // dashboard pages 
 import DashboardLayout from "../layout/DashboardLayout";
-import Dashboard from "../dashboard/pages/Dashboard";
+import AdminDashboardHome from "../dashboard/pages/AdminDashboardHome";
 import ProfileUpdate from "../dashboard/pages/ProfileUpdate";
 import PaymentMethod from "../dashboard/pages/PaymentMethod";
 import OrderList from "../dashboard/pages/Orderlist";
@@ -53,7 +53,7 @@ const mainRoutes = [
 
 // dashboard routes
 const dashboardRoute = [
-    {  path:'',    element:<Dashboard /> },
+    {  path:'',    element:<AdminDashboardHome /> },
     {  path:'profileupdate',    element: <ProfileUpdate /> },
     {  path:'payment',    element: <PaymentMethod /> },
     {  path:'order',    element: <OrderList /> },
