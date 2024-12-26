@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
 import { createContext } from "react";
 import { toast } from "react-toastify";
 import { cartsApi } from "../redux/apis/cartsApi";
 import useAuth from "../hooks/useAuth";
 import Swal from "sweetalert2";
+import { wishlistApi } from "../redux/apis/wishlistApi";
 
 
 export const FuncContext = createContext(null);
@@ -13,8 +15,8 @@ const FuncProvider = ({ children }) => {
 const { loggedInUser } = useAuth();
 const [ addToCart ] = cartsApi.useAddToCartMutation();
 const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
-const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation()
-
+const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation();
+const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
 
 
 // handle add to cart func
@@ -99,10 +101,29 @@ const handleDeleteCart = async(id, refetch ) => {
   };
 
 
+
+  
+// handle add to cart func
+ const handleAddToWishlist = async(data) => {
+  try{
+     const res =  await addToWishlist(data);
+     if(res?.data?.success){
+         toast.success(res?.data?.message);
+     } else if(res?.error?.data){
+       toast.error(res?.error?.data?.message);
+     }
+ 
+  } catch(error){
+     console.log(error)
+     toast.error(error);
+  }
+ }
+
     const functions = {
         handleAddToCart,
         handleDeleteCart,
         handleCartProductQuantityChange,
+        handleAddToWishlist
         
     }
     return (

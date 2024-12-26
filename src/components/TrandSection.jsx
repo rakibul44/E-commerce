@@ -61,7 +61,8 @@ const TrandSection = () => {
   }
   
   const trandingProducts = productData?.data || [];
-  // console.log(trandingProducts)
+  console.log(trandingProducts)
+
 
   const filteredProducts =
     filter === "all"
