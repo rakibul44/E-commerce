@@ -1,73 +1,40 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaCartPlus } from "react-icons/fa";
-import { Link } from "react-router-dom"; // Import Link for navigation
-import cloth from "../assets/cloth.jpg";
-import TNF from "../assets/TNF.jpg";
-import denim from "../assets/denim.jpg";
-import woman from "../assets/woman.jpg";
+import { Link } from "react-router-dom"; 
 import { productApi } from "../redux/apis/productApi";
+import useFunc from "../hooks/useFunc";
+import { categoryApi } from "../redux/apis/categoryApi";
 
-const products = [
-  {
-    id: "tshirts",
-    category: "T-Shirts",
-    name: "Sleek Slim Fit Suit",
-    price: "$25.00",
-    image: cloth,
-    status: "",
-    link: "/product/tshirts",
-    sizes: ["S", "M", "L", "XL"],
-  },
-  {
-    id: "jeans",
-    category: "Jeans",
-    name: "Denim Skinny Jeans",
-    price: "$21.00",
-    image: TNF,
-    link: "/product/jeans",
-    sizes: ["28", "30", "32", "34"],
-  },
-  {
-    id: "jackets",
-    category: "Shirts",
-    name: "Quilted Puffer Jacket",
-    price: "$20.00",
-    image: denim,
-    link: "/product/jackets",
-    sizes: ["M", "L", "XL"],
-  },
-  {
-    id: "pants",
-    category: "Accessories",
-    name: "Men's Classic Chino Pants",
-    price: "$15.00",
-    image: woman,
-    link: "/product/pants",
-    sizes: ["30", "32", "34", "36"],
-  },
-];
 
 const TrandSection = () => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState(null);
   const [modalProduct, setModalProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const { handleAddToCart } = useFunc();
 
-  const { data: productData, isLoading } = productApi.useGetTrandingProductsQuery();
+  const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
+  const { data: productData, isLoading } = productApi.useGetTrandingProductsQuery(filter);
   
+
+  // initially set color and size
+  useEffect(() => {
+    const firstColor = modalProduct?.colors?.length > 0 ? modalProduct?.colors[0]: "";
+    setSelectedColor(firstColor);
+    const firstSize = modalProduct?.sizes?.length > 0 ? modalProduct?.sizes[0] : "";
+    setSelectedSize(firstSize);
+    
+  }, [modalProduct])
+
 
   if(isLoading){
     return <p>Loading..</p>
   }
-  
   const trandingProducts = productData?.data || [];
-  console.log(trandingProducts)
+  const categories = categoryData?.data || [];
 
 
-  const filteredProducts =
-    filter === "all"
-      ? products
-      : products.filter((product) => product.id === filter);
 
   const openModal = (product) => {
     setModalProduct(product);
@@ -81,6 +48,10 @@ const TrandSection = () => {
 
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
+  };
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
   };
 
   const handleQuantityChange = (change) => {
@@ -98,68 +69,46 @@ const TrandSection = () => {
       <div className="flex flex-wrap justify-center gap-4 mb-8">
         <button
           className={`px-4 py-2 rounded text-sm sm:text-base ${
-            filter === "all"
+            filter === null
               ? "bg-black text-white"
               : "bg-gray-200 hover:bg-black hover:text-white"
           }`}
-          onClick={() => setFilter("all")}
+          onClick={() => setFilter(null)}
         >
           All
         </button>
-        <button
-          className={`px-4 py-2 rounded text-sm sm:text-base ${
-            filter === "tshirts"
-              ? "bg-black text-white"
-              : "bg-gray-200 hover:bg-black hover:text-white"
-          }`}
-          onClick={() => setFilter("tshirts")}
-        >
-          T-Shirts
-        </button>
-        <button
-          className={`px-4 py-2 rounded text-sm sm:text-base ${
-            filter === "jeans"
-              ? "bg-black text-white"
-              : "bg-gray-200 hover:bg-black hover:text-white"
-          }`}
-          onClick={() => setFilter("jeans")}
-        >
-          Jeans
-        </button>
-        <button
-          className={`px-4 py-2 rounded text-sm sm:text-base ${
-            filter === "jackets"
-              ? "bg-black text-white"
-              : "bg-gray-200 hover:bg-black hover:text-white"
-          }`}
-          onClick={() => setFilter("jackets")}
-        >
-          Jackets
-        </button>
-        <button
-          className={`px-4 py-2 rounded text-sm sm:text-base ${
-            filter === "pants"
-              ? "bg-black text-white"
-              : "bg-gray-200 hover:bg-black hover:text-white"
-          }`}
-          onClick={() => setFilter("pants")}
-        >
-          Pants
-        </button>
+
+
+        {
+          categories?.length > 0 && categories?.map((cat) => (
+            <button
+            key={ cat?._id}
+            className={`px-4 py-2 rounded text-sm sm:text-base ${
+              filter === cat?._id
+                ? "bg-black text-white"
+                : "bg-gray-200 hover:bg-black hover:text-white"
+            }`}
+            onClick={() => setFilter(cat?._id)}
+          >
+            {cat?.name}
+          </button>
+          ))
+        }
+
       </div>
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {filteredProducts.map((product, index) => (
+        { trandingProducts?.map((product) => (
           <div
-            key={index}
+            key={product?._id}
             className="border p-4 rounded shadow-sm hover:shadow-lg transition"
           >
             <div className="relative group">
               {/* Image with Link */}
-              <Link to={product.link}>
+              <Link to={`/${product?._id}`}>
                 <img
-                  src={product.image}
+                  src={product?.images[0]}
                   alt={product.name}
                   className="w-full h-40 sm:h-48 object-cover rounded"
                 />
@@ -181,14 +130,16 @@ const TrandSection = () => {
               )}
 
               {/* Favorite Icon */}
-              <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
+              <button 
+              onClick={() => handleAddToCart({ product:product?._id ,price: product?.price, quantity: 1, size: product?.sizes[0], color: product?.colors[0] })}
+               className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
                 <FaCartPlus />
               </button>
             </div>
             {/* Product Details */}
-            <h3 className="text-lg font-semibold mt-4  sm:text-lg">{product.name}</h3>
-            <p className="text-gray-500 text-xs sm:text-sm">{product.category}</p>
-            <p className="text-black font-bold text-sm sm:text-base">{product.price}</p>
+            <h3 className="text-lg font-semibold mt-4  sm:text-lg">{product?.name}</h3>
+            <p className="text-gray-500 text-xs sm:text-sm">{product?.categoryName}</p>
+            <p className="text-black font-bold text-sm sm:text-base">{product?.price}</p>
           </div>
         ))}
       </div>
@@ -212,30 +163,51 @@ const TrandSection = () => {
             >
               &times;
             </button>
-            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{modalProduct.name}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{modalProduct?.name}</h3>
             <img
-              src={modalProduct.image}
-              alt={modalProduct.name}
-              className="w-full h-40 sm:h-48 object-cover rounded mb-4"
+              src={modalProduct?.images[0]}
+              alt={modalProduct?.name}
+              className="w-full h-40 sm:h-48 object-cover rounded mb-2"
             />
-            <p className="text-gray-500 mb-4 text-center">{modalProduct.category}</p>
-            <p className="text-black font-bold text-lg sm:text-xl text-center mb-4">
-              {modalProduct.price}
+            <p className="text-gray-500 mb-2 text-center">{modalProduct?.categoryName}</p>
+            <p className="text-black font-bold text-lg sm:text-xl text-center mb-2">
+              {modalProduct?.price}
             </p>
             {/* Size Selector */}
+         
+            <div className="flex flex-wrap items-center gap-2 mt-2">
             <p className="text-sm sm:text-base">
               <strong>Size :</strong>
             </p>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              {modalProduct.sizes.map((size, index) => (
+              {modalProduct?.sizes.map((size, index) => (
                 <button
                   key={index}
-                  onClick={() => handleSizeSelect(size)} // Update size on click
-                  className={`px-3 py-1 border rounded-md text-sm sm:text-base hover:bg-gray-200 ${
-                    selectedSize === size ? "bg-gray-300" : ""
+                  onClick={() => handleSizeSelect(size)}
+                  className={`px-3 py-1 border rounded-md text-sm sm:text-base  ${
+                    selectedSize === size ?  "bg-btnbg text-white hover:bg-btnbghover" : "hover:bg-gray-200"
                   }`}
                 >
                   {size}
+                </button>
+              ))}
+            </div>
+
+
+               {/* Color Selector */}
+       
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+            <p className="text-sm sm:text-base ">
+              <strong>Color:</strong>
+            </p>
+              {modalProduct?.colors?.map((color, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleColorSelect(color)}
+                  className={`px-3 py-1 border rounded-md text-sm sm:text-base  ${
+                    selectedColor === color ? "bg-btnbg text-white hover:bg-btnbghover" : "hover:bg-gray-200"
+                  }`}
+                >
+                  {color}
                 </button>
               ))}
             </div>
@@ -262,10 +234,11 @@ const TrandSection = () => {
               Buy Now 
               </button>
             </Link>
-            <Link to="/mycart" >
-              <button className="bg-orange-700 hover:bg-orange-400 w-full text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">
-               Add to Cart </button>
-            </Link>
+        
+              <button onClick={() => handleAddToCart({ product:modalProduct?._id ,price: modalProduct?.price ,quantity, size:selectedSize ,color: selectedColor })} className="bg-orange-700 hover:bg-orange-400 w-full text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">
+               Add to Cart
+               </button>
+     
           </div>
         </div>
       )}

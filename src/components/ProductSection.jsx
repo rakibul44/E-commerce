@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { productApi } from "../redux/apis/productApi";
 
 const ProductSection = () => {
-
   const { data: productsData, isLoading } = productApi.useGetNewFeaturedBestDealAndOnSellProductsQuery();
 
   if(isLoading){

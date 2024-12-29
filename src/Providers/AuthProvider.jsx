@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import  { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -146,6 +147,8 @@ const AuthProvider = ({ children }) => {
 
       }
       setLoading(false);
+      localStorage.setItem("email", currentUser?.email);
+
       console.log("current user --> : ", currentUser);
     });
     return () => {

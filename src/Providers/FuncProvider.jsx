@@ -7,7 +7,6 @@ import useAuth from "../hooks/useAuth";
 import Swal from "sweetalert2";
 import { wishlistApi } from "../redux/apis/wishlistApi";
 
-
 export const FuncContext = createContext(null);
 
 
@@ -17,10 +16,12 @@ const [ addToCart ] = cartsApi.useAddToCartMutation();
 const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
 const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation();
 const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
+// eslint-disable-next-line no-unused-vars
+const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id)
 
 
 // handle add to cart func
- const handleAddToCart = async(data, refetch) => {
+ const handleAddToCart = async(data) => {
  if(!loggedInUser){
   toast.error("Please login !");
   return;
@@ -38,7 +39,7 @@ const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
     const res =  await addToCart(cartData);
  
     if(res?.data?.success){
-        refetch()
+      refetchCarts()
         toast.success(res?.data?.message)
     } else if(res?.error?.data){
       toast.error(res?.error?.data?.message)
