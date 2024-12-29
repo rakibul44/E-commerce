@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import winter from "../assets/winter.jpg";
 import DenimJacket from "../assets/DenimJacket.jpg";
@@ -61,7 +60,7 @@ const promoItems = [
   },
 ];
 
-const PromoSection = () => {
+const PromotionalSection = () => {
   return (
     <section className="p-4 bg-gray-50">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -132,4 +131,4 @@ const PromoSection = () => {
   );
 };
 
-export default PromoSection;
+export default PromotionalSection;
