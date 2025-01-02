@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+// import { FaEdit } from "react-icons/fa";
 import { cartsApi } from "../redux/apis/cartsApi";
 import useFunc from "../hooks/useFunc";
 import useAuth from "../hooks/useAuth";
@@ -17,8 +18,7 @@ const Cart = () => {
   const carts = cartsData?.data?.result || [];
   const subTotalPrice = cartsData?.data?.subTotalPrice;
 
-  console.log(carts)
- 
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 container mx-auto">
@@ -84,6 +84,10 @@ const Cart = () => {
             </div>
 
             {/* Remove Button */}
+            {/* <button onClick={() }>
+            <FaEdit  className="text-green-500 text-xl" />
+            </button> */}
+        
             <button
               onClick={() => handleDeleteCart(cart?._id, refetch)}
               className="text-red-500 hover:text-red-700 text-center"

@@ -12,6 +12,7 @@ export default withMT({
       'btnbg': '#ff9800',
       'btnbghover':'#f57c00',
       'inputfocus':'#ffcc80',
+      'primarytext':'#ff9800',
     },
     extend: {
       screens: {

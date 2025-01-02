@@ -36,11 +36,11 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50 w-full">
-      <div className="flex justify-between items-center h-16 px-4">
+      <div className=" container mx-auto flex justify-between items-center h-16 px-4">
         {/* Logo */}
         <div>
           <Link to="/">
-            <img src={logo} alt="Logo" className="logo-image h-10 w-10" />
+            <img src={logo} alt="Logo" className="logo-image h-10 w-10  rounded-tl-md rounded-br-md" />
           </Link>
         </div>
 
