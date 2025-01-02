@@ -52,15 +52,15 @@ const Sidebar = () => {
     { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
     { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
 
-    isAdmin && { 
-      name: "Product Update", 
-      icon: <AiOutlineProduct />, 
-      isSubMenu: true, // Flag for submenu
-      subMenu: [
-        { name: "Add Product", link: "/dashboard/update" },
-        { name: "Product List", link: "/dashboard/productlist" },
-      ]
-    },
+    // isAdmin && { 
+    //   name: "Product Update", 
+    //   icon: <AiOutlineProduct />, 
+    //   isSubMenu: true,
+    //   subMenu: [
+    //     { name: "Add Product", link: "/dashboard/update" },
+    //     { name: "Product List", link: "/dashboard/productlist" },
+    //   ]
+    // },
     { name: "Order", icon: <BsBoxFill />, link: "/dashboard/order" },
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
@@ -72,22 +72,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Toggle Button for Mobile */}
-      <button
-        className="block md:hidden p-2 text-gray-600 focus:outline-none"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-
       {/* Sidebar */}
       <aside
         className={`w-64 bg-white shadow-lg h-auto fixed md:relative top-0 left-0 transform ${

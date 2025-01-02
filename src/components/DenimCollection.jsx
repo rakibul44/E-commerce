@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
 import { BiCartAdd } from 'react-icons/bi';
 import { GiSelfLove } from 'react-icons/gi';
 import { GrGallery } from 'react-icons/gr';
 import { Link } from 'react-router-dom';
-import { Dialog, DialogBody } from '@material-tailwind/react';
+import { Dialog, DialogBody, DialogFooter } from '@material-tailwind/react';
 import { IoClose } from 'react-icons/io5'; // Close Icon
 import TNF from '../assets/TNF.jpg';
 
@@ -31,6 +31,7 @@ const products = [
     description:
       "Captivate with this shirt's versatile urban look that works as well at happy hour as it does in the back yard.",
     sizes: ['M', 'L', 'XL', 'S'],
+    colors: ['#708090', '#f5f5f5', '#ffb6c1', '#ff1493', '#000000', '#87ceeb'],
   },
   {
     id: 2,
@@ -50,8 +51,8 @@ const products = [
     tags: ['Accessories', 'Men', 'Tomford', 'Trousers', "Women's"],
     description:
       "Captivate with this shirt's versatile urban look that works as well at happy hour as it does in the back yard.",
-    
     sizes: ['M', 'L', 'XL', 'S'],
+    colors: ['#708090', '#f5f5f5', '#ffb6c1', '#ff1493', '#000000', '#87ceeb'],
   },
   {
     id: 3,
@@ -71,8 +72,8 @@ const products = [
     tags: ['Accessories', 'Men', 'Tomford', 'Trousers', "Women's"],
     description:
       "Captivate with this shirt's versatile urban look that works as well at happy hour as it does in the back yard.",
-    
     sizes: ['M', 'L', 'XL', 'S'],
+    colors: ['#708090', '#f5f5f5', '#ffb6c1', '#ff1493', '#000000', '#87ceeb'],
   },
   {
     id: 4,
@@ -92,8 +93,8 @@ const products = [
     tags: ['Accessories', 'Men', 'Tomford', 'Trousers', "Women's"],
     description:
       "Captivate with this shirt's versatile urban look that works as well at happy hour as it does in the back yard.",
-    // colors: ['#708090', '#f5f5f5', '#ffb6c1', '#ff1493', '#000000', '#87ceeb'],
     sizes: ['M', 'L', 'XL', 'S'],
+    colors: ['#708090', '#f5f5f5', '#ffb6c1', '#ff1493', '#000000', '#87ceeb'],
   },
   // Additional products can go here...
 ];
@@ -144,7 +145,8 @@ const DenimCollection = () => {
           grabCursor={true}
           pagination={{ clickable: true }}
           centeredSlides={true}
-          modules={[Pagination]}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          modules={[Pagination, Autoplay]}
           className="mySwiper"
           breakpoints={{
             640: { slidesPerView: 1 },
@@ -235,7 +237,7 @@ const DenimCollection = () => {
               </p>
               <p className="text-gray-600">{modalProduct.description}</p>
               {/* Color code  */}
-              {/* <p>
+              <p>
                 <strong>Color:</strong> {modalProduct.colors[0]}
               </p>
               <div className="flex items-center gap-2">
@@ -246,7 +248,7 @@ const DenimCollection = () => {
                     style={{ backgroundColor: color }}
                   ></div>
                 ))}
-              </div> */}
+              </div>
               <p>
                 <strong>Size :</strong>
               </p>
