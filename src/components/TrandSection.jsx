@@ -38,6 +38,7 @@ const TrandSection = () => {
   const openModal = (product) => {
     setModalProduct(product);
     setSelectedSize(null); // Reset size selection
+    setSelectedColor(null); // Reset color selection
     setQuantity(1); // Reset quantity
   };
 
@@ -61,7 +62,7 @@ const TrandSection = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Section Title */}
       <h2 className="text-center text-3xl font-bold mb-4">
-        {"Trendsetter's Picks"}
+        Trendsetter's Picks
       </h2>
 
       {/* Categories */}
@@ -113,7 +114,6 @@ const TrandSection = () => {
                 />
               </Link>
 
-              {/* Button on Hover */}
               <button
                 onClick={() => openModal(product)}
                 className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition"
@@ -143,15 +143,6 @@ const TrandSection = () => {
         ))}
       </div>
 
-      {/* View More Button */}
-      <Link to='/product' className="flex justify-center mt-8">
-        <button className="bg-orange-700 hover:bg-orange-400 text-white px-6 py-2 rounded text-sm sm:text-base">
-          View More
-          <span className="ml-2">→</span>
-        </button>
-        
-      </Link>
-
       {/* Modal */}
       {modalProduct && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
@@ -172,11 +163,12 @@ const TrandSection = () => {
             <p className="text-black font-bold text-lg sm:text-xl text-center mb-2">
               {modalProduct?.price}
             </p>
+
             {/* Size Selector */}
          
             <div className="flex flex-wrap items-center gap-2 mt-2">
             <p className="text-sm sm:text-base">
-              <strong>Size :</strong>
+              <strong>Size:</strong>
             </p>
               {modalProduct?.sizes.map((size, index) => (
                 <button
@@ -222,16 +214,14 @@ const TrandSection = () => {
               <span className="text-lg sm:text-xl">{quantity}</span>
               <button
                 onClick={() => handleQuantityChange(1)}
-                className="px-3 py-1 border rounded-md text-sm sm:text-base"
+                className="px-3 py-1 border rounded-md m-4 text-sm sm:text-base"
               >
                 +
               </button>
             </div>
 
-            <Link to="/payment" >
-              <button className="bg-orange-700 w-full hover:bg-orange-400 text-white px-4 py-2 rounded  mt-4 text-sm sm:text-base">
-              Buy Now 
-              </button>
+            <Link className="bg-orange-700 hover:bg-orange-400 text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">
+              Buy Now
             </Link>
         
               <button onClick={() => handleAddToCart({ product:modalProduct?._id ,price: modalProduct?.price ,quantity, size:selectedSize ,color: selectedColor })} className="bg-orange-700 hover:bg-orange-400 w-full text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">

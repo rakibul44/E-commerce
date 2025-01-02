@@ -145,6 +145,5 @@ export const productApi = apiService.injectEndpoints({
       method: "GET"
       })
     }),
-
   }),
 });

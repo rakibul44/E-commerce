@@ -12,6 +12,8 @@ const HeaderSection = () => {
     });
   };
 
+  console.log("images: ", productData)
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-screen bg-white text-white ">
       {/* Left Section */}

@@ -12,6 +12,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Wishlist from "../pages/Wishlist";
 import Mycart from "../pages/Mycart";
+import Blog from "../pages/Blog";
 
 // dashboard pages 
 import DashboardLayout from "../layout/DashboardLayout";
@@ -35,6 +36,7 @@ import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
 import AllBrands from "../dashboard/pages/categoryAndBrand/AllBrands";
 import AddBrand from "../dashboard/pages/categoryAndBrand/AddBrand";
 import EditBrand from "../dashboard/pages/categoryAndBrand/EditBrand";
+
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
 
@@ -50,6 +52,8 @@ const mainRoutes = [
     { path: '/register',     element: <Register /> },
     { path: '/wishlist',     element: <Wishlist /> },
     { path: '/mycart',     element: <Mycart /> },
+    { path: '/blog',     element: <Blog /> },
+
 ];
 
 // dashboard routes
