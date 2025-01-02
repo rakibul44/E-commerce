@@ -6,9 +6,8 @@ const PromotionalSection = () => {
   const { data: productData } = productApi.useGetTopSevenDiscountCategoriesQuery();
 
   const products = productData?.data || [];
-
   const topOne = products?.length > 0 && products[0];
-
+   
   
   return (
     <section className="p-4 bg-gray-50">

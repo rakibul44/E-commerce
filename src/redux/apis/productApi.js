@@ -138,5 +138,13 @@ export const productApi = apiService.injectEndpoints({
       })
     }),
 
+    // top-selling-twoproduct-image
+    getTopSellingInStockProductImages : builder.query({
+      query: () => ({
+      url: "/products/top-selling-twoproduct-image",
+      method: "GET"
+      })
+    }),
+
   }),
 });
