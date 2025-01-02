@@ -94,7 +94,7 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out z-50`}
       >
-        <h2 className="text-2xl font-bold mb-6 p-4">Admin Dashboard</h2>
+        <Link to={"/"} className="text-2xl font-bold mb-6 p-4">Admin Dashboard</Link>
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
             item && (

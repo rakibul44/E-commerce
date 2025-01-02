@@ -121,5 +121,22 @@ export const productApi = apiService.injectEndpoints({
         body: ratingsData,
       }),
     }),
+
+    // get top four category 
+    getTopDiscountCategories : builder.query({
+      query: () => ({
+      url: "/products/top-four-categories",
+      method: "GET"
+      })
+    }),
+
+    // get top six discount product category 
+    getTopSevenDiscountCategories : builder.query({
+      query: () => ({
+      url: "/products/top-six-discount-categories",
+      method: "GET"
+      })
+    }),
+
   }),
 });

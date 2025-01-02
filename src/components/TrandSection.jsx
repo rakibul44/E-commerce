@@ -3,7 +3,6 @@ import { FaCartPlus } from "react-icons/fa";
 import { Link } from "react-router-dom"; 
 import { productApi } from "../redux/apis/productApi";
 import useFunc from "../hooks/useFunc";
-import { categoryApi } from "../redux/apis/categoryApi";
 
 
 const TrandSection = () => {
@@ -14,7 +13,7 @@ const TrandSection = () => {
   const [quantity, setQuantity] = useState(1);
   const { handleAddToCart } = useFunc();
 
-  const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
+  const { data: categoryData } = productApi.useGetTopDiscountCategoriesQuery();
   const { data: productData, isLoading } = productApi.useGetTrandingProductsQuery(filter);
   
 
@@ -82,15 +81,15 @@ const TrandSection = () => {
         {
           categories?.length > 0 && categories?.map((cat) => (
             <button
-            key={ cat?._id}
+            key={ cat?.category}
             className={`px-4 py-2 rounded text-sm sm:text-base ${
-              filter === cat?._id
+              filter === cat?.category
                 ? "bg-black text-white"
                 : "bg-gray-200 hover:bg-black hover:text-white"
             }`}
-            onClick={() => setFilter(cat?._id)}
+            onClick={() => setFilter(cat?.category)}
           >
-            {cat?.name}
+            {cat?.categoryName}
           </button>
           ))
         }

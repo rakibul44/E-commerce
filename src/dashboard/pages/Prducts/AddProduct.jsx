@@ -300,7 +300,7 @@ const AddProduct = () => {
         <div className="mb-4">
           <h3 className="text-sm font-medium">Upload images</h3>
           <div className="flex gap-4 mt-2 flex-wrap">
-            {images.length < 4 && (
+            {images.length < 6 && (
               <label className="border-2 border-dashed flex items-center justify-center w-28 h-28 rounded-md cursor-pointer">
                 <input
                   type="file"

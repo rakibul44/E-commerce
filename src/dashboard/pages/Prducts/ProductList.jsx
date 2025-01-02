@@ -80,10 +80,11 @@ const ProductList = () => {
         <table className="min-w-full bg-white border rounded-lg">
           <thead>
             <tr className="w-full bg-gray-200">
+            <th className="py-2 px-4">ID</th>
               <th className="py-2 px-4 text-left">Product</th>
-              <th className="py-2 px-4">Product ID</th>
+              <th className="py-2 px-4 text-left">Category</th>
               <th className="py-2 px-4">Price</th>
-              <th className="py-2 px-4">Stock</th>
+              <th className="py-2 px-4">Discount</th>
               <th className="py-2 px-4">Sale</th>
               <th className="py-2 px-4">Stock</th>
               <th className="py-2 px-4">Action</th>
@@ -95,22 +96,32 @@ const ProductList = () => {
                 key={product.id}
                 className="hover:bg-gray-100 border-b transition duration-300"
               >
+              <td className="py-2 px-4 text-center">
+                {(() => {
+                  const splitId = product.id.split('-');
+                  return splitId[1];
+                })()}
+                </td>
                 <td className="py-2 px-4 flex items-center space-x-2">
                   <img
                     src={product?.images[0]}
                     alt={product?.name}
                     className="w-10 h-10 object-cover rounded"
                   />
+                  <span className=" flex flex-col">
                   <span>{product?.name}</span>
+                  <span className="  text-primarytext text-xs">({product?.brandName }) </span>
+                  </span>
                 </td>
-                <td className="py-2 px-4 text-center">
-                {(() => {
-                  const splitId = product.id.split('-');
-                  return splitId[1];
-                })()}
-                </td>
+     
+                <td className="py-2 px-4 text-center">{product?.categoryName}</td>
                 <td className="py-2 px-4 text-center">{product?.price}</td>
-                <td className="py-2 px-4 text-center">{product?.stock}</td>
+                <td className="py-2 px-4 text-center">
+                   <span className=" flex flex-col">
+                   <span className="text-primarytext text-sm">{ product?.discountPercent}%</span>
+                   {product?.discountPrice}
+                   </span>
+                </td>
                 <td className="py-2 px-4 text-center">{product?.sale}</td>
                 <td className="py-2 px-4 text-center">
                   <span className="text-red-500 bg-red-100 px-2 py-1 rounded">
