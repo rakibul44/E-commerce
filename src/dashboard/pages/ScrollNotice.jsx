@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { scrollNoteApi } from "../../redux/apis/scrollNoteApi";
+import { useForm } from "react-hook-form";
 
 const ScrollNotice = () => {
-  const [notices, setNotices] = useState([
-    { id: 1, text: "50% discount going on " },
-    { id: 2, text: "New updates are coming soon!" },
-    { id: 3, text: "Remember to check your notifications daily." },
-  ]);
+  const id = "67763be0465f01ffc6f2caf3";
+  const { data: noteData, refetch } = scrollNoteApi.useGetLatestNoteByIdQuery(id);
+  const { register, handleSubmit } = useForm();
+  const [ updateNoteById ] = scrollNoteApi.useUpdateNoteByIdMutation();
 
-  const [newNotice, setNewNotice] = useState("");
+  const note = noteData?.data;
 
-  const handleAddNotice = () => {
-    if (newNotice.trim()) {
-      const updatedNotices = [
-        ...notices,
-        { id: notices.length + 1, text: newNotice },
-      ];
-      setNotices(updatedNotices);
-      setNewNotice("");
-    }
-  };
+ const handleUpdateNotice = async(data) => {
+   const res = await updateNoteById(id, data);
+   console.log(res?.data)
+   if(res?.data?.success){
+    toast.success("Notice updated successfull!");
+    refetch();
+   }
+ }
+
+
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-4">
@@ -28,22 +28,24 @@ const ScrollNotice = () => {
         Enter your scrollable notice here
       </label>
 
-      {/* Textarea */}
+    <form action="" onSubmit={handleSubmit(handleUpdateNotice)}>
+                {/* Textarea */}
       <textarea
-        value={newNotice}
-        onChange={(e) => setNewNotice(e.target.value)}
+        {...register("note")}
         rows="4"
         className="w-full p-4 border rounded-lg text-gray-700 resize-none focus:outline-blue-400"
         placeholder="Enter your notice here..."
+        defaultValue={note?.note}
       ></textarea>
 
       {/* Update Button */}
       <button
-        onClick={handleAddNotice}
+        type="submit"
         className="mt-4 px-6 py-2 bg-orange-500 text-white font-semibold rounded hover:bg-orange-800"
       >
         Update 
       </button>
+        </form>
     </div>
   );
 };

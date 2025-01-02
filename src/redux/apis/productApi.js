@@ -145,5 +145,23 @@ export const productApi = apiService.injectEndpoints({
       method: "GET"
       })
     }),
+
+    // top-discount-men-women-collection
+    getMenAndWomenCollectionProducts : builder.query({
+      query: () => ({
+      url: "/products/top-discount-men-women-collection",
+      method: "GET"
+      })
+    }),
+
+    // getDenimCollections
+    getDenimCollections : builder.query({
+      query: () => ({
+      url: "/products/get-denim-collections",
+      method: "GET"
+      })
+    }),
+
+
   }),
 });

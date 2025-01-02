@@ -62,7 +62,7 @@ const TrandSection = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Section Title */}
       <h2 className="text-center text-3xl font-bold mb-4">
-        Trendsetter's Picks
+        {`Trendsetter's Picks`}
       </h2>
 
       {/* Categories */}

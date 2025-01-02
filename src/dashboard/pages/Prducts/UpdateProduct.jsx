@@ -38,7 +38,7 @@ const UpdateProduct = () => {
   const brands = brandData?.data || [];
   const currentProduct = productData?.data;
   
-  console.log("isNewImage: ", isNewImage)
+  console.log(currentProduct)
 
     // Watch price and discountPercent fields
     const price = watch("price");
@@ -113,7 +113,9 @@ const UpdateProduct = () => {
         sizes: selectedSizes ,
         colors: colors,
         images: images,
-        stock: data?.stock ,
+        stock: data?.stock,
+        menCollection: data?.menCollection,
+        womenCollection: data?.womenCollection
     }
 
    try{
@@ -133,6 +135,8 @@ const UpdateProduct = () => {
     formData.append("description", data?.description);
     formData.append("price", data?.price);
     formData.append("discountPrice", data?.discountPrice);
+    formData.append("menCollection", data?.menCollection);
+    formData.append("womenCollection", data?.womenCollection);
     formData.append("stock", data?.stock);
     formData.append("sizes", JSON.stringify(selectedSizes));
     formData.append("colors", JSON.stringify(colors));  
@@ -265,7 +269,7 @@ const UpdateProduct = () => {
           type="number"
           placeholder="Enter discount price Percent"
           {...register("discountPercent", {
-            min: { value: 1, message: "Discount Price percent must be a positive value" },
+            min: { value: 0, message: "Discount Price percent must be a positive value" },
             max: { value: 100, message: "Discount price percent not greater than 100" }
           })}
           className="w-full border p-2 rounded-md"
@@ -399,6 +403,28 @@ const UpdateProduct = () => {
             ))}
           </div>
         </div>
+          {/* Men or Women Collection */}
+          <div className="mb-4">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                {...register("menCollection")}
+                className="form-checkbox h-5 w-5 text-blue-600"
+                defaultChecked={currentProduct?.menCollection}
+              />
+              <span className="ml-2 text-gray-700">{`Men's Collection`}</span>
+            </label>
+            <label className="inline-flex items-center ml-4">
+              <input
+                type="checkbox"
+                {...register("womenCollection")}
+                className="form-checkbox h-5 w-5 text-blue-600"
+                defaultChecked={currentProduct?.womenCollection}
+              />
+              <span className="ml-2 text-gray-700">{`Women's Collection`}</span>
+            </label>
+          </div>
+
 
         {/* Sizes */}
         <div className="mb-4">

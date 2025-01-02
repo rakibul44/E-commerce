@@ -19,6 +19,24 @@ export const scrollNoteApi = apiService.injectEndpoints({
       }),
     }),
 
+    // get latest one by id
+    getLatestNoteById: builder.query({
+      query: (id) => ({
+        url: `notes/get-a-note/${id}`,
+        method: "GET",
+      }),
+    }),
+
+
+    // update
+    updateNoteById: builder.mutation({
+      query: (id, data) => ({
+        url: `notes/update/${id}`,
+        method: "PATCH",
+        body: data
+      }),
+    }),
+
   }),
 });
 
