@@ -1,66 +1,39 @@
-import React, { useState } from "react";
+import  { useEffect, useState } from "react";
 import { FaCartPlus } from "react-icons/fa";
-import { Link } from "react-router-dom"; // Import Link for navigation
-import cloth from "../assets/cloth.jpg";
-import TNF from "../assets/TNF.jpg";
-import denim from "../assets/denim.jpg";
-import woman from "../assets/woman.jpg";
+import { Link } from "react-router-dom"; 
+import { productApi } from "../redux/apis/productApi";
+import useFunc from "../hooks/useFunc";
 
-const products = [
-  {
-    id: "tshirts",
-    category: "T-Shirts",
-    name: "Sleek Slim Fit Suit",
-    price: "$25.00",
-    image: cloth,
-    status: "",
-    link: "/product/tshirts",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Red", "Blue", "Black"],
-  },
-  {
-    id: "jeans",
-    category: "Jeans",
-    name: "Denim Skinny Jeans",
-    price: "$21.00",
-    image: TNF,
-    link: "/product/jeans",
-    sizes: ["28", "30", "32", "34"],
-    colors: ["Light Blue", "Dark Blue", "White"],
-  },
-  {
-    id: "jackets",
-    category: "Shirts",
-    name: "Quilted Puffer Jacket",
-    price: "$20.00",
-    image: denim,
-    link: "/product/jackets",
-    sizes: ["M", "L", "XL"],
-    colors: ["Green", "Black", "Gray"],
-  },
-  {
-    id: "pants",
-    category: "Accessories",
-    name: "Men's Classic Chino Pants",
-    price: "$15.00",
-    image: woman,
-    link: "/product/pants",
-    sizes: ["30", "32", "34", "36"],
-    colors: ["Khaki", "Navy", "Beige"],
-  },
-];
 
 const TrandSection = () => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState(null);
   const [modalProduct, setModalProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null); // New state for selected color
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const { handleAddToCart } = useFunc();
 
-  const filteredProducts =
-    filter === "all"
-      ? products
-      : products.filter((product) => product.id === filter);
+  const { data: categoryData } = productApi.useGetTopDiscountCategoriesQuery();
+  const { data: productData, isLoading } = productApi.useGetTrandingProductsQuery(filter);
+  
+
+  // initially set color and size
+  useEffect(() => {
+    const firstColor = modalProduct?.colors?.length > 0 ? modalProduct?.colors[0]: "";
+    setSelectedColor(firstColor);
+    const firstSize = modalProduct?.sizes?.length > 0 ? modalProduct?.sizes[0] : "";
+    setSelectedSize(firstSize);
+    
+  }, [modalProduct])
+
+
+  if(isLoading){
+    return <p>Loading..</p>
+  }
+  const trandingProducts = productData?.data || [];
+  const categories = categoryData?.data || [];
+
+
 
   const openModal = (product) => {
     setModalProduct(product);
@@ -92,17 +65,50 @@ const TrandSection = () => {
         Trendsetter's Picks
       </h2>
 
+      {/* Categories */}
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <button
+          className={`px-4 py-2 rounded text-sm sm:text-base ${
+            filter === null
+              ? "bg-black text-white"
+              : "bg-gray-200 hover:bg-black hover:text-white"
+          }`}
+          onClick={() => setFilter(null)}
+        >
+          All
+        </button>
+
+
+        {
+          categories?.length > 0 && categories?.map((cat) => (
+            <button
+            key={ cat?.category}
+            className={`px-4 py-2 rounded text-sm sm:text-base ${
+              filter === cat?.category
+                ? "bg-black text-white"
+                : "bg-gray-200 hover:bg-black hover:text-white"
+            }`}
+            onClick={() => setFilter(cat?.category)}
+          >
+            {cat?.categoryName}
+          </button>
+          ))
+        }
+
+      </div>
+
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {filteredProducts.map((product, index) => (
+        { trandingProducts?.map((product) => (
           <div
-            key={index}
+            key={product?._id}
             className="border p-4 rounded shadow-sm hover:shadow-lg transition"
           >
             <div className="relative group">
-              <Link to={product.link}>
+              {/* Image with Link */}
+              <Link to={`/${product?._id}`}>
                 <img
-                  src={product.image}
+                  src={product?.images[0]}
                   alt={product.name}
                   className="w-full h-40 sm:h-48 object-cover rounded"
                 />
@@ -112,12 +118,27 @@ const TrandSection = () => {
                 onClick={() => openModal(product)}
                 className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition"
               >
-                Quickshop
+                <span className="bg-white text-midnight p-2 hover:bg-orange-700 rounded-full">Quickshop</span>
+              </button>
+
+              {/* Status Badge */}
+              {product.status && (
+                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                  {product.status}
+                </span>
+              )}
+
+              {/* Favorite Icon */}
+              <button 
+              onClick={() => handleAddToCart({ product:product?._id ,price: product?.price, quantity: 1, size: product?.sizes[0], color: product?.colors[0] })}
+               className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
+                <FaCartPlus />
               </button>
             </div>
-            <h3 className="text-lg font-semibold mt-4 text-sm sm:text-lg">{product.name}</h3>
-            <p className="text-gray-500 text-xs sm:text-sm">{product.category}</p>
-            <p className="text-black font-bold text-sm sm:text-base">{product.price}</p>
+            {/* Product Details */}
+            <h3 className="text-lg font-semibold mt-4  sm:text-lg">{product?.name}</h3>
+            <p className="text-gray-500 text-xs sm:text-sm">{product?.categoryName}</p>
+            <p className="text-black font-bold text-sm sm:text-base">{product?.price}</p>
           </div>
         ))}
       </div>
@@ -132,28 +153,29 @@ const TrandSection = () => {
             >
               &times;
             </button>
-            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{modalProduct.name}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{modalProduct?.name}</h3>
             <img
-              src={modalProduct.image}
-              alt={modalProduct.name}
-              className="w-full h-40 sm:h-48 object-cover rounded mb-4"
+              src={modalProduct?.images[0]}
+              alt={modalProduct?.name}
+              className="w-full h-40 sm:h-48 object-cover rounded mb-2"
             />
-            <p className="text-gray-500 mb-4 text-center">{modalProduct.category}</p>
-            <p className="text-black font-bold text-lg sm:text-xl text-center mb-4">
-              {modalProduct.price}
+            <p className="text-gray-500 mb-2 text-center">{modalProduct?.categoryName}</p>
+            <p className="text-black font-bold text-lg sm:text-xl text-center mb-2">
+              {modalProduct?.price}
             </p>
 
             {/* Size Selector */}
+         
+            <div className="flex flex-wrap items-center gap-2 mt-2">
             <p className="text-sm sm:text-base">
               <strong>Size:</strong>
             </p>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              {modalProduct.sizes.map((size, index) => (
+              {modalProduct?.sizes.map((size, index) => (
                 <button
                   key={index}
                   onClick={() => handleSizeSelect(size)}
-                  className={`px-3 py-1 border rounded-md text-sm sm:text-base hover:bg-gray-200 ${
-                    selectedSize === size ? "bg-gray-300" : ""
+                  className={`px-3 py-1 border rounded-md text-sm sm:text-base  ${
+                    selectedSize === size ?  "bg-btnbg text-white hover:bg-btnbghover" : "hover:bg-gray-200"
                   }`}
                 >
                   {size}
@@ -161,17 +183,19 @@ const TrandSection = () => {
               ))}
             </div>
 
-            {/* Color Selector */}
-            <p className="text-sm sm:text-base mt-4">
+
+               {/* Color Selector */}
+       
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+            <p className="text-sm sm:text-base ">
               <strong>Color:</strong>
             </p>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              {modalProduct.colors.map((color, index) => (
+              {modalProduct?.colors?.map((color, index) => (
                 <button
                   key={index}
                   onClick={() => handleColorSelect(color)}
-                  className={`px-3 py-1 border rounded-md text-sm sm:text-base hover:bg-gray-200 ${
-                    selectedColor === color ? "bg-gray-300" : ""
+                  className={`px-3 py-1 border rounded-md text-sm sm:text-base  ${
+                    selectedColor === color ? "bg-btnbg text-white hover:bg-btnbghover" : "hover:bg-gray-200"
                   }`}
                 >
                   {color}
@@ -199,9 +223,11 @@ const TrandSection = () => {
             <Link className="bg-orange-700 hover:bg-orange-400 text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">
               Buy Now
             </Link>
-            <Link className="bg-orange-700 hover:bg-orange-400 text-white px-4 py-2 rounded m-4 text-sm sm:text-base">
-              Buy Now
-            </Link>
+        
+              <button onClick={() => handleAddToCart({ product:modalProduct?._id ,price: modalProduct?.price ,quantity, size:selectedSize ,color: selectedColor })} className="bg-orange-700 hover:bg-orange-400 w-full text-white px-4 py-2 rounded mt-4 text-sm sm:text-base">
+               Add to Cart
+               </button>
+     
           </div>
         </div>
       )}

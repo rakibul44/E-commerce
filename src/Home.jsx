@@ -1,4 +1,3 @@
-import React from "react";
 // import Slider from "./components/Slider";
 import BenefitsSection from "./components/BenefitsSection";
 import Collections from "./components/Collections";

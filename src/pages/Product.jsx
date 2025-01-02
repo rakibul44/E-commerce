@@ -19,7 +19,7 @@ function Product() {
     colors: [],
     brand: [],
   });
-  const { handleAddToCart } = useFunc();
+  const { handleAddToCart, handleAddToWishlist } = useFunc();
   const { data: filtersOptions } = categoryApi.useGetFiltreOptionsByCategoriesBrandsAndOthersQuery();
   const filters = filtersOptions?.data || [];
   const filterParams = new URLSearchParams();
@@ -160,8 +160,9 @@ function Product() {
                   className="w-full h-48 object-cover rounded"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                  <button onClick={() => handleAddToWishlist({ product: product?._id})}>
                   <GiSelfLove className="text-white text-3xl mx-2 cursor-pointer hover:scale-110 transition-transform" />
-              
+                    </button>              
                   <button
                     className="text-white text-3xl mx-2 cursor-pointer hover:scale-110 transition-transform flex justify-center items-center"
                     onClick={() =>

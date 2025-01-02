@@ -23,8 +23,8 @@ export const productApi = apiService.injectEndpoints({
 
     // Get tranding-products
     getTrandingProducts: builder.query({
-      query: () => ({
-        url: `products/tranding-products`,
+      query: (category) => ({
+        url: `products/tranding-products?category=${category}`,
         method: "GET",
       }),
     }),
@@ -57,7 +57,7 @@ export const productApi = apiService.injectEndpoints({
     // Update product with images by ID
     updateProductWithImageById: builder.mutation({
       query: ({ id, formData }) => ({
-        url: `products/update-with-images/${id}`,
+        url: `products/update-with-images/${id}?locationFolder=product-images`,
         method: "PATCH",
         body: formData,
       }),
@@ -121,5 +121,22 @@ export const productApi = apiService.injectEndpoints({
         body: ratingsData,
       }),
     }),
+
+    // get top four category 
+    getTopDiscountCategories : builder.query({
+      query: () => ({
+      url: "/products/top-four-categories",
+      method: "GET"
+      })
+    }),
+
+    // get top six discount product category 
+    getTopSevenDiscountCategories : builder.query({
+      query: () => ({
+      url: "/products/top-six-discount-categories",
+      method: "GET"
+      })
+    }),
+
   }),
 });

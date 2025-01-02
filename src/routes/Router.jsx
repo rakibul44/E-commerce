@@ -27,8 +27,9 @@ import Customer from "../dashboard/pages/Customer";
 import Campaign from "../dashboard/pages/Campaign";
 import Message from "../dashboard/pages/Message";
 import ScrollNotice from "../dashboard/pages/ScrollNotice";
-import ProductList from "../dashboard/pages/ProductList";
-import AddProduct from "../dashboard/pages/AddProduct";
+import ProductList from "../dashboard/pages/Prducts/ProductList";
+import AddProduct from "../dashboard/pages/Prducts/AddProduct";
+import UpdateProduct from "../dashboard/pages/Prducts/UpdateProduct";
 import Categories from "../dashboard/pages/categoryAndBrand/Categories";
 import AddCategory from "../dashboard/pages/categoryAndBrand/AddCategory";
 import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
@@ -71,6 +72,7 @@ const dashboardRoute = [
     {  path:'notice',    element: <ScrollNotice /> },
     {  path:'productlist',    element: <ProductList /> },
     {  path:'add-product',    element: <AddProduct /> },
+    {  path:'update-product/:id',    element: <UpdateProduct /> },
     {  path:'categories',    element: <Categories /> },
     {  path:'add-category',    element: <AddCategory /> },
     {  path:'edit-category/:id',    element: <EditCategory /> },
