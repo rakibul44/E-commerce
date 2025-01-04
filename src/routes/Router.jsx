@@ -36,6 +36,7 @@ import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
 import AllBrands from "../dashboard/pages/categoryAndBrand/AllBrands";
 import AddBrand from "../dashboard/pages/categoryAndBrand/AddBrand";
 import EditBrand from "../dashboard/pages/categoryAndBrand/EditBrand";
+import OrderSingleProduct from "../pages/OrderSingleProduct";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -53,8 +54,9 @@ const mainRoutes = [
     { path: '/wishlist',     element: <Wishlist /> },
     { path: '/mycart',     element: <Mycart /> },
     { path: '/blog',     element: <Blog /> },
-
+    { path: '/buy-now/:id',     element: <OrderSingleProduct /> },
 ];
+
 
 // dashboard routes
 const dashboardRoute = [

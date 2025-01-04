@@ -1,22 +1,24 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import denim from "../assets/denim.jpg";
+import { BDLocations } from 'react-bd-location';
+import useAuth from "../hooks/useAuth";
+
 
 const Payment = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    apartment: "",
-    city: "",
-    state: "",
-    zip: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const [division, setDivision] = useState("");
+  const [district, setDistrict] = useState("");
+  const [upazila, setUpazila] = useState("");
 
-  const [selectedPayment, setSelectedPayment] = useState("COD");
-  const [formError, setFormError] = useState(false);
+  const { loggedInUser } = useAuth()
 
+  const selectedPayment = watch("payment", "COD");
   const cartItems = [
     {
       id: 1,
@@ -25,77 +27,6 @@ const Payment = () => {
       size: "Size : S",
       color: "Color : Outer Space",
       image: denim, // Replace with your image URL
-    },
-  ];
-
-  const formFields = [
-    {
-      id: "email",
-      type: "email",
-      name: "email",
-      placeholder: "Email or mobile phone number",
-      className: "w-full border p-2 rounded mb-6",
-      required: true,
-    },
-    {
-      id: "firstName",
-      type: "text",
-      name: "firstName",
-      placeholder: "First name",
-      className: "border w-full p-2 rounded mb-6 mr-6",
-      required: true,
-    },
-    {
-      id: "lastName",
-      type: "text",
-      name: "lastName",
-      placeholder: "Last name",
-      className: "border w-full p-2 rounded mb-6",
-      required: true,
-    },
-    {
-      id: "address",
-      type: "text",
-      name: "address",
-      placeholder: "Address",
-      className: "w-full border p-2 rounded mb-6",
-      required: true,
-    },
-    {
-      id: "apartment",
-      type: "text",
-      name: "Size",
-      placeholder: "size : S, M, etc.",
-      className: "w-full border p-2 rounded mb-6",
-      required: false,
-    },
-    {
-      id: "state",
-      type: "select",
-      name: "District",
-      options: [
-        { value: "", label: "District" },
-        { value: "CA", label: "California" },
-        { value: "NY", label: "New York" },
-      ],
-      className: "border p-2 rounded mb-6",
-      required: true,
-    },
-    {
-      id: "city",
-      type: "text",
-      name: "Thana",
-      placeholder: "Thana",
-      className: "w-full border p-2 rounded mb-6",
-      required: true,
-    },
-    {
-      id: "zip",
-      type: "text",
-      name: "zip",
-      placeholder: "ZIP code",
-      className: "w-full border p-2 rounded mb-6",
-      required: true,
     },
   ];
 
@@ -108,23 +39,45 @@ const Payment = () => {
     "Nagad",
   ];
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+  const products = []
+
+  // handle order
+  const handleOrder = async(data) => {
+    console.log(data);
+    const orderData = {
+      client: loggedInUser?._id,
+      clientName: data?.name,
+      clientPhone: data?.phone,
+      clientEmail: loggedInUser?.email,
+      products: products,
+      address: data?.address,
+      shippingAddress: {
+        division,
+        district,
+        upazila,
+      },
+      shippingCost: 20,
+      paymentMethod: data?.paymentMethod,
+      orderNotes: data?.orderNotes,
+    };
+
+  
+
+    console.log(orderData);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const isFormComplete = formFields.every(
-      (field) => !field.required || formData[field.name]?.trim()
-    );
-    if (isFormComplete) {
-      setFormError(false);
-      // Navigate to the confirmation page
-      window.location.href = "/confirmation";
-    } else {
-      setFormError(true);
-    }
+
+    // Handle location change
+    const handleLocationChange = (location) => {
+      console.log(location)
+      if(location.id){
+        setDivision(location?.name)
+      }
+     if(location.division_id){
+      setDistrict(location?.name)
+     }
+     setUpazila(location?.name)
   };
 
   return (
@@ -132,78 +85,85 @@ const Payment = () => {
       {/* Left Section: Form */}
       <div className="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-6">Contact</h2>
-        {formFields.map((field) => {
-          if (field.type === "select") {
-            return (
-              <select
-                key={field.id}
-                name={field.name}
-                value={formData[field.name]}
-                onChange={handleInputChange}
-                className={`${field.className} w-full`}
-                required={field.required}
-              >
-                {field.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            );
-          }
-          return (
+        <form onSubmit={handleSubmit(handleOrder)}>
+          {/* Email Field */}
+          <input
+            type="email"
+            {...register("email", { required: true })}
+            placeholder="Email or mobile phone number"
+            className="w-full border p-2 rounded mb-6"
+          />
+          {errors.email && <p className="text-red-500 text-sm">Email is required.</p>}
+
+          {/* Full Name Field */}
+          <input
+            type="text"
+            {...register("fullName", { required: true })}
+            placeholder="Full name"
+            className="border w-full p-2 rounded mb-6 mr-6"
+          />
+          {errors.fullName && <p className="text-red-500 text-sm">Full name is required.</p>}
+
+
+         {/* address selectior */}
+          <div className=" my-3">
+          <h1> Select Your Address</h1>
+          <BDLocations onChange={handleLocationChange} bn={false} className =""/>
+        </div>
+
+
+          {/* Address Field */}
+          <input
+            type="text"
+            {...register("address", { required: true })}
+            placeholder="Full Address"
+            className="w-full border p-2 rounded mb-6"
+          />
+          {errors.address && <p className="text-red-500 text-sm">Address is required.</p>}
+
+
+ 
+          {/* Save Info Checkbox */}
+          <div className="flex items-center gap-2 mb-6">
             <input
-              key={field.id}
-              type={field.type}
-              name={field.name}
-              value={formData[field.name]}
-              onChange={handleInputChange}
-              placeholder={field.placeholder}
-              className={field.className}
-              required={field.required}
+              type="checkbox"
+              {...register("saveInfo")}
+              id="saveInfo"
+              className="w-4 h-4"
             />
-          );
-        })}
-
-        {formError && (
-          <p className="text-red-500 text-sm mb-4">You need to fill up all the fields.</p>
-        )}
-
-        <div className="flex items-center gap-2 mb-6">
-          <input type="checkbox" id="saveInfo" className="w-4 h-4" />
-          <label htmlFor="saveInfo" className="text-sm">
-            Save this information for next time
-          </label>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-6">Payment Details</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-          {paymentOptions.map((option) => (
-            <label
-              key={option}
-              className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:shadow-md"
-            >
-              <input
-                type="radio"
-                name="payment"
-                value={option}
-                checked={selectedPayment === option}
-                onChange={() => setSelectedPayment(option)}
-                className="w-4 h-4"
-              />
-              <span className="text-sm">{option}</span>
+            <label htmlFor="saveInfo" className="text-sm">
+              Save this information for next time
             </label>
-          ))}
-        </div>
+          </div>
 
-        <div className="mt-6">
-          <button
-            onClick={handleSubmit}
-            className="bg-orange-600 text-white py-3 px-4 w-full text-center rounded hover:bg-orange-700"
-          >
-            Proceed to Confirmation
-          </button>
-        </div>
+          <h2 className="text-2xl font-semibold mt-6">Payment Details</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+            {paymentOptions.map((option) => (
+              <label
+                key={option}
+                className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:shadow-md"
+              >
+                <input
+                  type="radio"
+                  {...register("payment")}
+                  value={option}
+                  defaultChecked={selectedPayment === option}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm">{option}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <button
+              type="submit"
+              className="bg-orange-600 text-white py-3 px-4 w-full text-center rounded hover:bg-orange-700"
+            >
+              Proceed to Confirmation
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Right Section: Cart Summary */}
@@ -229,11 +189,15 @@ const Payment = () => {
         <div className="border-t pt-6">
           <div className="flex justify-between mb-4">
             <span className="text-gray-600">Subtotal</span>
-            <span className="text-gray-800 font-medium">${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}</span>
+            <span className="text-gray-800 font-medium">
+              ${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}</span>
+            <span>
+              ${cartItems.reduce((total, item) => total + item.price, 0).toFixed(2)}
+            </span>
           </div>
         </div>
       </div>

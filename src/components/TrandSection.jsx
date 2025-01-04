@@ -185,7 +185,6 @@ const TrandSection = () => {
 
 
                {/* Color Selector */}
-       
             <div className="flex flex-wrap items-center gap-2 mt-2">
             <p className="text-sm sm:text-base ">
               <strong>Color:</strong>

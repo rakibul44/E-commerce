@@ -16,6 +16,7 @@ const [ addToCart ] = cartsApi.useAddToCartMutation();
 const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
 const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation();
 const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
+const [ deletewishlistById  ] = wishlistApi.useDeletewishlistByIdMutation();
 // eslint-disable-next-line no-unused-vars
 const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id)
 
@@ -37,7 +38,6 @@ const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUser
         color: data?.color
       }    
     const res =  await addToCart(cartData);
- 
     if(res?.data?.success){
       refetchCarts()
         toast.success(res?.data?.message)
@@ -88,15 +88,18 @@ const handleDeleteCart = async(id, refetch ) => {
 
   // handle quantity change
   const handleCartProductQuantityChange = async(id, quantityChange, refetch) => {
-    console.log(quantityChange)
      try{
         const res = await updateQuantityById({id, quantityChange});
         if(res?.data?.success){
             refetch();
             toast.success(res?.data?.message)
         }
+        else if(res?.error){
+          toast.error(res?.error?.data?.message)
+        }
+        console.log("res:" , res)
      } catch(err){
-        console.log(err)
+        console.log("error: ", err)
         toast.error(err?.data?.message)
      }
   };
@@ -120,11 +123,46 @@ const handleDeleteCart = async(id, refetch ) => {
   }
  }
 
+
+//  handle delete wishlist
+const handleDeleteWishlist = async(id, refetch ) => {
+  try{
+          Swal.fire({
+            title: "Are you sure?",
+            text: `You won't be able to revert !`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              deletewishlistById(id).then((res) => {
+                console.log(res)
+                if (res?.data?.success){
+                  refetch();
+                  Swal.fire({
+                    title: "Deleted!",
+                    text: `Product has been deleted from wishlist`,
+                    icon: "success",
+                  });
+                }
+      
+              });
+            }
+          });
+
+  } catch(error){
+      toast.error(error.message)
+  }
+}
+
     const functions = {
         handleAddToCart,
         handleDeleteCart,
         handleCartProductQuantityChange,
-        handleAddToWishlist
+        handleAddToWishlist,
+        handleDeleteWishlist
         
     }
     return (

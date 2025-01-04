@@ -1,39 +1,35 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineDelete } from "react-icons/ai";
-import TNF from '../assets/TNF.jpg';
+import { wishlistApi } from "../redux/apis/wishlistApi";
+import { FaCartPlus } from "react-icons/fa";
+import useFunc from "../hooks/useFunc";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
-const Wishlist = () => {
-  // State to store wishlist items
-  const [wishlistItems, setWishlistItems] = useState([
-    {
-      id: 1,
-      name: "Transition jacket with hood",
-      price: "$113.00",
-      image: TNF, // Replace with real image URL
-      link: "/product",
-    },
-    {
-      id: 2,
-      name: "Stylish winter coat",
-      price: "$150.00",
-      image: TNF, // Replace with real image URL
-      link: "/product",
-    },
-    {
-      id: 3,
-      name: "Casual hoodie for men",
-      price: "$89.99",
-      image: TNF, // Replace with real image URL
-      link: "/product",
-    },
-  ]);
+const Wishlist = () => {   
+  const { handleDeleteWishlist, handleAddToCart } = useFunc();
+  const [ deletewishlistById  ] = wishlistApi.useDeletewishlistByIdMutation();
+  const {data: wishlistProductData, refetch } = wishlistApi.useGetAllWishlistsByUserIpQuery();
 
-  // Function to handle item removal
-  const handleRemove = (id) => {
-    const updatedWishlist = wishlistItems.filter((item) => item.id !== id);
-    setWishlistItems(updatedWishlist);
-  };
+  const products = wishlistProductData?.data || [];
+  console.log("wishlistProductData: ", wishlistProductData);
+
+  // handle wishlist to cart data
+  const handleWishlistToCart = async(id, data) => {
+   const price = data?.discountPrice && data?.discountPrice < data?.price ?  data?.discountPrice : data?.price;
+   const size = data?.sizes?.length > 0 ? data?.sizes[0] : "";
+   const color = data?.colors?.length > 0 ? data?.colors[0] : "";
+    const cartData = { 
+      product: data?._id,
+      price,
+      quantity: 1,
+      size,
+      color
+    }
+    handleAddToCart(cartData);
+    await deletewishlistById(id);
+    refetch();
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -48,55 +44,67 @@ const Wishlist = () => {
       {/* Wishlist Table */}
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="grid grid-cols-5 gap-4 p-4 text-gray-700 font-semibold uppercase text-sm border-b">
+          <div className="grid grid-cols-6 gap-4 p-4 text-gray-700 font-semibold uppercase text-sm border-b">
             <span className="col-span-2">Your Favorite Products</span>
             <span>Price</span>
-            <span>Remove</span>
-            <span>Add to Bag</span>
+            <span>Action</span>
           </div>
 
           {/* Product List */}
-          {wishlistItems.length > 0 ? (
-            wishlistItems.map((item) => (
+          {products?.length > 0 ? (
+            products?.map((item) => (
               <div
-                key={item.id}
-                className="grid grid-cols-5 items-center gap-4 p-4 hover:bg-gray-50 border-b"
+                key={item?._id}
+                className="grid grid-cols-6 items-center gap-4 p-4 hover:bg-gray-50 border-b"
               >
                 {/* Product Image and Name */}
                 <div className="col-span-2 flex items-center">
-                  <Link to={item.link}>
+                  <Link to={item?.product?._id}>
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item?.product?.images}
+                      alt={item?.product?.name}
                       className="w-25 h-20 object-cover rounded mr-4"
                     />
                   </Link>
                   <Link
-                    to={item.link}
+                    to={item?.product?._id}
                     className="text-gray-800 hover:text-blue-500"
                   >
-                    {item.name}
+                    {item?.product?.name}
                   </Link>
                 </div>
 
                 {/* Price */}
-                <div className="text-gray-800">{item.price}</div>
-
-                {/* Remove Button */}
-                <div>
-                  <button
-                    onClick={() => handleRemove(item.id)} // Remove item on click
-                    className="text-gray-600 hover:text-red-500 flex items-center"
-                  >
-                    <span class='text-2xl'><AiOutlineDelete /></span>
-                  </button>
+                <div className= "col-span-2 text-gray-800 flex flex-col">
+                  <span className={`flex gap-1 items-center ${  item?.product?.discountPrice < item?.product?.price ? 'line-through text-gray-500':' text-gray-800'}`}>
+                  <FaBangladeshiTakaSign  className=" text-sm"/>
+                  {item?.product?.price}
+                  </span>
+                  { 
+                   item?.product?.discountPrice < item?.product?.price && 
+                   <span className=" flex gap-1 items-center">
+                    <FaBangladeshiTakaSign className=" text-sm"/>
+                   {item?.product?.discountPrice}
+                   </span> 
+                  }
+     
                 </div>
 
-                {/* Add to Bag Button */}
-                <div>
-                  <Link to ='/payment' className="bg-orange-600 text-white py-3 px-4 rounded hover:bg-orange-800 transition duration-300">
-                    Buy Now
-                  </Link>
+            
+
+                {/* Add to Bag Button  & remove */}
+                <div className=" col-span-2 flex gap-3">
+                <button
+                    onClick={() => handleDeleteWishlist(item?._id, refetch)} // Remove item on click
+                    className="text-gray-600 hover:text-red-500 flex items-center"
+                  >
+                    <span className='text-2xl'><AiOutlineDelete /></span>
+                  </button>
+                  <button 
+                   onClick={() => handleWishlistToCart(item?._id, item?.product)}
+                   className="bg-btnbg text-white py-1 px-2 rounded hover:bg-btnbghover transition duration-300">
+                <FaCartPlus />
+                  </button>
                 </div>
               </div>
             ))

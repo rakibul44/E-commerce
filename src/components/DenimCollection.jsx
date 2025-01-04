@@ -20,7 +20,7 @@ const DenimCollection = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const { handleAddToCart } = useFunc();
+  const { handleAddToCart, handleAddToWishlist } = useFunc();
   const { data: productData } = productApi.useGetDenimCollectionsQuery();
   const swiperRef = useRef(null); 
 
@@ -57,8 +57,6 @@ const DenimCollection = () => {
 
   // handle add to cart 
   const handleAddToCartFunc =  (product) => {
-    console.log("hitt")
-
     const price = product?.discountPrice && product?.discountPrice < product?.price ? product?.discountPrice : product?.price 
     const size = selectedSize?.length > 0 ? selectedSize : product?.sizes[0];
     const color = selectedColor?.length > 0 ? selectedColor : product?.colors[0];
@@ -127,11 +125,11 @@ const DenimCollection = () => {
                         <BiCartAdd />
                       </div>
                     </button >
-                    <Link to="/wishlist">
+                    <button onClick={() => handleAddToWishlist({ product: product?._id})}>
                       <div className="text-white text-2xl p-2 bg-gray-800 rounded-full hover:bg-gray-600">
                         <GiSelfLove />
                       </div>
-                    </Link>
+                    </button>
                     <button
                       onClick={() => handleOpen(product)}
                       className="text-white text-2xl p-2 bg-gray-800 rounded-full hover:bg-gray-600"
