@@ -110,10 +110,10 @@ const UpdateProduct = () => {
         price: Number(data?.price),
         discountPercent: Number(data?.discountPercent) ,
         discountPrice: Number(data?.discountPrice),
-        sizes: selectedSizes ,
+        sizes: selectedSizes,
         colors: colors,
         images: images,
-        stock: data?.stock,
+        stock: Number(data?.stock),
         menCollection: data?.menCollection,
         womenCollection: data?.womenCollection
     }

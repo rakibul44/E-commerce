@@ -23,7 +23,7 @@ const PromotionalSection = () => {
             {/* Overlay content */}
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white p-4">
               <p className="text-red-500 text-sm mb-1">
-                Save up to {topOne?.discountPercent}
+                Save up to {topOne?.discountPercent} %
               </p>
               <h3 className="text-lg font-bold mb-2">{topOne?.categoryName}</h3>
               <Link
@@ -64,7 +64,7 @@ const PromotionalSection = () => {
                 <h3 className="text-lg font-bold mb-2">{product?.categoryName}</h3>
                 { index >= 3 && (
                   <p className="text-gray-300 text-sm mb-2">
-                    Save up to {product?.discountPercent}
+                    Save up to {product?.discountPercent} %
                   </p>
                 )}
                 { index >= 3 && (

@@ -10,6 +10,15 @@ export const orderApi = apiService.injectEndpoints({
         body: data,
       }),
     }),
+
+    // sslcommerz order
+    createSslcommerzOrder: builder.mutation({
+      query: (data) => ({
+        url: `orders/create-sslcommerz-order`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { cartsApi } from "../redux/apis/cartsApi";
 import useFunc from "../hooks/useFunc";
 import useAuth from "../hooks/useAuth";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 const Cart = () => {
   const { loggedInUser } = useAuth()
@@ -108,9 +109,9 @@ const Cart = () => {
             </Link>
           </div>
           <div className="text-center md:text-right">
-            <p className="text-lg font-semibold">
+            <p className="text-lg font-semibold flex gap-1">
               Subtotal:{" "}
-              <span className="text-gray-800">${subTotalPrice?.toFixed(2)} USD</span>
+              <span className="text-gray-800 flex gap-1 items-center"> <FaBangladeshiTakaSign className=" text-sm"/> {subTotalPrice?.toFixed(2)} BDT</span>
             </p>
             <p className="text-sm mb-4 text-gray-500">
               Taxes and shipping calculated at checkout

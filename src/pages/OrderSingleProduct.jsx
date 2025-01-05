@@ -26,10 +26,10 @@ const OrderSingleProduct = () => {
   const { data: productData } = productApi.useGetProductByIdQuery(id);
   const { loggedInUser } = useAuth();
   const [ cashOnDeliveryOrder ] = orderApi.useCashOnDeliveryOrderMutation();
+  const [ createSslcommerzOrder ] = orderApi.useCreateSslcommerzOrderMutation();
 
 
   const product = productData?.data;
-  console.log(product)
 
   const selectedPayment = watch("paymentMethod", "COD");
 
@@ -48,7 +48,6 @@ const OrderSingleProduct = () => {
      { value: "sslcommerz", option:   "SSLCommerze"},
      { value: "bkash", option:   "Bkash"},
      { value: "nagad", option:   "Nagad"}
-
   ];
  
   const unitPrice = (product?.discountPrice && product?.discountPrice < product?.price ? product?.discountPrice : product?.price)
@@ -58,6 +57,7 @@ const OrderSingleProduct = () => {
   const products = [
     {
         product: product?._id,
+        name: product?.name,
         quantity,
         size: selectedSize,
         color: selectedColor,
@@ -68,7 +68,6 @@ const OrderSingleProduct = () => {
 
   // handle order
   const handleOrder = async(data) => {
-    console.log(data);
     const orderData = {
       client: loggedInUser?._id,
       clientName: data?.fullName,
@@ -82,13 +81,19 @@ const OrderSingleProduct = () => {
         upazila,
       },
       deliveryCharge,
+      totalAmount,
+      subtotal: totalPrice,
       paymentMethod: data?.paymentMethod,
       orderNotes: data?.orderNotes,
     };
 
     try{
-        const res = await cashOnDeliveryOrder(orderData);
-        console.log(res)
+      let res;
+      if(selectedPayment === "cash_on_delivery"){
+        res = await cashOnDeliveryOrder(orderData);
+      } else if(selectedPayment === "sslcommerz"){
+        res = await createSslcommerzOrder(orderData)
+      }
         if(res?.data?.success){
             toast.success(res?.data?.message)
         }
@@ -301,7 +306,7 @@ const OrderSingleProduct = () => {
               Proceed to Confirmation
             </button>
           </div>
-        </div>
+           </div>
         
            </div>
       
