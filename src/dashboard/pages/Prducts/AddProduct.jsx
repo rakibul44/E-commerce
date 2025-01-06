@@ -77,6 +77,8 @@ const AddProduct = () => {
     formData.append("description", data?.description);
     formData.append("price", data?.price);
     formData.append("discountPrice", data?.discountPrice);
+    formData.append("menCollection", data?.menCollection);
+    formData.append("womenCollection", data?.womenCollection);
     formData.append("stock", data?.stock);
     formData.append("sizes", JSON.stringify(selectedSizes));
     formData.append("colors", JSON.stringify(colors));  
@@ -102,7 +104,6 @@ const AddProduct = () => {
       console.log(error),
       toast.error(error?.data?.message)
     }
-    // Add your submission logic here
   };
 
   const handleImageUpload = (e) => {
@@ -329,6 +330,27 @@ const AddProduct = () => {
             ))}
           </div>
         </div>
+
+          {/* Men or Women Collection */}
+         <div className="mb-4">
+           <label className="inline-flex items-center">
+             <input
+               type="checkbox"
+               {...register("menCollection")}
+               className="form-checkbox h-5 w-5 text-blue-600"
+             />
+             <span className="ml-2 text-gray-700">{`Men's Collection`}</span>
+           </label>
+           <label className="inline-flex items-center ml-4">
+             <input
+               type="checkbox"
+               {...register("womenCollection")}
+               className="form-checkbox h-5 w-5 text-blue-600"
+             />
+             <span className="ml-2 text-gray-700">{`Women's Collection`}</span>
+           </label>
+         </div>
+
 
         {/* Sizes */}
         <div className="mb-4">

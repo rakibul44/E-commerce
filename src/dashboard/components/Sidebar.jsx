@@ -38,6 +38,15 @@ const Sidebar = () => {
         { name: "Add Brand ", link: "/dashboard/add-brand" },
       ]
     },
+    isAdmin && { 
+      name: "Blogs", 
+      icon: <AiOutlineProduct />, 
+      isSubMenu: true, // Flag for submenu
+      subMenu: [
+        { name: "Blogs", link: "/dashboard/all-blogs" },
+        { name: "Add Blog", link: "/dashboard/add-blog" },
+      ]
+    },
     // isAdmin && { name: "Dashboard", icon: <FaHome />, link: "/dashboard/admin" },
     isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
     isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },

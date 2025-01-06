@@ -35,4 +35,21 @@ export default [
       ],
     },
   },
+  {
+    files: ["tailwind.config.js", "webpack.config.js", "*.mjs"],
+    languageOptions: {
+      globals: globals.node, // Use Node.js globals like `module` and `require`
+      parserOptions: {
+        ecmaVersion: 2021,
+        sourceType: "script", // Use CommonJS-style syntax
+      },
+    },
+    env: {
+      node: true,
+    },
+    rules: {
+      // Add rules specific to configuration files if needed
+    },
+  },
+
 ]

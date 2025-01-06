@@ -36,6 +36,10 @@ import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
 import AllBrands from "../dashboard/pages/categoryAndBrand/AllBrands";
 import AddBrand from "../dashboard/pages/categoryAndBrand/AddBrand";
 import EditBrand from "../dashboard/pages/categoryAndBrand/EditBrand";
+import OrderSingleProduct from "../pages/OrderSingleProduct";
+import AllBlogs from "../dashboard/pages/blogs/AllBlogs";
+import AddBlog from "../dashboard/pages/blogs/AddBlog";
+import UpdateBlog from "../dashboard/pages/blogs/UpdateBlog";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -53,8 +57,9 @@ const mainRoutes = [
     { path: '/wishlist',     element: <Wishlist /> },
     { path: '/mycart',     element: <Mycart /> },
     { path: '/blog',     element: <Blog /> },
-
+    { path: '/buy-now/:id',     element: <OrderSingleProduct /> },
 ];
+
 
 // dashboard routes
 const dashboardRoute = [
@@ -79,6 +84,9 @@ const dashboardRoute = [
     {  path:'brands',    element: <AllBrands /> },
     {  path:'add-brand',    element: <AddBrand /> },
     {  path:'edit-brand/:id',    element: <EditBrand /> },
+    { path: "all-blogs", element: <AllBlogs /> },
+    { path: "add-blog", element: <AddBlog /> },
+    { path: "update-blog/:id", element: <UpdateBlog /> },
 ]
 
 // all routes

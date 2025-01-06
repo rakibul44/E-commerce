@@ -183,7 +183,7 @@ function Product() {
               <p className="text-gray-500 mb-2">${product.price.toFixed(2)}</p>
               <div className="flex flex-col gap-2 md:flex-row md:justify-center">
                 <Link
-                  to={`/payment`}
+                  to={`/buy-now/${product?._id}`}
                   className="bg-btnbg hover:bg-btnbghover text-white px-4 py-2 rounded text-sm sm:text-base"
                 >
                   Buy Now

@@ -11,10 +11,10 @@ export const wishlistApi = apiService.injectEndpoints({
             }),
         }),
 
-        // Get all wishlists by user ID
-        getAllWishlistsByUserId: builder.query({
-            query: (userId) => ({
-                url: `wishlist/user/${userId}`,
+        // Get all wishlists by user Ip
+        getAllWishlistsByUserIp: builder.query({
+            query: () => ({
+                url: `wishlist/device`,
             }),
         }),
 
@@ -25,36 +25,18 @@ export const wishlistApi = apiService.injectEndpoints({
             }),
         }),
 
-        // Update wishlist by ID
-        updateWishlistById: builder.mutation({
-            query: ({ id, data }) => ({
-                url: `wishlist/update/${id}`,
-                method: "PUT",
-                body: data,
-            }),
-        }),
-
-        // Update quantity by ID
-        updateQuantityById: builder.mutation({
-            query: ({ id, quantityChange }) => ({
-                url: `wishlist/update/${id}/quantity`,
-                method: "PATCH",
-                body: { quantityChange },
-            }),
-        }),
-
         // Delete wishlist by ID
         deletewishlistById: builder.mutation({
             query: (id) => ({
-                url: `wishlist/delete/${id}`,
+                url: `wishlist/remove/${id}`,
                 method: "DELETE",
             }),
         }),
 
         // Delete all wishlists by user ID
-        deletewishlistsByUserId: builder.mutation({
-            query: (userId) => ({
-                url: `wishlist/user/${userId}/wishlists`,
+        deletewishlistsByUserIp: builder.mutation({
+            query: () => ({
+                url: `wishlist/device/clear`,
                 method: "DELETE",
             }),
         }),

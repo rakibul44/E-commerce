@@ -26,7 +26,6 @@ const Navbar = () => {
   const carts = cartsData?.data?.result || [];
   const subTotalPrice = cartsData?.data?.subTotalPrice || 0;
 
-  console.log(carts)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
