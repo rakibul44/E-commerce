@@ -36,11 +36,6 @@ import EditCategory from "../dashboard/pages/categoryAndBrand/EditCategory";
 import AllBrands from "../dashboard/pages/categoryAndBrand/AllBrands";
 import AddBrand from "../dashboard/pages/categoryAndBrand/AddBrand";
 import EditBrand from "../dashboard/pages/categoryAndBrand/EditBrand";
-import PendingOrders from "../dashboard/pages/PendingOrders";
-import ShippedOrders from "../dashboard/pages/ShippedOrders";
-import DeliveredOrders from "../dashboard/pages/Delivered";
-import CancelledOrders from "../dashboard/pages/CancelledOrders";
-import ReturnedOrders from "../dashboard/pages/ReturnedOrders";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -67,11 +62,6 @@ const dashboardRoute = [
     {  path:'profileupdate',    element: <ProfileUpdate /> },
     {  path:'payment',    element: <PaymentMethod /> },
     {  path:'order',    element: <OrderList /> },
-    {  path:'orders/pending',    element: <PendingOrders/> },
-    {  path:'orders/shipped',    element: <ShippedOrders/> },
-    {  path:'orders/delivered',    element: <DeliveredOrders/> },
-    {  path:'orders/cancelled',    element: <CancelledOrders/> },
-    {  path:'orders/returned',    element: <ReturnedOrders/> },
     {  path:'wishcart',    element: <Wishcart /> },
     {  path:'address',    element: <Address /> },
     {  path:'support',    element: <Support /> },
