@@ -2,38 +2,6 @@ import { Link } from 'react-router-dom';
 import { blogsApi } from '../redux/apis/blogsApi';
 
 const Blog = () => {
-  // const blogs = [
-  //   {
-  //     id: 1,
-  //     title: "Top 10 Tips for Shopping Online",
-  //     description: "Learn the best practices for a safe and enjoyable online shopping experience.",
-  //     image: "https://via.placeholder.com/300",
-  //     link: "/blog/1"
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "How to Choose the Right Products",
-  //     description: "A guide to making informed decisions when shopping online.",
-  //     image: "https://via.placeholder.com/300",
-  //     link: "/blog/2"
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "E-commerce Trends in 2025",
-  //     description: "Discover the latest trends shaping the e-commerce industry.",
-  //     image: "https://via.placeholder.com/300",
-  //     link: "/blog/3"
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Top 5 Payment Methods for Online Shopping",
-  //     description: "Explore the safest and most popular payment methods for e-commerce.",
-  //     image: "https://via.placeholder.com/300",
-  //     link: "/blog/4"
-  //   },
-  //   //add more here 
-  // ];
-
   const {data: blogsData } = blogsApi.useGetAllBlogsQuery();
   const blogs = blogsData?.data?.blogs || [];
 

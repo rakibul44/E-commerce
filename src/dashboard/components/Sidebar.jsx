@@ -1,7 +1,7 @@
 import  { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHome, FaUser, FaMapMarkerAlt } from "react-icons/fa";
-import { MdPayment, MdOutlineSupportAgent, MdOutlineMessage } from "react-icons/md";
+import {  MdOutlineSupportAgent, MdOutlineMessage } from "react-icons/md";
 import { BsBoxFill } from "react-icons/bs";
 import { GiRoyalLove, GiCampingTent } from "react-icons/gi";
 import { LuLogOut } from "react-icons/lu";
@@ -13,7 +13,7 @@ const Sidebar = () => {
   const [activeIndex, setActiveIndex] = useState(null); // State to track active menu item
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // State for Product Update Sub-menu
   const isAdmin = true;
-  const isUser = true;
+  const isUser = false;
   
   // Menu items data
   const menuItems = [
@@ -53,24 +53,13 @@ const Sidebar = () => {
     isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
     { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
     isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
-    isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
+    // isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
     { name: "Order", icon: <BsBoxFill />, link: "/dashboard/order" },
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
-    { name: "Address", icon: <FaMapMarkerAlt />, link: "/dashboard/address" },
+    { name: "Contact us", icon: <FaMapMarkerAlt />, link: "/dashboard/contact-us" },
     { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
     { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
-
-    // isAdmin && { 
-    //   name: "Product Update", 
-    //   icon: <AiOutlineProduct />, 
-    //   isSubMenu: true,
-    //   subMenu: [
-    //     { name: "Add Product", link: "/dashboard/update" },
-    //     { name: "Product List", link: "/dashboard/productlist" },
-    //   ]
-    // },
-    { name: "Order", icon: <BsBoxFill />, link: "/dashboard/order" },
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
     { name: "Address", icon: <FaMapMarkerAlt />, link: "/dashboard/address" },

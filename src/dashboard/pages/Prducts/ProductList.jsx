@@ -1,5 +1,5 @@
-import  { useState } from "react";
-import { Link } from "react-router-dom";
+import  { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { productApi } from "../../../redux/apis/productApi";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -10,7 +10,10 @@ import { toast } from "react-toastify";
 const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: productData, isLoading, refetch } = productApi.useGetAllProductsQuery();
-  const [ deleteProductById ] = productApi.useDeleteProductByIdMutation()
+  const [ deleteProductById ] = productApi.useDeleteProductByIdMutation();
+  const location = useLocation();
+
+  useEffect(() => { refetch()}, [location])
 
   if(isLoading){
     return <p>Loading..</p>

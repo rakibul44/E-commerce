@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
+import { newsletterApi } from "../redux/apis/newsletterApi";
 const footerData = {
+  
   categories: [
     { id: 1, name: "Home", link: "/" },
     { id: 2, name: "Collections", link: "/product" },
@@ -30,7 +33,10 @@ const footerData = {
 };
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
   const [showScroll, setShowScroll] = useState(false);
+  const [ subscribeNewsLetter ] = newsletterApi.useSubscribeNewsLetterMutation();
 
   // Scroll event listener
   useEffect(() => {
@@ -54,6 +60,37 @@ const Footer = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+console.log(email)
+  const SubmitHandler = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!validateEmail(email)) {
+        setError('Please enter a valid email address.');
+        return;
+    }
+
+    try {
+      const data = { email: email}
+      console.log("data: ", data)
+       const res =  await subscribeNewsLetter(data);
+
+       console.log(res)
+       if(res?.data?.success){
+        toast.success(res?.message)
+       }
+        setEmail('');
+    } catch (error) {
+      console.log(error)
+      console.log(error)
+        setError(`Failed to subscribe. Please try again. \n ${error?.message}`);
+    }
+};
   return (
     <footer className="bg-midnight py-12 text-gray-400 relative">
       {/* Newsletter Section */}
@@ -62,16 +99,21 @@ const Footer = () => {
         <p className="text-sm mt-2">
           Never Miss Anything From Store By Signing Up To Our Newsletter.
         </p>
-        <div className="mt-4 flex justify-center items-center gap-2">
+        <form onSubmit={SubmitHandler} className="mt-4 flex justify-center items-center gap-2">
           <input
             type="email"
+             name="email"
             placeholder="Enter Email Address"
             className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 w-full sm:max-w-sm"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <button className=" text-white px-6 py-2 rounded-md bg-orange-500 hover:bg-orange-600">
+          <button type="submit" className=" text-white px-6 py-2 rounded-md bg-orange-500 hover:bg-orange-600">
             SUBSCRIBE
           </button>
-        </div>
+        </form>
+        {error && <p className="error-message">{error}</p>}
+
       </div>
 
       {/* Footer Content */}

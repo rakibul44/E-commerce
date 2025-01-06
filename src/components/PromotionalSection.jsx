@@ -27,7 +27,7 @@ const PromotionalSection = () => {
               </p>
               <h3 className="text-lg font-bold mb-2">{topOne?.categoryName}</h3>
               <Link
-                to={topOne?.categoryName}
+                to={`/product?category=${topOne?.category}`}
                 className="mt-4 text-black py-2 px-4 rounded-md bg-btnbg hover:bg-btnbghover"
               >
                 {`Shop Now`}
@@ -69,7 +69,7 @@ const PromotionalSection = () => {
                 )}
                 { index >= 3 && (
                   <Link
-                    to={product.link}
+                    to={`/product?category=${product?.category}`}
                     className="mt-4 text-white py-2 px-4 rounded-md bg-orange-500 hover:bg-orange-600"
                   >
                      Shop Now

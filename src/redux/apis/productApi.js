@@ -133,7 +133,7 @@ export const productApi = apiService.injectEndpoints({
     // get top six discount product category 
     getTopSevenDiscountCategories : builder.query({
       query: () => ({
-      url: "/products/top-six-discount-categories",
+      url: "/products/top-seven-discount-categories",
       method: "GET"
       })
     }),

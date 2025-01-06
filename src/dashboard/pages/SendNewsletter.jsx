@@ -60,7 +60,7 @@ const SendNewsletter = () => {
     console.log("formData: ", formData)
     const res = await sendEmailToSubscriberOrUsers(formData);
     console.log("response : ", res)
-    if(res?.data){
+    if(res?.data?.success){
       reset();
       setEditorState("");
       setSelectedEmails([]);
@@ -174,7 +174,7 @@ const SendNewsletter = () => {
       </div>
 
       {/* Newsletter Content */}
-      {/* <div className="mb-6">
+      <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Newsletter Content
         </label>
@@ -185,7 +185,7 @@ const SendNewsletter = () => {
           editorClassName="p-3 min-h-[150px] rounded-b-md focus:outline-none"
           onEditorStateChange={onEditorStateChange}
         />
-      </div> */}
+      </div>
 
       {/* Submit Button */}
        <div className=" flex justify-end">

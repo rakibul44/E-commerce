@@ -198,7 +198,7 @@ const UpdateProduct = () => {
     <form onSubmit={handleSubmit(handleUpdateProduct)} className="md:p-8 flex flex-col lg:flex-row gap-6">
       {/* Left Section */}
       <div className="w-full lg:w-1/2 bg-white p-6 rounded-md shadow-sm">
-        <h2 className="text-lg font-semibold mb-4">Add Product</h2>
+        <h2 className="text-lg font-semibold mb-4">Update Product</h2>
 
         {/* Product Name */}
         <div className="mb-4">

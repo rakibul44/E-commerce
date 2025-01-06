@@ -21,7 +21,6 @@ import ProfileUpdate from "../dashboard/pages/ProfileUpdate";
 import PaymentMethod from "../dashboard/pages/PaymentMethod";
 import OrderList from "../dashboard/pages/Orderlist";
 import Wishcart from "../dashboard/pages/WishCart";
-import Address from "../dashboard/pages/Address";
 import Support from "../dashboard/pages/Support";
 import Customer from "../dashboard/pages/Customer";
 import Campaign from "../dashboard/pages/Campaign";
@@ -40,6 +39,8 @@ import OrderSingleProduct from "../pages/OrderSingleProduct";
 import AllBlogs from "../dashboard/pages/blogs/AllBlogs";
 import AddBlog from "../dashboard/pages/blogs/AddBlog";
 import UpdateBlog from "../dashboard/pages/blogs/UpdateBlog";
+import SendNewsletter from "../dashboard/pages/SendNewsletter";
+import ContactUpdate from "../dashboard/pages/ContactUpdate";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -68,10 +69,10 @@ const dashboardRoute = [
     {  path:'payment',    element: <PaymentMethod /> },
     {  path:'order',    element: <OrderList /> },
     {  path:'wishcart',    element: <Wishcart /> },
-    {  path:'address',    element: <Address /> },
+    {  path:'contact-us',    element: <ContactUpdate /> },
     {  path:'support',    element: <Support /> },
     {  path:'customer',    element: <Customer /> },
-    // {  path:'newsletter',  element: <SendNewsletter /> },
+    {  path:'newsletter',  element: <SendNewsletter /> },
     {  path:'camp',    element: <Campaign /> },
     {  path:'message',    element: <Message /> },
     {  path:'notice',    element: <ScrollNotice /> },

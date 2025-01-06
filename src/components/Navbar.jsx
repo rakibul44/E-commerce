@@ -2,10 +2,10 @@ import  { useEffect, useState } from "react";
 import { FaSearch, FaShoppingCart, FaRegUser, FaTrashAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { usersApi } from "../redux/apis/usersApi";
 import useAuth from "../hooks/useAuth";
 import { cartsApi } from "../redux/apis/cartsApi";
 import useFunc from "../hooks/useFunc";
+import { categoryApi } from "../redux/apis/categoryApi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,11 +14,18 @@ const Navbar = () => {
   const { loggedInUser } = useAuth();
   const { handleDeleteCart } = useFunc();
   const { data: cartsData , refetch} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+  const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
+  const { loggedInUser: currentUser} = useAuth();
 
   const location = useLocation();
-  const email = localStorage.getItem("email");
-  const { data: userData  } = usersApi.useGetUserByEmailQuery(email);
-  const currentUser = userData?.data;
+  const email = localStorage.getItem("email")
+  const categories = categoryData?.data || [];
+
+  const midIndex = Math.ceil(categories.length / 2);
+  const firstHalfCategories = categories.slice(0, midIndex);
+  const secondHalfCategories = categories.slice(midIndex);
+  
+
 
 
   useEffect(()=> { setIsDropdownOpen(false)}, [location])
@@ -59,28 +66,14 @@ const Navbar = () => {
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">Column I</h4>
                     <ul className="space-y-2 text-gray-600">
-                      <li><Link to="/shop-2-column" className="hover:text-black">Shop 2 Column</Link></li>
-                      <li><Link to="/shop-3-column" className="hover:text-black">Shop 3 Column</Link></li>
-                      <li><Link to="/shop-4-column" className="hover:text-black">Shop 4 Column</Link></li>
-                      <li><Link to="/shop-5-column" className="hover:text-black">Shop 5 Column</Link></li>
-                      <li><Link to="/shop-6-column" className="hover:text-black">Shop 6 Column</Link></li>
-                      <li><Link to="/shop-left-sidebar" className="hover:text-black">Shop Left Sidebar</Link></li>
-                      <li><Link to="/shop-right-sidebar" className="hover:text-black">Shop Right Sidebar</Link></li>
-                      <li><Link to="/shop-grid-view" className="hover:text-black">Shop Grid View</Link></li>
+                      { firstHalfCategories?.length > 0 && firstHalfCategories?.map((cat) =>  <li key={cat?._id}><Link to={`/product?category=${cat?._id}`} className="hover:text-black">{cat?.name}</Link></li>) }
                     </ul>
                   </div>
                   {/* Column II */}
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">Column II</h4>
                     <ul className="space-y-2 text-gray-600 ">
-                      <li><Link to="/shop-list-view" className="hover:text-black">Shop List View</Link></li>
-                      <li><Link to="/add-to-cart-button" className="hover:text-black">Add To Cart Button</Link></li>
-                      <li><Link to="/add-to-cart-icon" className="hover:text-black">Add To Cart Icon</Link></li>
-                      <li><Link to="/shop-load-more" className="hover:text-black">Shop Load More</Link></li>
-                      <li><Link to="/shop-infinite-scroll" className="hover:text-black">Shop Infinite Scroll</Link></li>
-                      <li><Link to="/shop-pagination" className="hover:text-black">Shop Pagination</Link></li>
-                      <li><Link to="/container-width" className="hover:text-black">Container Width</Link></li>
-                      <li><Link to="/container-fluid" className="hover:text-black">Container Fluid</Link></li>
+                      { secondHalfCategories?.length > 0 && secondHalfCategories?.map((cat) => <li key={cat?._id}><Link to={`/product?category=${cat?._id}`} className="hover:text-black">{cat?.name}</Link></li>) }
                     </ul>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import  { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { GiSelfLove } from 'react-icons/gi';
 import { FaCartPlus } from 'react-icons/fa';
 // import winter from '../assets/winter.jpg';
@@ -11,6 +11,7 @@ import useAuth from '../hooks/useAuth';
 import { categoryApi } from '../redux/apis/categoryApi';
 
 function Product() {
+  const [searchParams] = useSearchParams();
   const [expandedFilter, setExpandedFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
     category: [],
@@ -20,11 +21,15 @@ function Product() {
     brand: [],
   });
   const { handleAddToCart, handleAddToWishlist } = useFunc();
+  const category =searchParams.get("category");
   const { data: filtersOptions } = categoryApi.useGetFiltreOptionsByCategoriesBrandsAndOthersQuery();
   const filters = filtersOptions?.data || [];
   const filterParams = new URLSearchParams();
   
-  // Add filters to query params
+  // Add filters to query 
+  if(category){
+    filterParams.append('category', category)
+  }
   if (selectedFilters.category.length) {
     filterParams.append('category', selectedFilters.category.join(','));
   }
@@ -92,7 +97,7 @@ function Product() {
   });
 
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap min-h-screen">
       {/* Sidebar Filters */}
       <aside className="w-full md:w-1/4 p-4 border-r">
         <h2 className="font-bold text-lg mb-4">FILTER BY</h2>
