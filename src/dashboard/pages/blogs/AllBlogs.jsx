@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { blogsApi } from "../../../redux/apis/blogsApi";
-import { MdOutlineDeleteForever } from "react-icons/md";
+// import { MdOutlineDeleteForever } from "react-icons/md";
+// import Swal from "sweetalert2";
+// import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { FaEdit } from "react-icons/fa";
 
 const AllBlogs = () => {
     
@@ -36,70 +37,77 @@ const AllBlogs = () => {
     });
   };
     return (
-        <div className=" w-full">
-          <div className=" flex justify-between  md:px-4 mb-3 mt-4 ">
-            <h3 className=" text-xl font-semibold">All blogs </h3>
-            <Link to={`/dashboard/add-blog`} className=" px-2 py-1 bg-blue-500 hover:bg-blue-700 rounded text-white text-[16px]">Add New Blog</Link>
-          </div>
-      <div className="container overflow-x-auto">
-       <table className="table">
-    {/* head */}
-    <thead>
-      <tr>
-        <th>Si </th>
-        <th>Image</th>
-        <th>Title</th>
-        <th>Category</th>
-        <th>Author</th>
-        <th>Created At</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {/* row 1 */}
-     {
-      blogs?.length > 0 ?  blogs?.map((blog, i) => (<tr key={blog?._id}>
-        <th>
-          { i + 1}
-        </th>
-        <td>
-          <div className="flex items-center gap-3">
-            <div className="avatar">
-              <div className="mask mask-squircle h-12 w-12">
-                <img
-                  src={blog?.image}
-                  alt="blog img" />
-              </div>
-            </div>
-           
-          </div>
-        </td>
-        <td>
-         { blog?.title }
-        </td>
-        <td>{blog?.categoryId?.name}</td>
-        <td>
-          {blog?.authorId?.name}
-        </td>
-        <td>
-          {
-          new Date(blog?.createdAt).toLocaleDateString()
-          }
-        </td>
-        <td className=" flex gap-2">
-          <Link to={`/dashboard/update-blog/${blog?._id}`}> <FaEdit className=" text-green-500 text-xl "/> </Link>
-          <MdOutlineDeleteForever onClick={( ) => handleDeleteBlog(blog?._id, blog?.title)} className=" text-rose-600 text-xl"/>
-     
-        </td>
-      </tr>)) :
-         <p>Blogs not found</p>
-     }
-
-    </tbody>
-
-  </table>
+      <div className="w-full">
+  <div className="flex justify-between px-4 mb-3 mt-4">
+    <h3 className="text-xl font-semibold">All blogs</h3>
+    <Link
+      to={`/dashboard/add-blog`}
+      className="px-3 py-2 bg-blue-500 hover:bg-blue-700 rounded text-white text-sm"
+    >
+      Add New Blog
+    </Link>
+  </div>
+  <div className="overflow-x-auto">
+    <table className="min-w-full border-collapse border border-gray-200">
+      {/* Table Head */}
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="border border-gray-300 px-4 py-2 text-left">Si</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Image</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Title</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Category</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Author</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Created At</th>
+          <th className="border border-gray-300 px-4 py-2 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {blogs?.length > 0 ? (
+          blogs.map((blog, i) => (
+            <tr key={blog?._id} className="hover:bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">{i + 1}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-lg overflow-hidden">
+                    <img
+                      src={blog?.image}
+                      alt="blog img"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </td>
+              <td className="border border-gray-300 px-4 py-2">{blog?.title}</td>
+              <td className="border border-gray-300 px-4 py-2">{blog?.categoryId?.name}</td>
+              <td className="border border-gray-300 px-4 py-2">{blog?.authorId?.name}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                {new Date(blog?.createdAt).toLocaleDateString()}
+              </td>
+              <td className="border border-gray-300 px-4 py-2 flex gap-2">
+                <Link to={`/dashboard/update-blog/${blog?._id}`}>
+                  <span className="text-green-500 text-xl cursor-pointer hover:scale-110">✏️</span>
+                </Link>
+                <span
+                  onClick={() => handleDeleteBlog(blog?._id, blog?.title)}
+                  className="text-red-500 text-xl cursor-pointer hover:scale-110"
+                >
+                  🗑️
+                </span>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="7" className="text-center px-4 py-2">
+              Blogs not found
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
 </div>
-        </div>
+
     );
 };
 

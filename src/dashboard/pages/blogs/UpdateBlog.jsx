@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdAddTask } from "react-icons/md";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+// import { Editor } from "react-draft-wysiwyg";
+// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+// import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { Link, useParams } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
 import { categoryApi } from "../../../redux/apis/categoryApi";
@@ -19,7 +19,7 @@ const UpdateBlog = () => {
   const [imageFile, setImageFile] = useState(null);
   const [  selectedImage ,setSelectedImage] = useState(currentBlog?.image);
   // Initialize the editor state with default content if available
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const { data: categoryData, isLoading:categoryLoading } = categoryApi.useGetAllCategoryQuery();
    const [ updateBlog ] = blogsApi.useUpdateBlogMutation();
    const [ updateBlogByIdWithImage ] = blogsApi.useUpdateBlogByIdWithImageMutation();
@@ -34,20 +34,16 @@ const UpdateBlog = () => {
     if (currentBlog?.description) {
       try {
         setSelectedImage(currentBlog?.image)
-        const parsedDescription = JSON.parse(currentBlog.description);
-        console.log("Parsed Description:", parsedDescription);
-        const contentState = convertFromRaw(parsedDescription);
-        setEditorState(EditorState.createWithContent(contentState));
+    
       } catch (error) {
         console.error("Error parsing description:", error);
-        setEditorState(EditorState.createEmpty());
+        // setEditorState(EditorState.createEmpty());
       }
     }
   }, [currentBlog]);
   
 
 
-  console.log("editorState", editorState)
 
   if(isLoading || categoryLoading){
     return <p>Loading..</p>
@@ -57,9 +53,9 @@ console.log(currentBlog)
 
   const categories = categoryData?.data || [];
 
-  const onEditorStateChange = (newState) => {
-    setEditorState(newState);
-  };
+  // const onEditorStateChange = (newState) => {
+  //   setEditorState(newState);
+  // };
 
     // Handle image change function
     const handleImageChange = (files) => {
@@ -84,8 +80,8 @@ console.log(currentBlog)
     try{
 
      if(!imageFile){
-      const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-      data.description =  JSON.stringify(rawContent);
+      // const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+      // data.description =  JSON.stringify(rawContent);
 
       const filterData = { ...data }; // copy
       const excludeFields = ['image'];
@@ -97,7 +93,7 @@ console.log(currentBlog)
       if(res?.data?.success){
         refetch();      
         setSelectedImage(null);
-        setEditorState(null)
+        // setEditorState(null)
          toast.success(res?.data?.message)
        }
      } else {
@@ -108,14 +104,14 @@ console.log(currentBlog)
       formData.append("image", imageFile);
       formData.append("shortDescription", data?.shortDescription);
  
-      const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-      formData.append("description", JSON.stringify(rawContent));
+      // const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+      // formData.append("description", JSON.stringify(rawContent));
       const res = await updateBlogByIdWithImage({ id, formData});
  
       if(res?.data?.success){
        refetch();      
        setSelectedImage(null);
-       setEditorState(null)
+      //  setEditorState(null)
         toast.success(res?.data?.message)
       }
      }
@@ -132,7 +128,7 @@ console.log(currentBlog)
     <div className=" container mx-auto p-6 bg-white shadow-md rounded-md mt-10">
        <div className=" flex justify-between items-center">
        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Update Blog</h2>
-         <Link to={"/dashboard/all-posts"} className=" flex gap-2 text-white bg-blue-600 hover:bg-blue-800 px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
+         <Link to={"/dashboard/all-blogs"} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
        </div>
       <form onSubmit={handleSubmit(handleUpdateBlog)} className="space-y-6">
 
@@ -247,15 +243,11 @@ console.log(currentBlog)
 
         </div>
         </div>
- 
- 
-
-
         </div>
 
 
         {/* Schedule Description */}
-          <div>
+          {/* <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
            Blog description 
           </label>
@@ -266,12 +258,12 @@ console.log(currentBlog)
          editorClassName="p-3 min-h-[200px] rounded-b-md focus:outline-none"
          onEditorStateChange={onEditorStateChange}
       />       
-          </div>
+          </div> */}
         {/* Submit Button */}
         <div className=" flex justify-end">
           <button
             type="submit"
-            className=" flex items-center gap-2 w-[200px] px-4 py-2 bg-white bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className=" flex items-center gap-2 w-[200px] px-4 py-2  bg-btnbg text-white rounded-md shadow-sm hover:bg-btnbghover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <MdAddTask className=" text-white text-xl" />
 

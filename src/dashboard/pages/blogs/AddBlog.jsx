@@ -2,9 +2,9 @@ import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdAddTask } from "react-icons/md";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { convertToRaw, EditorState } from "draft-js";
+// import { Editor } from "react-draft-wysiwyg";
+// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+// import { convertToRaw, EditorState } from "draft-js";
 
 import { Link } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
@@ -16,16 +16,16 @@ import useAuth from "../../../hooks/useAuth";
 const AddBlog = () => {
   const [imageFile, setImageFile] = useState(null);
   const [  selectedImage ,setSelectedImage] = useState(null);
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const { data: categoryData, isLoading:categoryLoading } = categoryApi.useGetAllCategoryQuery();
   const { loggedInUser: user } = useAuth();
   const [ createBlog ] = blogsApi.useCreateBlogMutation();
   const categories = categoryData?.data || [];
 
   // handle eidotor change
-  const onEditorStateChange = (newState) => {
-    setEditorState(newState);
-  };
+  // const onEditorStateChange = (newState) => {
+  //   setEditorState(newState);
+  // };
 
   const {
     register,
@@ -67,14 +67,14 @@ const AddBlog = () => {
      formData.append("image", imageFile);
      formData.append("shortDescription", data?.shortDescription);
 
-     const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-     formData.append("description", JSON.stringify(rawContent));
+    //  const rawContent = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    //  formData.append("description", JSON.stringify(rawContent));
 
      const res = await createBlog(formData).unwrap();
      if(res?.success){
       reset()
       setSelectedImage(null);
-      setEditorState(null)
+      // setEditorState(null)
       toast.success(res?.message)
      }
     } catch(error){
@@ -88,7 +88,7 @@ const AddBlog = () => {
     <div className=" container mx-auto p-6 bg-white shadow-md rounded-md mt-10">
        <div className=" flex justify-between items-center">
        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add New Blog</h2>
-         <Link to={"/dashboard/all-posts"} className=" flex gap-2 text-white bg-blue-600 hover:bg-blue-800 px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
+         <Link to={"/dashboard/all-blogs"} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
        </div>
       <form onSubmit={handleSubmit(handleAddBlog)} className="space-y-6">
 
@@ -203,14 +203,12 @@ const AddBlog = () => {
 
         </div>
  
- 
-
 
         </div>
 
 
-        {/* Schedule Description */}
-          <div>
+        {/* blog Description */}
+          {/* <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
            Blog description 
           </label>
@@ -221,12 +219,12 @@ const AddBlog = () => {
          editorClassName="p-3 min-h-[200px] rounded-b-md focus:outline-none"
          onEditorStateChange={onEditorStateChange}
       />       
-          </div>
+          </div> */}
         {/* Submit Button */}
         <div className=" flex justify-end">
           <button
             type="submit"
-            className=" flex items-center gap-2 w-[200px] px-4 py-2 bg-white bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className=" flex items-center gap-2 w-[200px] px-4 py-2 bg-btnbg hover:bg-btnbghover text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-btnbg focus:ring-offset-2"
           >
             <MdAddTask className=" text-white text-xl" />
 
