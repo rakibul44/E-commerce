@@ -54,7 +54,6 @@ const Payment = () => {
 
 
 
- console.log("selectedPayment: " , selectedPayment)
 
 
   const deliveryCharge = 100;
