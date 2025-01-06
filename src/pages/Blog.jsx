@@ -48,7 +48,7 @@ const Blog = () => {
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{blog?.title}</h2>
               <p className="text-gray-600 mb-4">{blog?.shortDescription?.length > 200 ? blog?.shortDescription?.slice(0,200) + "..": blog?.shortDescription }</p>
-              <Link to={blog?.category} className="text-blue-500 hover:underline">View more</Link>
+              <Link to={"/product"} className="text-blue-500 hover:underline">View more</Link>
             </div>
           </div>
         ))}
