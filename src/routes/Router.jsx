@@ -42,6 +42,11 @@ import AddBlog from "../dashboard/pages/blogs/AddBlog";
 import UpdateBlog from "../dashboard/pages/blogs/UpdateBlog";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
+import Cancelled from './../dashboard/pages/Cancelled';
+import Returned from './../dashboard/pages/Returned';
+import Pending from './../dashboard/pages/Pending';
+import Delivered from './../dashboard/pages/Delivered';
+import Shipped from './../dashboard/pages/Shipped';
 
 
 // main routes
@@ -66,7 +71,7 @@ const dashboardRoute = [
     {  path:'',    element:<AdminDashboardHome /> },
     {  path:'profileupdate',    element: <ProfileUpdate /> },
     {  path:'payment',    element: <PaymentMethod /> },
-    {  path:'order',    element: <OrderList /> },
+    {  path:'orders',    element: <OrderList /> },
     {  path:'wishcart',    element: <Wishcart /> },
     {  path:'address',    element: <Address /> },
     {  path:'support',    element: <Support /> },
@@ -87,6 +92,13 @@ const dashboardRoute = [
     { path: "all-blogs", element: <AllBlogs /> },
     { path: "add-blog", element: <AddBlog /> },
     { path: "update-blog/:id", element: <UpdateBlog /> },
+    { path: 'orders/cancelled', element: <Cancelled/> },
+    { path: 'orders/returned', element: <Returned/> },
+    { path: 'orders/pending', element: <Pending/> },
+    { path: 'orders/delivered', element: <Delivered/> },
+    { path: 'orders/shipped', element: <Shipped/> },
+    { path:'orders/order-list', element: <OrderList/>}
+    
 ]
 
 // all routes
