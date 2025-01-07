@@ -161,6 +161,7 @@ const Payment = () => {
             type="number"
             {...register("clientPhone", { required: true })}
             placeholder="Enter your phone number"
+            defaultValue={loggedInUser?.phone}
             className="border w-full p-2 rounded mt-4 mr-6"
           />
           {errors.clientPhone && <p className="text-red-500 text-sm">Phone number is required.</p>}

@@ -9,6 +9,7 @@ export const apiService = createApi({
         baseUrl: "http://localhost:5001/api/v1/"
      // baseUrl: 'https://elan-server.vercel.app/api/v1/'
      }),
+     tagTypes: ["order"],
      endpoints: () => ({}),
 });
 

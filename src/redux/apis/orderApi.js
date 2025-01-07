@@ -18,7 +18,29 @@ export const orderApi = apiService.injectEndpoints({
         method: "POST",
         body: data,
       }),
+
     }),
+
+
+    // get all orders 
+    getAllOrder: builder.query({
+      query: () => ({
+        url: 'orders/all-orders',
+        method: "GET"
+      }),
+      providesTags: ["order"]
+    }),
+    
+    // update order by order _id
+    updateOrderStatusById: builder.mutation({
+      query: (id, status) => ({
+        url: `orders/order/${id}/status`,
+        method: 'PATCH',
+        body: status
+      }),
+      invalidatesTags: ["order"]
+    })
+
   }),
 });
 

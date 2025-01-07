@@ -105,8 +105,11 @@ const Sidebar = () => {
                         }`}
                       >
                         <span className="text-lg">{item.icon}</span>
+                        <span>
+                          
+                        </span>
                         <span>{item.name}</span>
-                        <span className="ml-auto">{activeIndex === index && isSubMenuOpen ? "▲" : "▼"}</span>
+                        <span className="">{activeIndex === index && isSubMenuOpen ? "▲" : "▼"}</span>
                       </button>
 
                       {/* Sub-menu */}
