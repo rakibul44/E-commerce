@@ -57,7 +57,7 @@ const mainRoutes = [
     { path: '/product',     element: <Product /> },
     { path: '/payment',     element: <Payment /> },
     { path: '/confirmation',     element: <Confirmation /> },
-    { path: '/ProductDetails',     element: <ProductDetails /> },
+    { path: '/product-details/:id',     element: <ProductDetails /> },
     { path: '/login',     element: <Login /> },
     { path: '/register',     element: <Register /> },
     { path: '/wishlist',     element: <Wishlist /> },

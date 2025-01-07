@@ -194,7 +194,7 @@ function Product() {
                   Buy Now
                 </Link>
                 <Link
-                  to={`/ProductDetails`}
+                  to={`/product-details/${product?._id}`}
                   className="bg-gray-700 hover:bg-gray-500 text-white px-4 py-2 rounded text-sm sm:text-base"
                 >
                   Details
