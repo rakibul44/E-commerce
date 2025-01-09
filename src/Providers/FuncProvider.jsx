@@ -51,6 +51,36 @@ const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUser
  }
 }
 
+// handle delete data
+const handleDeleteSingleData = async(deleteApi, id, title) => {
+      try{
+       Swal.fire({
+         title: "Are you sure?",
+         text: `You won't be able to revert ${title}!`,
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Yes, delete it!",
+       }).then((result) => {
+         if (result.isConfirmed) {
+          deleteApi(id).then((res) => {
+             console.log(res)
+             if (res?.data?.success){
+               Swal.fire({
+                 title: "Deleted!",
+                 text: `${title} has been deleted `,
+                 icon: "success",
+               });
+             }
+           });
+         }
+       });
+      } catch(err){
+       console.log(err)
+       toast.error(err?.message)
+      }
+}
 
 // handle delete cart
 const handleDeleteCart = async(id, refetch ) => {
@@ -162,7 +192,8 @@ const handleDeleteWishlist = async(id, refetch ) => {
         handleDeleteCart,
         handleCartProductQuantityChange,
         handleAddToWishlist,
-        handleDeleteWishlist
+        handleDeleteWishlist,
+        handleDeleteSingleData
         
     }
     return (

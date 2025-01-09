@@ -34,11 +34,26 @@ export const orderApi = apiService.injectEndpoints({
     // update order by order _id
     updateOrderStatusById: builder.mutation({
       query: (id, status) => ({
-        url: `orders/order/${id}/status`,
+        url: `orders/order/${id}/${status}`,
         method: 'PATCH',
-        body: status
       }),
       invalidatesTags: ["order"]
+    }),
+   
+    // get orders by status
+    getOrdersByStatus: builder.query({
+      query: (status) => ({
+        url: `orders/status/${status}`,
+        method: 'GET'
+      })
+    }) ,
+
+    // delete pending order
+    deletePendingOrderById: builder.mutation({
+      query: (id) => ({
+        url: `orders/delete-pending-order/${id}`,
+        method: "DELETE"
+      })
     })
 
   }),

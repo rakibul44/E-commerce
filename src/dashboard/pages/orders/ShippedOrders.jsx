@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdPreview } from "react-icons/md";
 
 const orders = [

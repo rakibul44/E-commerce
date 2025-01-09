@@ -6,6 +6,8 @@ import useAuth from "../hooks/useAuth";
 import { cartsApi } from "../redux/apis/cartsApi";
 import useFunc from "../hooks/useFunc";
 import { categoryApi } from "../redux/apis/categoryApi";
+import { GiSelfLove } from "react-icons/gi";
+import { wishlistApi } from "../redux/apis/wishlistApi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +18,7 @@ const Navbar = () => {
   const { data: cartsData , refetch} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
   const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
   const { loggedInUser: currentUser} = useAuth();
-
+  const {data: wishlistProductData } = wishlistApi.useGetAllWishlistsByUserIpQuery();
   const location = useLocation();
   const email = localStorage.getItem("email")
   const categories = categoryData?.data || [];
@@ -25,6 +27,8 @@ const Navbar = () => {
   const firstHalfCategories = categories.slice(0, midIndex);
   const secondHalfCategories = categories.slice(midIndex);
   
+  
+  const wishlists = wishlistProductData?.data || [];
 
 
 
@@ -159,6 +163,14 @@ const Navbar = () => {
             </button>
             <span className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] rounded-full px-1">
               {carts?.length}
+            </span>
+          </div>
+          <div className="relative">
+              <Link to={"/wishlist"} className=" text-xl">
+                <GiSelfLove />
+              </Link>
+            <span className="absolute -top-3 -right-3 bg-orange-500 text-white text-[10px] rounded-full px-1">
+              {wishlists?.length}
             </span>
           </div>
         </div>

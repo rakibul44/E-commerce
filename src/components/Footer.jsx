@@ -82,12 +82,13 @@ console.log(email)
 
        console.log(res)
        if(res?.data?.success){
-        toast.success(res?.message)
-       }
+        toast.success(res?.data?.message)
+      } else if(res?.error){
+        toast.error(res?.error?.data?.message)
+      }
         setEmail('');
     } catch (error) {
-      console.log(error)
-      console.log(error)
+      toast.error(error?.message)
         setError(`Failed to subscribe. Please try again. \n ${error?.message}`);
     }
 };

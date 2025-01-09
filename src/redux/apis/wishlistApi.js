@@ -9,6 +9,7 @@ export const wishlistApi = apiService.injectEndpoints({
                 method: "POST",
                 body: wishlist,
             }),
+            invalidatesTags: ["wishlist"]
         }),
 
         // Get all wishlists by user Ip
@@ -16,6 +17,7 @@ export const wishlistApi = apiService.injectEndpoints({
             query: () => ({
                 url: `wishlist/device`,
             }),
+            providesTags: ["wishlist"]
         }),
 
         // Get wishlist by ID
@@ -23,6 +25,7 @@ export const wishlistApi = apiService.injectEndpoints({
             query: (id) => ({
                 url: `wishlist/${id}`,
             }),
+            providesTags: ["wishlist"]
         }),
 
         // Delete wishlist by ID
@@ -31,6 +34,7 @@ export const wishlistApi = apiService.injectEndpoints({
                 url: `wishlist/remove/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["wishlist"]
         }),
 
         // Delete all wishlists by user ID
@@ -39,6 +43,7 @@ export const wishlistApi = apiService.injectEndpoints({
                 url: `wishlist/device/clear`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["wishlist"]
         }),
     }),
 });

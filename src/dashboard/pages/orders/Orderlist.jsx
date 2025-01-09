@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdPreview } from "react-icons/md";
-import { orderApi } from "../../redux/apis/orderApi";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { orderApi } from "../../../redux/apis/orderApi";
 
 
 const OrderList = () => {
@@ -33,11 +33,13 @@ const OrderList = () => {
 
 // handle update status
 const hanldeUpdateStatus = async(data, id) => {
-  console.log("status data: ", data)
-  const res = await updateOrderStatusById(id, data);
+  console.log("status data: ", data?.status)
+  const res = await updateOrderStatusById(id, data?.status);
   console.log(" stats update res: ", res)
   if(res?.data?.success){
     toast.success(res?.data?.message)
+  } else if(res?.error){
+    toast.error(res?.error?.data?.message)
   }
 }
 
@@ -118,7 +120,7 @@ const hanldeUpdateStatus = async(data, id) => {
           <div className="bg-white w-11/12 md:w-1/2 lg:w-1/3 rounded-lg shadow-lg  relative ">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 bg-red-500 text-white rounded-full"
+              className="absolute top-2 right-2 px-[10px] py-1 rounded-full bg-red-500 text-white "
             >
               ×
             </button>
@@ -160,10 +162,10 @@ const hanldeUpdateStatus = async(data, id) => {
                 {modalType === "edit" && <div className=" px-3 py-5">
                  <h4 className="text-lg font-semibold">{selectedOrder.productName}</h4>
 
-                    <p><strong>Product ID:</strong> {selectedOrder.productId}</p>
-                    <p><strong>Date:</strong> {selectedOrder.date}</p>
-                    <p><strong>Status:</strong> {selectedOrder.status}</p>
-                    <p><strong>Total Price:</strong> {selectedOrder.totalPrice}</p>
+                    <p><strong>Order ID:</strong> {selectedOrder.id}</p>
+                    <p><strong>Date:</strong> {new Date(selectedOrder?.createdAt).toLocaleDateString()}</p>
+                    <p><strong>Status:</strong> {selectedOrder?.status}</p>
+                    <p><strong>Total Price:</strong> {selectedOrder?.totalAmount}</p>
                     
                     <form   onSubmit={handleSubmit((data) => hanldeUpdateStatus(data, selectedOrder?._id))}>
                     <label className="block mt-4">

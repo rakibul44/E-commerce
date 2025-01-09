@@ -19,7 +19,6 @@ import DashboardLayout from "../layout/DashboardLayout";
 import AdminDashboardHome from "../dashboard/pages/AdminDashboardHome";
 import ProfileUpdate from "../dashboard/pages/ProfileUpdate";
 import PaymentMethod from "../dashboard/pages/PaymentMethod";
-import OrderList from "../dashboard/pages/Orderlist";
 import Wishcart from "../dashboard/pages/WishCart";
 import Support from "../dashboard/pages/Support";
 import Customer from "../dashboard/pages/Customer";
@@ -41,13 +40,14 @@ import AddBlog from "../dashboard/pages/blogs/AddBlog";
 import UpdateBlog from "../dashboard/pages/blogs/UpdateBlog";
 import SendNewsletter from "../dashboard/pages/SendNewsletter";
 import ContactUpdate from "../dashboard/pages/ContactUpdate";
+import CancelledOrders from "../dashboard/pages/orders/CancelledOrders";
+import ReturnedOrders from "../dashboard/pages/orders/ReturnedOrders";
+import PendingOrders from "../dashboard/pages/orders/PendingOrders";
+import DeliveredOrders from "../dashboard/pages/orders/DeliveredOrders";
+import ShippedOrders from "../dashboard/pages/orders/ShippedOrders";
+import OrderList from "../dashboard/pages/orders/Orderlist";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
-import Cancelled from './../dashboard/pages/Cancelled';
-import Returned from './../dashboard/pages/Returned';
-import Pending from './../dashboard/pages/Pending';
-import Delivered from './../dashboard/pages/Delivered';
-import Shipped from './../dashboard/pages/Shipped';
 
 
 // main routes
@@ -72,7 +72,6 @@ const dashboardRoute = [
     {  path:'',    element:<AdminDashboardHome /> },
     {  path:'profileupdate',    element: <ProfileUpdate /> },
     {  path:'payment',    element: <PaymentMethod /> },
-    {  path:'orders',    element: <OrderList /> },
     {  path:'wishcart',    element: <Wishcart /> },
     {  path:'contact-us',    element: <ContactUpdate /> },
     {  path:'support',    element: <Support /> },
@@ -93,12 +92,12 @@ const dashboardRoute = [
     { path: "all-blogs", element: <AllBlogs /> },
     { path: "add-blog", element: <AddBlog /> },
     { path: "update-blog/:id", element: <UpdateBlog /> },
-    { path: 'orders/cancelled', element: <Cancelled/> },
-    { path: 'orders/returned', element: <Returned/> },
-    { path: 'orders/pending', element: <Pending/> },
-    { path: 'orders/delivered', element: <Delivered/> },
-    { path: 'orders/shipped', element: <Shipped/> },
-    { path:'orders/order-list', element: <OrderList/>}
+    { path:'orders/order-list', element: <OrderList/>},
+    { path: 'orders/cancelled', element: <CancelledOrders /> },
+    { path: 'orders/returned', element: <ReturnedOrders/> },
+    { path: 'orders/pending', element: <PendingOrders/> },
+    { path: 'orders/delivered', element: <DeliveredOrders/> },
+    { path: 'orders/shipped', element: <ShippedOrders/> },
     
 ]
 
