@@ -13,4 +13,4 @@ export const apiService = createApi({
      endpoints: () => ({}),
 });
 
-export default apiService
+export default apiService;

@@ -22,13 +22,19 @@ function Product() {
   });
   const { handleAddToCart, handleAddToWishlist } = useFunc();
   const category =searchParams.get("category");
+  const searchTerm =searchParams.get("searchTerm") || "";
   const { data: filtersOptions } = categoryApi.useGetFiltreOptionsByCategoriesBrandsAndOthersQuery();
   const filters = filtersOptions?.data || [];
   const filterParams = new URLSearchParams();
   
+
+  console.log("searchTerm: ", searchTerm)
   // Add filters to query 
   if(category){
     filterParams.append('category', category)
+  }
+  if(searchTerm){
+    filterParams.append('searchTerm', searchTerm);
   }
   if (selectedFilters.category.length) {
     filterParams.append('category', selectedFilters.category.join(','));
@@ -50,7 +56,7 @@ function Product() {
  // eslint-disable-next-line no-unused-vars
  const { data: cartsData , refetch: refetchCarts} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
   
-  const { data: productData, isLoading, refetch } = productApi.useGetAllProductsQuery(filterParams.toString());
+  const { data: productData, isLoading, refetch } = productApi.useGetAllProductsQuery(filterParams.toString(), searchTerm);
 
  useEffect(()=> { refetch()}, [selectedFilters])
 
@@ -152,7 +158,7 @@ function Product() {
       {/* Product Grid */}
       <main className="w-full md:w-3/4 p-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.map((product) => (
+          {filteredProducts?.length > 0 ? filteredProducts.map((product) => (
             <div
               key={product.id}
               className="relative border p-2 rounded text-center group hover:shadow-lg transition"
@@ -201,7 +207,11 @@ function Product() {
                 </Link>
               </div>
             </div>
-          ))}
+          )) :
+            <div className=' h-screen flex items-center justify-center'>
+              <p className=' text-center text-xl'>Product not found</p>
+            </div>
+          }
         </div>
       </main>
     </div>

@@ -1,6 +1,6 @@
 import  { useEffect, useState } from "react";
 import { FaSearch, FaShoppingCart, FaRegUser, FaTrashAlt } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import {  Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import useAuth from "../hooks/useAuth";
 import { cartsApi } from "../redux/apis/cartsApi";
@@ -8,8 +8,10 @@ import useFunc from "../hooks/useFunc";
 import { categoryApi } from "../redux/apis/categoryApi";
 import { GiSelfLove } from "react-icons/gi";
 import { wishlistApi } from "../redux/apis/wishlistApi";
+import { useForm } from "react-hook-form";
 
 const Navbar = () => {
+  const { register, handleSubmit , reset} = useForm();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
@@ -20,6 +22,7 @@ const Navbar = () => {
   const { loggedInUser: currentUser} = useAuth();
   const {data: wishlistProductData } = wishlistApi.useGetAllWishlistsByUserIpQuery();
   const location = useLocation();
+  const navigate = useNavigate();
   const email = localStorage.getItem("email")
   const categories = categoryData?.data || [];
 
@@ -42,6 +45,12 @@ const Navbar = () => {
   const toggleCartModal = () => setIsCartModalOpen(!isCartModalOpen);
 
 
+
+  const handleSearchFunc = async (data) => {
+      navigate(`/product?searchTerm=${data?.searchTerm}`);
+      reset()
+  
+  }
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50 w-full">
@@ -97,16 +106,17 @@ const Navbar = () => {
         {/* Right Side */}
         <div className="flex items-center space-x-4">
           {/* Search Bar */}
-          <div className="hidden md:flex items-center">
+          <form onSubmit={handleSubmit(handleSearchFunc)} className="hidden md:flex items-center">
             <input
               type="text"
               placeholder="Search entire store here..."
+              {...register("searchTerm")}
               className="border-b border-gray-400 focus:outline-none focus:border-black px-2 py-1 text-sm"
             />
-            <button className="font-semibold text-lg">
+            <button  type="submit" className="font-semibold text-lg">
               <FaSearch />
             </button>
-          </div>
+          </form>
 
           {/* User Dropdown */}
           <div className="relative">

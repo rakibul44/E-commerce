@@ -47,6 +47,7 @@ import DeliveredOrders from "../dashboard/pages/orders/DeliveredOrders";
 import ShippedOrders from "../dashboard/pages/orders/ShippedOrders";
 import OrderList from "../dashboard/pages/orders/Orderlist";
 import MyOrders from "../dashboard/pages/orders/MyOrders";
+import AdminRoute from "./AdminRoute";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -112,7 +113,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout />,
+        element: <AdminRoute><DashboardLayout /></AdminRoute> ,
         children: dashboardRoute, // Pass the dashboardRoutes as children
     },
     

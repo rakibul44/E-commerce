@@ -26,7 +26,7 @@ const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
   const email = localStorage.getItem('email');
-  const { data: userData } = usersApi.useGetUserByEmailQuery(email);
+  const { data: userData,  isLoading: userLoading } = usersApi.useGetUserByEmailQuery(email);
   const loggedInUser = userData?.data;
 
   const [user, setUser] = useState(null);
@@ -159,6 +159,7 @@ const AuthProvider = ({ children }) => {
   // auth information
   const authInfo = {
     loggedInUser,
+    userLoading,
     user,
     loading,
     createUser,

@@ -8,7 +8,7 @@ const footerData = {
     { id: 1, name: "Home", link: "/" },
     { id: 2, name: "Collections", link: "/product" },
     { id: 3, name: "About Us", link: "#" },
-    { id: 4, name: "Blogs", link: "#" },
+    { id: 4, name: "Blogs", link: "/blog" },
     { id: 5, name: "Offers", link: "#" },
     { id: 6, name: "Search", link: "#" },
   ],
