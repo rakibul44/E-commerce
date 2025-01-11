@@ -15,7 +15,7 @@ const Navbar = () => {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const { loggedInUser } = useAuth();
   const { handleDeleteCart } = useFunc();
-  const { data: cartsData , refetch} = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+  const { data: cartsData } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
   const { data: categoryData } = categoryApi.useGetAllCategoryQuery();
   const { loggedInUser: currentUser} = useAuth();
   const {data: wishlistProductData } = wishlistApi.useGetAllWishlistsByUserIpQuery();
@@ -29,7 +29,6 @@ const Navbar = () => {
   
   
   const wishlists = wishlistProductData?.data || [];
-
 
 
   useEffect(()=> { setIsDropdownOpen(false)}, [location])
@@ -246,7 +245,7 @@ const Navbar = () => {
                     </div>
                     <p> {item?.quantity} </p>
                     <button
-                      onClick={() => handleDeleteCart(item?._id, refetch)}
+                      onClick={() => handleDeleteCart(item?._id)}
                       className="text-gray-400 hover:text-red-500"
                     >
                       <FaTrashAlt />

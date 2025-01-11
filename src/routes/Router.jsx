@@ -46,6 +46,7 @@ import PendingOrders from "../dashboard/pages/orders/PendingOrders";
 import DeliveredOrders from "../dashboard/pages/orders/DeliveredOrders";
 import ShippedOrders from "../dashboard/pages/orders/ShippedOrders";
 import OrderList from "../dashboard/pages/orders/Orderlist";
+import MyOrders from "../dashboard/pages/orders/MyOrders";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -92,7 +93,8 @@ const dashboardRoute = [
     { path: "all-blogs", element: <AllBlogs /> },
     { path: "add-blog", element: <AddBlog /> },
     { path: "update-blog/:id", element: <UpdateBlog /> },
-    { path:'orders/order-list', element: <OrderList/>},
+    { path: 'orders/order-list', element: <OrderList/>},
+    { path: 'orders/my-orders', element: <MyOrders/>},
     { path: 'orders/cancelled', element: <CancelledOrders /> },
     { path: 'orders/returned', element: <ReturnedOrders/> },
     { path: 'orders/pending', element: <PendingOrders/> },

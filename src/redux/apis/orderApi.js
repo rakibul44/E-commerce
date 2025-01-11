@@ -9,6 +9,7 @@ export const orderApi = apiService.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["order"]
     }),
 
     // sslcommerz order
@@ -18,7 +19,7 @@ export const orderApi = apiService.injectEndpoints({
         method: "POST",
         body: data,
       }),
-
+      invalidatesTags: ["order"]
     }),
 
 
@@ -45,7 +46,8 @@ export const orderApi = apiService.injectEndpoints({
       query: (status) => ({
         url: `orders/status/${status}`,
         method: 'GET'
-      })
+      }),
+      providesTags: ["order"]
     }) ,
 
     // delete pending order
@@ -53,8 +55,18 @@ export const orderApi = apiService.injectEndpoints({
       query: (id) => ({
         url: `orders/delete-pending-order/${id}`,
         method: "DELETE"
-      })
-    })
+      }),
+      invalidatesTags: ["order"]
+    }),
+
+    // get all my order by user id
+    getAllMyOrders: builder.query({
+      query: (id) => ({
+        url: `orders/my-orders/${id}`,
+        method: 'GET'
+      }),
+      providesTags: ["order"]
+    }),
 
   }),
 });

@@ -17,9 +17,6 @@ const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
 const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation();
 const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
 const [ deletewishlistById  ] = wishlistApi.useDeletewishlistByIdMutation();
-// eslint-disable-next-line no-unused-vars
-const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id)
-
 
 // handle add to cart func
  const handleAddToCart = async(data) => {
@@ -39,7 +36,6 @@ const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUser
       }    
     const res =  await addToCart(cartData);
     if(res?.data?.success){
-      refetchCarts()
         toast.success(res?.data?.message)
     } else if(res?.error?.data){
       toast.error(res?.error?.data?.message)
@@ -83,7 +79,7 @@ const handleDeleteSingleData = async(deleteApi, id, title) => {
 }
 
 // handle delete cart
-const handleDeleteCart = async(id, refetch ) => {
+const handleDeleteCart = async(id ) => {
     try{
 
             Swal.fire({
@@ -99,7 +95,6 @@ const handleDeleteCart = async(id, refetch ) => {
                 deleteCartById(id).then((res) => {
                   console.log(res)
                   if (res?.data?.success){
-                    refetch();
                     Swal.fire({
                       title: "Deleted!",
                       text: `Product has been deleted from cart`,
@@ -117,11 +112,10 @@ const handleDeleteCart = async(id, refetch ) => {
 }
 
   // handle quantity change
-  const handleCartProductQuantityChange = async(id, quantityChange, refetch) => {
+  const handleCartProductQuantityChange = async(id, quantityChange) => {
      try{
         const res = await updateQuantityById({id, quantityChange});
         if(res?.data?.success){
-            refetch();
             toast.success(res?.data?.message)
         }
         else if(res?.error){

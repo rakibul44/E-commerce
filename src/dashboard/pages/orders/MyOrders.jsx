@@ -1,22 +1,20 @@
 import { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
 import { MdPreview } from "react-icons/md";
-import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
 import { orderApi } from "../../../redux/apis/orderApi";
+import useAuth from "../../../hooks/useAuth";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 
-const OrderList = () => {
-  const { register, handleSubmit } = useForm();
+const MyOrders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [ selectedProducts, setSelectedProducts ] = useState(null)
   const [modalType, setModalType] = useState("");
-  const { data: ordersData, isLoading } = orderApi.useGetAllOrderQuery();
-  const [updateOrderStatusById] =orderApi.useUpdateOrderStatusByIdMutation();
+  const { loggedInUser } = useAuth()
+  const { data: ordersData, isLoading } = orderApi.useGetAllMyOrdersQuery(loggedInUser?._id);
   
   const orders = ordersData?.data || [];
   
-  console.log("selectedProducts: ", selectedProducts)
+  console.log("orders: ", ordersData)
 
   const openModal = (order, type) => {
     setSelectedOrder(order);
@@ -31,17 +29,6 @@ const OrderList = () => {
   };
 
 
-// handle update status
-const hanldeUpdateStatus = async(data, id) => {
-  console.log("status data: ", data?.status)
-  const res = await updateOrderStatusById(id, data?.status);
-  console.log(" stats update res: ", res)
-  if(res?.data?.success){
-    toast.success(res?.data?.message)
-  } else if(res?.error){
-    toast.error(res?.error?.data?.message)
-  }
-}
 
 
   return (
@@ -55,6 +42,7 @@ const hanldeUpdateStatus = async(data, id) => {
               <th className="text-left p-3 text-gray-600">Date</th>
               <th className="text-left p-3 text-gray-600">Status</th>
               <th className="text-left p-3 text-gray-600">Amount</th>
+              <th className="text-left p-3 text-gray-600">Payment Status</th>
               <th className="text-left p-3 text-gray-600">Customer Details</th>
               <th className="text-left p-3 text-gray-600">Action</th>
             </tr>
@@ -86,7 +74,8 @@ const hanldeUpdateStatus = async(data, id) => {
                </span>
 
                 </td>
-                <td className="p-3 text-gray-700">{order?.totalAmount}</td>
+                <td className="p-3 text-gray-700 flex gap-1 items-center justify-center"> <FaBangladeshiTakaSign  className=" text-[14px]"/> {order?.totalAmount}</td>
+                <td className="p-3 text-gray-700">{order?.paymentStatus}</td>
                 <td className="p-3 text-gray-700">
                   <p>{order?.clientName}</p>
                   <p>{order.clientEmail}</p>
@@ -98,12 +87,6 @@ const hanldeUpdateStatus = async(data, id) => {
                     className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
                   >
                     <MdPreview />
-                  </button>
-                  <button
-                    onClick={() => openModal(order, "edit")}
-                    className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center"
-                  >
-                    <FaRegEdit />
                   </button>
                 </td>
          
@@ -158,40 +141,6 @@ const hanldeUpdateStatus = async(data, id) => {
                  ))}
                 </div>
                   }
-
-                {modalType === "edit" && <div className=" px-3 py-5">
-                 <h4 className="text-lg font-semibold">{selectedOrder.productName}</h4>
-
-                    <p><strong>Order ID:</strong> {selectedOrder.id}</p>
-                    <p><strong>Date:</strong> {new Date(selectedOrder?.createdAt).toLocaleDateString()}</p>
-                    <p><strong>Status:</strong> {selectedOrder?.status}</p>
-                    <p><strong>Total Price:</strong> {selectedOrder?.totalAmount}</p>
-                    
-                    <form   onSubmit={handleSubmit((data) => hanldeUpdateStatus(data, selectedOrder?._id))}>
-                    <label className="block mt-4">
-                    <span className="text-gray-700">Change Status:</span>
-                    <select
-                      className="block w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
-                      defaultValue={selectedOrder?.status || ""}
-                      {...register("status")}
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="processing">Processing</option>
-                      <option value="shipped">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="canceled">Canceled</option>
-                      <option value="returned">Returned</option>
-                    </select>
-                  </label>
-
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-                    >
-                      Update Status
-                    </button>
-                    </form>
-                </div> }
               </div>
             </div>
           </div>
@@ -200,4 +149,4 @@ const hanldeUpdateStatus = async(data, id) => {
   );
 };
 
-export default OrderList;
+export default MyOrders;

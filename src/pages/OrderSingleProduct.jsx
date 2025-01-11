@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { BDLocations } from 'react-bd-location';
 import useAuth from "../hooks/useAuth";
 import { productApi } from "../redux/apis/productApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { orderApi } from "../redux/apis/orderApi";
@@ -14,6 +14,7 @@ const OrderSingleProduct = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
   const [division, setDivision] = useState("");
@@ -27,6 +28,7 @@ const OrderSingleProduct = () => {
   const { loggedInUser } = useAuth();
   const [ cashOnDeliveryOrder ] = orderApi.useCashOnDeliveryOrderMutation();
   const [ createSslcommerzOrder ] = orderApi.useCreateSslcommerzOrderMutation();
+  const navigate = useNavigate();
 
 
   const product = productData?.data;
@@ -95,7 +97,9 @@ const OrderSingleProduct = () => {
         res = await createSslcommerzOrder(orderData)
       }
         if(res?.data?.success){
-            toast.success(res?.data?.message)
+            reset();
+            toast.success(res?.data?.message);
+            navigate("/dashboard/orders/my-orders")
         }
     } catch(error){
         console.log(error)

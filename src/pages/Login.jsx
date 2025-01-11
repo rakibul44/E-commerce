@@ -36,6 +36,7 @@ const Login = () => {
   
          const res =  await createUsers(userInfo);
          if(res){
+          console.log(res)
           navigate("/");
          }
         

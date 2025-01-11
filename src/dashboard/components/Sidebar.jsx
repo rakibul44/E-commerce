@@ -38,13 +38,7 @@ const Sidebar = () => {
         { name: "Add Brand ", link: "/dashboard/add-brand" },
       ],
     },
-    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
-    isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
-    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
-    { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
-    isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
-    // isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
-    {
+    isAdmin && {
       name: "Order",
       icon: <BsBoxFill />,
       isSubMenu: true, // Flag for submenu
@@ -57,10 +51,17 @@ const Sidebar = () => {
         { name: "Returned", link: "/dashboard/orders/returned" },
       ],
     },
+   { name: "My orders", icon: <BsBoxFill />, link: "/dashboard/orders/my-orders" },
+    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
+    isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
+    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
+    { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
+    isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
+    // isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
+
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
     { name: "Contact us", icon: <FaMapMarkerAlt />, link: "/dashboard/contact-us" },
-    { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
     { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
