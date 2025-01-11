@@ -15,7 +15,7 @@ const SendNewsletter = () => {
   const [isSubscriberDropdownOpen, setIsSubscriberDropdownOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const [ sendEmailToSubscriberOrUsers ] = newsletterApi.useSendEmailToSubscriberOrUsersMutation();
+  const [ sendEmail ] = newsletterApi.useSendEmailMutation();
   const { data: usersData, isLoading: userLoading } = usersApi.useGetAllUsersQuery();
   const { data: subscriberData, isLoading: subscriberLoading } = newsletterApi.useGetAllSubscribersQuery();
 
@@ -24,13 +24,8 @@ const SendNewsletter = () => {
   }
 
   const subscribers = subscriberData?.data?.subscribers || [];
-  const users = usersData?.data?.users || [];
+  const users = usersData?.data || [];
 
-  const handleCheckboxChange = (email, checked) => {
-    setSelectedEmails((prev) =>
-      checked ? [...prev, email] : prev.filter((item) => item !== email)
-    );
-  };
 
   const handleSelectAll = (emails) => {
     const uniqueEmails = [...new Set([...selectedEmails, ...emails])];
@@ -46,46 +41,62 @@ const SendNewsletter = () => {
   };
 
 
-
-  // handle send email function
-  const handleSendEmail = async(data) => {
+  const handleCheckboxChange = (email, checked) => {
+    setSelectedEmails((prev) =>
+      checked ? [...prev, email] : prev.filter((item) => item !== email)
+    );
+    // Ensure no unintended actions happen here
+    console.log("Selected Emails Updated: ", selectedEmails);
+  };
+  
+  const handleSendEmail = async (data) => {
     const content = stateToHTML(editorState.getCurrentContent());
-
+  
+    if (selectedEmails.length === 0) {
+      toast.error("Please select at least one email!");
+      return;
+    }
+  
     const formData = {
       emails: selectedEmails,
       subject: data?.subject,
-      content
+      content,
     };
-
-    console.log("formData: ", formData)
-    const res = await sendEmailToSubscriberOrUsers(formData);
-    console.log("response : ", res)
-    if(res?.data){
+  
+    console.log("Form Data: ", formData);
+    const res = await sendEmail(formData);
+    console.log("Response: ", res);
+    if (res?.data) {
       reset();
-      setEditorState("");
+      setEditorState(EditorState.createEmpty());
       setSelectedEmails([]);
-      toast.success(res?.data?.message)
+      toast.success(res?.data?.message);
+    } else {
+      toast.error("Failed to send email!");
     }
-  }
-
+  };
   return (
     <div className="container w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Send Newsletter</h2>
 
        <form onSubmit={handleSubmit(handleSendEmail)}>
               {/* User Emails */}
-      <div className="mb-6 relative">
+      <div className="mb-4 relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Emails (Users)
         </label>
         <button
-          onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+           onMouseEnter={() => setIsUserDropdownOpen(true)}
+           onMouseLeave={() => setIsUserDropdownOpen(false)}
           className="w-full px-3 py-2 text-left border border-gray-300 rounded-md bg-white focus:outline-none"
         >
           {`${selectedEmails.length} items selected`}
         </button>
         {isUserDropdownOpen && (
-          <div className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-md shadow-md">
+          <div 
+          onMouseEnter={() => setIsUserDropdownOpen(true)}
+          onMouseLeave={() => setIsUserDropdownOpen(false)}
+          className="absolute  z-10 w-full pt-2 bg-white border border-gray-300 rounded-md shadow-md">
             <div className="flex justify-between p-2 bg-gray-100 border-b border-gray-300">
               <button
                 onClick={() => handleSelectAll(users.map((user) => user.email))}
@@ -118,18 +129,22 @@ const SendNewsletter = () => {
       </div>
 
       {/* Subscriber Emails */}
-      <div className="mb-6 relative">
+      <div className="mb-4 relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Emails (Subscribers)
         </label>
         <button
-          onClick={() => setIsSubscriberDropdownOpen(!isSubscriberDropdownOpen)}
-          className="w-full px-3 py-2 text-left border border-gray-300 rounded-md bg-white focus:outline-none"
+          onMouseEnter={() => setIsSubscriberDropdownOpen(true)}
+          onMouseLeave={() => setIsSubscriberDropdownOpen(false)}      
+        className="w-full px-3 py-2 text-left border border-gray-300 rounded-md bg-white focus:outline-none"
         >
           {`${selectedEmails.length} items selected`}
         </button>
         {isSubscriberDropdownOpen && (
-          <div className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-md shadow-md">
+          <div 
+          onMouseEnter={() => setIsSubscriberDropdownOpen(true)}
+          onMouseLeave={() => setIsSubscriberDropdownOpen(false)}  
+          className="absolute z-10 w-full pt-2 bg-white border border-gray-300 rounded-md shadow-md">
             <div className="flex justify-between p-2 bg-gray-100 border-b border-gray-300">
               <button
                 onClick={() => handleSelectAll(subscribers.map((sub) => sub.email))}
@@ -174,7 +189,7 @@ const SendNewsletter = () => {
       </div>
 
       {/* Newsletter Content */}
-      {/* <div className="mb-6">
+      <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Newsletter Content
         </label>
@@ -185,7 +200,7 @@ const SendNewsletter = () => {
           editorClassName="p-3 min-h-[150px] rounded-b-md focus:outline-none"
           onEditorStateChange={onEditorStateChange}
         />
-      </div> */}
+      </div>
 
       {/* Submit Button */}
        <div className=" flex justify-end">

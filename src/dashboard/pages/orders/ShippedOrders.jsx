@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdPreview } from "react-icons/md";
 
 const orders = [
@@ -25,7 +25,7 @@ const orders = [
     id: 2,
     orderId: "#355",
     date: "Feb 06, 2021",
-    status: "Pending",
+    status: "Shipped",
     amount: "৳480",
     totalPrice: "৳2,400",
     productImage: "https://via.placeholder.com/100",
@@ -59,23 +59,23 @@ const orders = [
   },
 ];
 
-const PendingOrders = () => {
+const ShippedOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 7;
 
-  // Filter pending orders
-  const pendingOrders = orders.filter((order) => order.status === "Pending");
+  // Filter shipped orders
+  const shippedOrders = orders.filter((order) => order.status === "Shipped");
 
   // Pagination logic
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = pendingOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = shippedOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Pending Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Shipped Orders</h2>
       <div className="overflow-x-auto">
         <table className="w-full bg-white rounded-lg shadow-lg">
           <thead className="bg-gray-100 border-b">
@@ -100,6 +100,8 @@ const PendingOrders = () => {
                         ? "bg-green-100 text-green-600"
                         : order.status === "Pending"
                         ? "bg-yellow-100 text-yellow-600"
+                        : order.status === "Shipped"
+                        ? "bg-blue-100 text-blue-600"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
@@ -127,7 +129,7 @@ const PendingOrders = () => {
 
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        {Array.from({ length: Math.ceil(pendingOrders.length / ordersPerPage) }, (_, i) => (
+        {Array.from({ length: Math.ceil(shippedOrders.length / ordersPerPage) }, (_, i) => (
           <button
             key={i + 1}
             onClick={() => paginate(i + 1)}
@@ -145,4 +147,4 @@ const PendingOrders = () => {
   );
 };
 
-export default PendingOrders;
+export default ShippedOrders;

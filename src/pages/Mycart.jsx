@@ -7,7 +7,7 @@ import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 const Cart = () => {
   const { loggedInUser } = useAuth()
-  const { data: cartsData, isLoading, refetch } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+  const { data: cartsData, isLoading } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
   const { handleCartProductQuantityChange , handleDeleteCart} = useFunc();
 
    
@@ -65,14 +65,14 @@ const Cart = () => {
             {/* Quantity */}
             <div className="flex justify-center md:justify-start items-center">
               <button
-                onClick={() => handleCartProductQuantityChange(cart?._id, cart?.quantity > 1 && -1, refetch)}
+                onClick={() => handleCartProductQuantityChange(cart?._id, cart?.quantity > 1 && -1)}
                 className="border px-2 py-1 text-lg"
               >
                 -
               </button>
               <span className="mx-2">{cart?.quantity}</span>
               <button
-                onClick={() => handleCartProductQuantityChange(cart?._id, 1, refetch)}
+                onClick={() => handleCartProductQuantityChange(cart?._id, 1)}
                 className="border px-2 py-1 text-lg"
               >
                 +
@@ -90,7 +90,7 @@ const Cart = () => {
             </button> */}
         
             <button
-              onClick={() => handleDeleteCart(cart?._id, refetch)}
+              onClick={() => handleDeleteCart(cart?._id)}
               className="text-red-500 hover:text-red-700 text-center"
             >
               🗑️

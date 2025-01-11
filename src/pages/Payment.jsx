@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { cartsApi } from "../redux/apis/cartsApi";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { orderApi } from "../redux/apis/orderApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Payment = () => {
@@ -26,6 +26,8 @@ const Payment = () => {
   const subTotalPrice = cartsData?.data?.subTotalPrice;
   const [ cashOnDeliveryOrder ] = orderApi.useCashOnDeliveryOrderMutation();
   const [ createSslcommerzOrder ] = orderApi.useCreateSslcommerzOrderMutation();
+  const navigate = useNavigate();
+
 
   const selectedPayment = watch("paymentMethod", "COD");
   const paymentOptions = [
@@ -54,7 +56,6 @@ const Payment = () => {
 
 
 
- console.log("selectedPayment: " , selectedPayment)
 
 
   const deliveryCharge = 100;
@@ -107,6 +108,7 @@ const Payment = () => {
             toast.success(res?.data?.message);
             refetchCarts();
             reset();
+            navigate("/dashboard/orders/my-orders")
         }
     } catch(error){
         console.log(error)
@@ -162,6 +164,7 @@ const Payment = () => {
             type="number"
             {...register("clientPhone", { required: true })}
             placeholder="Enter your phone number"
+            defaultValue={loggedInUser?.phone}
             className="border w-full p-2 rounded mt-4 mr-6"
           />
           {errors.clientPhone && <p className="text-red-500 text-sm">Phone number is required.</p>}

@@ -17,9 +17,6 @@ const [ updateQuantityById ] = cartsApi.useUpdateQuantityByIdMutation();
 const [ deleteCartById ] = cartsApi.useDeleteCartByIdMutation();
 const [ addToWishlist ] = wishlistApi.useAddToWishlistMutation();
 const [ deletewishlistById  ] = wishlistApi.useDeletewishlistByIdMutation();
-// eslint-disable-next-line no-unused-vars
-const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id)
-
 
 // handle add to cart func
  const handleAddToCart = async(data) => {
@@ -39,7 +36,6 @@ const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUser
       }    
     const res =  await addToCart(cartData);
     if(res?.data?.success){
-      refetchCarts()
         toast.success(res?.data?.message)
     } else if(res?.error?.data){
       toast.error(res?.error?.data?.message)
@@ -51,9 +47,39 @@ const { data: cartsData, refetch: refetchCarts } = cartsApi.useGetAllCartsByUser
  }
 }
 
+// handle delete data
+const handleDeleteSingleData = async(deleteApi, id, title) => {
+      try{
+       Swal.fire({
+         title: "Are you sure?",
+         text: `You won't be able to revert ${title}!`,
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Yes, delete it!",
+       }).then((result) => {
+         if (result.isConfirmed) {
+          deleteApi(id).then((res) => {
+             console.log(res)
+             if (res?.data?.success){
+               Swal.fire({
+                 title: "Deleted!",
+                 text: `${title} has been deleted `,
+                 icon: "success",
+               });
+             }
+           });
+         }
+       });
+      } catch(err){
+       console.log(err)
+       toast.error(err?.message)
+      }
+}
 
 // handle delete cart
-const handleDeleteCart = async(id, refetch ) => {
+const handleDeleteCart = async(id ) => {
     try{
 
             Swal.fire({
@@ -69,7 +95,6 @@ const handleDeleteCart = async(id, refetch ) => {
                 deleteCartById(id).then((res) => {
                   console.log(res)
                   if (res?.data?.success){
-                    refetch();
                     Swal.fire({
                       title: "Deleted!",
                       text: `Product has been deleted from cart`,
@@ -87,11 +112,10 @@ const handleDeleteCart = async(id, refetch ) => {
 }
 
   // handle quantity change
-  const handleCartProductQuantityChange = async(id, quantityChange, refetch) => {
+  const handleCartProductQuantityChange = async(id, quantityChange) => {
      try{
         const res = await updateQuantityById({id, quantityChange});
         if(res?.data?.success){
-            refetch();
             toast.success(res?.data?.message)
         }
         else if(res?.error){
@@ -162,7 +186,8 @@ const handleDeleteWishlist = async(id, refetch ) => {
         handleDeleteCart,
         handleCartProductQuantityChange,
         handleAddToWishlist,
-        handleDeleteWishlist
+        handleDeleteWishlist,
+        handleDeleteSingleData
         
     }
     return (

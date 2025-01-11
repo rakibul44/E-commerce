@@ -10,7 +10,6 @@ const ProductSection = () => {
   }
   const productData = productsData?.data || [];
   
-  console.log
 
   return (
     <section className="py-8 px-4 bg-gray-100">
@@ -53,7 +52,7 @@ const ProductSection = () => {
               ))}
             </div>
             <Link
-              to={`/${category?.category?.toLowerCase().replace(/ /g, "-")}`}
+              to={`/product`}
               className="block absolute bottom-2 right-2 mt-4 text-center bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg text-lg"
             >
               View More

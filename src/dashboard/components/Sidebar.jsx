@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHome, FaUser, FaMapMarkerAlt } from "react-icons/fa";
-import { MdPayment, MdOutlineSupportAgent, MdOutlineMessage } from "react-icons/md";
+import {  MdOutlineSupportAgent, MdOutlineMessage } from "react-icons/md";
 import { BsBoxFill } from "react-icons/bs";
 import { GiRoyalLove, GiCampingTent } from "react-icons/gi";
 import { LuLogOut } from "react-icons/lu";
@@ -13,8 +13,8 @@ const Sidebar = () => {
   const [activeIndex, setActiveIndex] = useState(null); // State to track active menu item
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // State for Product Update Sub-menu
   const isAdmin = true;
-  const isUser = true;
-
+  const isUser = false;
+  
   // Menu items data
   const menuItems = [
     isAdmin && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
@@ -38,13 +38,7 @@ const Sidebar = () => {
         { name: "Add Brand ", link: "/dashboard/add-brand" },
       ],
     },
-    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
-    isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
-    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
-    { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
-    isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
-    isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
-    {
+    isAdmin && {
       name: "Order",
       icon: <BsBoxFill />,
       isSubMenu: true, // Flag for submenu
@@ -57,11 +51,23 @@ const Sidebar = () => {
         { name: "Returned", link: "/dashboard/orders/returned" },
       ],
     },
+   { name: "My orders", icon: <BsBoxFill />, link: "/dashboard/orders/my-orders" },
+    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
+    isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
+    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
+    { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
+    isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
+    // isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
+
+    { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
+    { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
+    { name: "Contact us", icon: <FaMapMarkerAlt />, link: "/dashboard/contact-us" },
+    { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
     { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
     { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
     { name: "Address", icon: <FaMapMarkerAlt />, link: "/dashboard/address" },
     { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
-    { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
+    { name: "Support", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
     { name: "Logout", icon: <LuLogOut />, link: "/logout" },
   ];
 
@@ -100,8 +106,11 @@ const Sidebar = () => {
                         }`}
                       >
                         <span className="text-lg">{item.icon}</span>
+                        <span>
+                          
+                        </span>
                         <span>{item.name}</span>
-                        <span className="ml-auto">{activeIndex === index && isSubMenuOpen ? "▲" : "▼"}</span>
+                        <span className="">{activeIndex === index && isSubMenuOpen ? "▲" : "▼"}</span>
                       </button>
 
                       {/* Sub-menu */}

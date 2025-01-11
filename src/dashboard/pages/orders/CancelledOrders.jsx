@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { MdPreview } from "react-icons/md";
 
 const orders = [
@@ -25,7 +25,7 @@ const orders = [
     id: 2,
     orderId: "#355",
     date: "Feb 06, 2021",
-    status: "Shipped",
+    status: "Cancelled",
     amount: "৳480",
     totalPrice: "৳2,400",
     productImage: "https://via.placeholder.com/100",
@@ -43,7 +43,7 @@ const orders = [
     id: 3,
     orderId: "#356",
     date: "Feb 07, 2021",
-    status: "Completed",
+    status: "Delivered",
     amount: "৳1,200",
     totalPrice: "৳6,000",
     productImage: "https://via.placeholder.com/100",
@@ -57,25 +57,43 @@ const orders = [
     customerEmail: "robert@example.com",
     customerPhone: "+8801122334455",
   },
+  {
+    id: 4,
+    orderId: "#357",
+    date: "Feb 08, 2021",
+    status: "Cancelled",
+    amount: "৳700",
+    totalPrice: "৳3,500",
+    productImage: "https://via.placeholder.com/100",
+    productSize: "Medium",
+    productColor: "Black",
+    productId: "#P126",
+    quantity: "5",
+    price: "৳350",
+    productName: "Leather Bag",
+    customerName: "Alice White",
+    customerEmail: "alice@example.com",
+    customerPhone: "+8801222334455",
+  },
 ];
 
-const ShippedOrders = () => {
+const CancelledOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 7;
 
-  // Filter shipped orders
-  const shippedOrders = orders.filter((order) => order.status === "Shipped");
+  // Filter cancelled orders
+  const cancelledOrders = orders.filter((order) => order.status === "Cancelled");
 
   // Pagination logic
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = shippedOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = cancelledOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Shipped Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Cancelled Orders</h2>
       <div className="overflow-x-auto">
         <table className="w-full bg-white rounded-lg shadow-lg">
           <thead className="bg-gray-100 border-b">
@@ -102,6 +120,8 @@ const ShippedOrders = () => {
                         ? "bg-yellow-100 text-yellow-600"
                         : order.status === "Shipped"
                         ? "bg-blue-100 text-blue-600"
+                        : order.status === "Delivered"
+                        ? "bg-purple-100 text-purple-600"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
@@ -129,7 +149,7 @@ const ShippedOrders = () => {
 
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        {Array.from({ length: Math.ceil(shippedOrders.length / ordersPerPage) }, (_, i) => (
+        {Array.from({ length: Math.ceil(cancelledOrders.length / ordersPerPage) }, (_, i) => (
           <button
             key={i + 1}
             onClick={() => paginate(i + 1)}
@@ -147,4 +167,4 @@ const ShippedOrders = () => {
   );
 };
 
-export default ShippedOrders;
+export default CancelledOrders;

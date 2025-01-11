@@ -9,6 +9,7 @@ export const cartsApi = apiService.injectEndpoints({
                 method: "POST",
                 body: cart,
             }),
+            invalidatesTags: ["cart"]
         }),
 
         // Get all carts by user ID
@@ -16,6 +17,7 @@ export const cartsApi = apiService.injectEndpoints({
             query: (userId) => ({
                 url: `carts/user/${userId}`,
             }),
+            providesTags: ["cart"]
         }),
 
         // Get cart by ID
@@ -23,6 +25,7 @@ export const cartsApi = apiService.injectEndpoints({
             query: (id) => ({
                 url: `carts/${id}`,
             }),
+            providesTags: ["cart"]
         }),
 
         // Update cart by ID
@@ -32,6 +35,7 @@ export const cartsApi = apiService.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
+            invalidatesTags: ["cart"]
         }),
 
         // Update quantity by ID
@@ -41,6 +45,7 @@ export const cartsApi = apiService.injectEndpoints({
                 method: "PATCH",
                 body: { quantityChange },
             }),
+            invalidatesTags: ["cart"]
         }),
 
         // Delete cart by ID
@@ -49,6 +54,7 @@ export const cartsApi = apiService.injectEndpoints({
                 url: `carts/delete/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["cart"]
         }),
 
         // Delete all carts by user ID
@@ -57,6 +63,7 @@ export const cartsApi = apiService.injectEndpoints({
                 url: `carts/user/${userId}/carts`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["cart"]
         }),
     }),
 });

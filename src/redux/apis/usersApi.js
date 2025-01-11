@@ -21,7 +21,7 @@ export const usersApi = apiService.injectEndpoints({
         // get a spacific single user
         getUserById: builder.query({
             query: (id) => ({
-                url: `users/${id}`
+                url: `users/single/${id}`
             })
         }),
 
@@ -48,6 +48,13 @@ export const usersApi = apiService.injectEndpoints({
                 url: `users/delete/${id}`,
                 method: "DELETE"
             })
-        })
+        }),
+
+        // get all customers
+        getAllCustomers: builder.query({
+            query: () => ({
+                url: "users/all-customers"
+            }),
+        }),
     }),
 })
