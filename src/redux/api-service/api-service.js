@@ -7,10 +7,12 @@ export const apiService = createApi({
      baseQuery: fetchBaseQuery({
       // localhost
      //    baseUrl: "http://localhost:5001/api/v1/"
-     baseUrl: 'https://elan-server.vercel.app/api/v1/'
+     baseUrl: 'https://elan-server.vercel.app/api/v1/',
+     credentials: "include"
      }),
      tagTypes: ["order", "wishlist", "cart"],
      endpoints: () => ({}),
+     
 });
 
 export default apiService;
