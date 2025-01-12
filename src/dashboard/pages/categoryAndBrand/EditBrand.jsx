@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useParams } from "react-router-dom";
 import { brandApi } from "../../../redux/apis/brandApi";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 const EditBrand = () => {
   const { id } = useParams();
@@ -10,8 +11,8 @@ const EditBrand = () => {
   const { data: brandData , isLoading, refetch,} = brandApi.useGetBrandByIdQuery(id);
   const [ updateBrand ] = brandApi.useUpdateBrandMutation();
   const  currentBrand = brandData?.data;
+  const { baseRoute } = useBaseRoute();
 
-  console.log(brandData)
 
   
 
@@ -37,7 +38,7 @@ if(isLoading){
     <div className=" container bg-gray-50  rounded-lg p-6 mt-3">
        <div className=" flex justify-between px-5">
        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Update Brand</h2>
-       <Link to={"/dashboard/brands"} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover  rounded ">All Brands</Link>
+       <Link to={`${baseRoute}/brands`} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover  rounded ">All Brands</Link>
 
        </div>
       <form onSubmit={handleSubmit(handleUpdateBrand)} className=" max-w-lg mx-auto bg-white shadow-lg  p-6 ">

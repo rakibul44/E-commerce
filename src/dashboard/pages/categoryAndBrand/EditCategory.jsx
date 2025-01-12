@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { categoryApi } from "../../../redux/apis/categoryApi";
 import { toast } from "react-toastify";
 import { Link, useParams } from "react-router-dom";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 const EditCategory = () => {
   const { id } = useParams();
@@ -10,8 +11,8 @@ const EditCategory = () => {
   const { data: categoryData , isLoading, refetch,} = categoryApi.useGetCategoryByIdQuery(id);
   const [ updateCategory ] = categoryApi.useUpdateCategoryMutation();
   const  currentCategory = categoryData?.data;
+  const { baseRoute } = useBaseRoute();
 
-  console.log(categoryData)
 
   
 
@@ -37,7 +38,7 @@ if(isLoading){
     <div className=" container bg-gray-50  rounded-lg p-6 mt-3">
        <div className=" flex justify-between px-5">
        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Update Category</h2>
-       <Link to={"/dashboard/categories"} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover  rounded ">All Categories</Link>
+       <Link to={`${baseRoute}/categories`} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover  rounded ">All Categories</Link>
 
        </div>
       <form onSubmit={handleSubmit(handleUpdateCategory)} className=" max-w-lg mx-auto bg-white shadow-lg  p-6 ">

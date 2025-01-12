@@ -7,67 +7,70 @@ import { GiRoyalLove, GiCampingTent } from "react-icons/gi";
 import { LuLogOut } from "react-icons/lu";
 import { FaUserGroup } from "react-icons/fa6";
 import { AiFillNotification, AiOutlineProduct } from "react-icons/ai";
+import useBaseRoute from "../../hooks/useBaseRoute";
+import useAuth from "../../hooks/useAuth";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle sidebar
   const [activeIndex, setActiveIndex] = useState(null); // State to track active menu item
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // State for Product Update Sub-menu
-  const isAdmin = true;
-  const isUser = false;
+  const { baseRoute } = useBaseRoute();
+  const { loggedInUser } = useAuth();
+  const isSuperAdminOrAdmin = loggedInUser?.role === "superAdmin" || loggedInUser?.role === "Admin";
+  const isUser = loggedInUser?.role === "user";
   
   // Menu items data
   const menuItems = [
-    isAdmin && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
-    isAdmin && {
+    isSuperAdminOrAdmin && { name: "Dashboard", icon: <FaHome />, link: {baseRoute} },
+    isSuperAdminOrAdmin && {
       name: "Product management",
       icon: <AiOutlineProduct />,
       isSubMenu: true, // Flag for submenu
       subMenu: [
-        { name: "Add Product", link: "/dashboard/add-product" },
-        { name: "Product List", link: "/dashboard/productlist" },
+        { name: "Add Product", link: `${baseRoute}/add-product` },
+        { name: "Product List", link: `${baseRoute}/productlist` },
       ],
     },
-    isAdmin && {
+    isSuperAdminOrAdmin && {
       name: "Category & Brands",
       icon: <AiOutlineProduct />,
       isSubMenu: true, // Flag for submenu
       subMenu: [
-        { name: "Categories", link: "/dashboard/categories" },
-        { name: "Add Category", link: "/dashboard/add-category" },
-        { name: "Brands ", link: "/dashboard/brands" },
-        { name: "Add Brand ", link: "/dashboard/add-brand" },
+        { name: "Categories", link: `${baseRoute}/categories` },
+        { name: "Add Category", link: `${baseRoute}/add-category` },
+        { name: "Brands ", link: `${baseRoute}/brands` },
+        { name: "Add Brand ", link: `${baseRoute}/add-brand` },
       ],
     },
-    isAdmin && {
+    isSuperAdminOrAdmin && {
       name: "Order",
       icon: <BsBoxFill />,
       isSubMenu: true, // Flag for submenu
       subMenu: [
-        { name: "Order List", link: "/dashboard/orders/order-list" },
-        { name: "Pending", link: "/dashboard/orders/pending" },
-        { name: "Shipped", link: "/dashboard/orders/shipped" },
-        { name: "Delivered", link: "/dashboard/orders/delivered" },
-        { name: "Cancelled", link: "/dashboard/orders/cancelled" },
-        { name: "Returned", link: "/dashboard/orders/returned" },
+        { name: "Order List", link: `${baseRoute}/orders/order-list` },
+        { name: "Pending", link: `${baseRoute}/orders/pending` },
+        { name: "Shipped", link: `${baseRoute}/orders/shipped` },
+        { name: "Delivered", link: `${baseRoute}/orders/delivered` },
+        { name: "Cancelled", link: `${baseRoute}/orders/cancelled` },
+        { name: "Returned", link: `${baseRoute}/orders/returned` },
       ],
     },
-   { name: "My orders", icon: <BsBoxFill />, link: "/dashboard/orders/my-orders" },
-    isUser && { name: "Dashboard", icon: <FaHome />, link: "/dashboard" },
-    isAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: "/dashboard/notice" },
-    isAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: "/dashboard/newsletter" },
-    { name: "Personal Info", icon: <FaUser />, link: "/dashboard/profileupdate" },
-    isAdmin && { name: "Customers", icon: <FaUserGroup />, link: "/dashboard/customer" },
-    // isUser && { name: "Payment Method", icon: <MdPayment />, link: "/dashboard/payment" },
+    isUser && { name: "Dashboard", icon: <FaHome />, link: {baseRoute} },
+   { name: "My orders", icon: <BsBoxFill />, link: `${baseRoute}/orders/my-orders` },
+    isSuperAdminOrAdmin && { name: "Scroll Notice", icon: <AiFillNotification />, link: `${baseRoute}/notice` },
+    isSuperAdminOrAdmin && { name: "Newsletter", icon: <AiFillNotification />, link: `${baseRoute}/newsletter` },
+    { name: "Personal Info", icon: <FaUser />, link: `${baseRoute}/profileupdate` },
+    isSuperAdminOrAdmin && { name: "Customers", icon: <FaUserGroup />, link: `${baseRoute}/customer` },
+    // isUser && { name: "Payment Method", icon: <MdPayment />, link: `${baseRoute}/payment` },
 
-    { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
-    { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
-    { name: "Contact us", icon: <FaMapMarkerAlt />, link: "/dashboard/contact-us" },
-    { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
-    { name: "Wishlist", icon: <GiRoyalLove />, link: "/dashboard/wishcart" },
-    { name: "Messages", icon: <MdOutlineMessage />, link: "/dashboard/message" },
-    { name: "Address", icon: <FaMapMarkerAlt />, link: "/dashboard/address" },
-    { name: "Campaigns", icon: <GiCampingTent />, link: "/dashboard/camp" },
-    { name: "Support", icon: <MdOutlineSupportAgent />, link: "/dashboard/support" },
+    { name: "Wishlist", icon: <GiRoyalLove />, link: `${baseRoute}/wishcart` },
+    isSuperAdminOrAdmin &&  { name: "Messages", icon: <MdOutlineMessage />, link: `${baseRoute}/message` },
+    isSuperAdminOrAdmin &&  { name: "Contact us", icon: <FaMapMarkerAlt />, link: `${baseRoute}/contact-us` },
+    isSuperAdminOrAdmin &&  { name: "Support Ticket", icon: <MdOutlineSupportAgent />, link: `${baseRoute}/support` },
+    isSuperAdminOrAdmin &&  { name: "Messages", icon: <MdOutlineMessage />, link: `${baseRoute}/message` },
+    isSuperAdminOrAdmin &&  { name: "Address", icon: <FaMapMarkerAlt />, link: `${baseRoute}/address` },
+    isSuperAdminOrAdmin &&  { name: "Campaigns", icon: <GiCampingTent />, link: `${baseRoute}/camp` },
+    isSuperAdminOrAdmin &&  { name: "Support", icon: <MdOutlineSupportAgent />, link: `${baseRoute}/support` },
     { name: "Logout", icon: <LuLogOut />, link: "/logout" },
   ];
 
@@ -75,12 +78,12 @@ const Sidebar = () => {
     <>
       {/* Sidebar */}
       <aside
-        className={`w-64 bg-white shadow-lg h-auto fixed md:relative top-0 left-0 transform ${
+        className={`w-64 h-screen overflow-y-auto bg-white shadow-lg fixed md:relative top-0 left-0 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out z-50`}
       >
         <Link to={"/"} className="text-2xl font-bold mb-6 p-4">
-          Admin Dashboard
+        {isSuperAdminOrAdmin ? "Admin" : "User" }  Dashboard
         </Link>
         <ul className="space-y-2">
           {menuItems.map(

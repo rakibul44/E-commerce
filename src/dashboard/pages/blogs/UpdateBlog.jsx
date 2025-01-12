@@ -10,6 +10,7 @@ import { FaAlignJustify } from "react-icons/fa";
 import { categoryApi } from "../../../redux/apis/categoryApi";
 import { toast } from "react-toastify";
 import { blogsApi } from "../../../redux/apis/blogsApi";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 
 const UpdateBlog = () => {
@@ -28,6 +29,8 @@ const UpdateBlog = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { baseRoute } = useBaseRoute();
+
 
   // set deffault previous description
   useEffect(() => {
@@ -128,7 +131,7 @@ console.log(currentBlog)
     <div className=" container mx-auto p-6 bg-white shadow-md rounded-md mt-10">
        <div className=" flex justify-between items-center">
        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Update Blog</h2>
-         <Link to={"/dashboard/all-blogs"} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
+         <Link to={`${baseRoute}/all-blogs`} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
        </div>
       <form onSubmit={handleSubmit(handleUpdateBlog)} className="space-y-6">
 

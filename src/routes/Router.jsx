@@ -48,6 +48,8 @@ import ShippedOrders from "../dashboard/pages/orders/ShippedOrders";
 import OrderList from "../dashboard/pages/orders/Orderlist";
 import MyOrders from "../dashboard/pages/orders/MyOrders";
 import AdminRoute from "./AdminRoute";
+import PrivateRoute from "./PrivateRoute";
+import Dashboard from "../dashboard/pages/Dashboard";
 
 // import SendNewsletter from "../dashboard/pages/SendNewsletter";
 
@@ -70,7 +72,7 @@ const mainRoutes = [
 
 
 // dashboard routes
-const dashboardRoute = [
+const dashboardAdminRoute = [
     {  path:'',    element:<AdminDashboardHome /> },
     {  path:'profileupdate',    element: <ProfileUpdate /> },
     {  path:'payment',    element: <PaymentMethod /> },
@@ -101,7 +103,15 @@ const dashboardRoute = [
     { path: 'orders/pending', element: <PendingOrders/> },
     { path: 'orders/delivered', element: <DeliveredOrders/> },
     { path: 'orders/shipped', element: <ShippedOrders/> },
-    
+]
+
+const dashboardUserRoutes = [
+    {  path:'',    element:<Dashboard /> },
+    { path: 'orders/my-orders', element: <MyOrders/>},
+    {  path:'wishcart',    element: <Wishcart /> },
+    {  path:'profileupdate',    element: <ProfileUpdate /> },
+    // {  path:'message',    element: <Message /> },
+
 ]
 
 // all routes
@@ -112,10 +122,16 @@ const router = createBrowserRouter([
         children: mainRoutes, // Pass the mainRoutes as children
     },
     {
-        path: '/dashboard',
+        path: '/dashboard/admin',
         element: <AdminRoute><DashboardLayout /></AdminRoute> ,
-        children: dashboardRoute, // Pass the dashboardRoutes as children
+        children: dashboardAdminRoute, // Pass the dashboardRoutes as children
     },
+    {
+        path: '/dashboard/user',
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute> ,
+        children: dashboardUserRoutes, // Pass the dashboardRoutes as children
+    },
+
     
 ]);
 

@@ -9,6 +9,7 @@ import { categoryApi } from "../redux/apis/categoryApi";
 import { GiSelfLove } from "react-icons/gi";
 import { wishlistApi } from "../redux/apis/wishlistApi";
 import { useForm } from "react-hook-form";
+import useBaseRoute from "../hooks/useBaseRoute";
 
 const Navbar = () => {
   const { register, handleSubmit , reset} = useForm();
@@ -25,6 +26,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const email = localStorage.getItem("email")
   const categories = categoryData?.data || [];
+  const { baseRoute } = useBaseRoute();
 
   const midIndex = Math.ceil(categories.length / 2);
   const firstHalfCategories = categories.slice(0, midIndex);
@@ -156,7 +158,7 @@ const Navbar = () => {
               { currentUser?.name}
             </h2>
             <Link
-              to="/dashboard"
+              to={baseRoute}
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
             >
               Dashboard

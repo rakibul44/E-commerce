@@ -4,13 +4,15 @@ import { blogsApi } from "../../../redux/apis/blogsApi";
 // import Swal from "sweetalert2";
 // import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 const AllBlogs = () => {
     
    const {data: blogsData , refetch} = blogsApi.useGetAllBlogsQuery();
    const [deleteBlog ] = blogsApi.useDeleteBlogMutation();
    const blogs = blogsData?.data?.blogs || [];
-  
+   const { baseRoute } = useBaseRoute();
+
    
   //  handle delte a blog
    const handleDeleteBlog = async (id, blogTitle) => {
@@ -41,7 +43,7 @@ const AllBlogs = () => {
   <div className="flex justify-between px-4 mb-3 mt-4">
     <h3 className="text-xl font-semibold">All blogs</h3>
     <Link
-      to={`/dashboard/add-blog`}
+      to={`${baseRoute}/add-blog`}
       className="px-3 py-2 bg-blue-500 hover:bg-blue-700 rounded text-white text-sm"
     >
       Add New Blog
@@ -84,7 +86,7 @@ const AllBlogs = () => {
                 {new Date(blog?.createdAt).toLocaleDateString()}
               </td>
               <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                <Link to={`/dashboard/update-blog/${blog?._id}`}>
+                <Link to={`${baseRoute}/update-blog/${blog?._id}`}>
                   <span className="text-green-500 text-xl cursor-pointer hover:scale-110">✏️</span>
                 </Link>
                 <span

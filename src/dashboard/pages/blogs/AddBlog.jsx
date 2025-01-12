@@ -12,6 +12,7 @@ import { categoryApi } from "../../../redux/apis/categoryApi";
 import { toast } from "react-toastify";
 import { blogsApi } from "../../../redux/apis/blogsApi";
 import useAuth from "../../../hooks/useAuth";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 const AddBlog = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -21,6 +22,8 @@ const AddBlog = () => {
   const { loggedInUser: user } = useAuth();
   const [ createBlog ] = blogsApi.useCreateBlogMutation();
   const categories = categoryData?.data || [];
+  const { baseRoute } = useBaseRoute();
+
 
   // handle eidotor change
   // const onEditorStateChange = (newState) => {
@@ -88,7 +91,7 @@ const AddBlog = () => {
     <div className=" container mx-auto p-6 bg-white shadow-md rounded-md mt-10">
        <div className=" flex justify-between items-center">
        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add New Blog</h2>
-         <Link to={"/dashboard/all-blogs"} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
+         <Link to={`${baseRoute}/all-blogs`} className=" flex gap-2 text-white bg-btnbg hover:bg-btnbghover px-2 py-1 rounded-md"> <FaAlignJustify /> All Blogs </Link>
        </div>
       <form onSubmit={handleSubmit(handleAddBlog)} className="space-y-6">
 

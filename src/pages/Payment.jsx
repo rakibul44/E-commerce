@@ -7,6 +7,7 @@ import { cartsApi } from "../redux/apis/cartsApi";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { orderApi } from "../redux/apis/orderApi";
 import { Link, useNavigate } from "react-router-dom";
+import useBaseRoute from "../hooks/useBaseRoute";
 
 
 const Payment = () => {
@@ -27,6 +28,8 @@ const Payment = () => {
   const [ cashOnDeliveryOrder ] = orderApi.useCashOnDeliveryOrderMutation();
   const [ createSslcommerzOrder ] = orderApi.useCreateSslcommerzOrderMutation();
   const navigate = useNavigate();
+  const { baseRoute } = useBaseRoute();
+
 
 
   const selectedPayment = watch("paymentMethod", "COD");
@@ -108,7 +111,7 @@ const Payment = () => {
             toast.success(res?.data?.message);
             refetchCarts();
             reset();
-            navigate("/dashboard/orders/my-orders")
+            navigate(`${baseRoute}/orders/my-orders`)
         }
     } catch(error){
         console.log(error)

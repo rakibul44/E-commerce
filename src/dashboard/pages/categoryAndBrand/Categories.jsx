@@ -5,12 +5,14 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 
 const Categories = () => {
    const { data: categoryData, isLoading, refetch } = categoryApi.useGetAllCategoryQuery();
    const [deleteCategory ] = categoryApi.useDeleteCategoryMutation();
    const location = useLocation();
+   const { baseRoute } = useBaseRoute();
 
    useEffect(()=> {  refetch()}, [location])
 
@@ -54,7 +56,7 @@ const Categories = () => {
       <div className="flex justify-between px-4 mb-3">
         <h3 className="text-xl font-semibold">All Categories</h3>
         <Link
-          to={`/dashboard/add-category`}
+          to={`${baseRoute}/add-category`}
           className="px-2 py-1 bg-btnbg hover:bg-btnbghover rounded text-white text-[16px]"
         >
           Add New Category
@@ -85,7 +87,7 @@ const Categories = () => {
                       {category?.slug}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                    <Link to={`/dashboard/edit-category/${category?._id}`}>
+                    <Link to={`${baseRoute}/edit-category/${category?._id}`}>
                       <FaEdit className="text-green-500 text-xl" />
                     </Link>
                     <MdOutlineDeleteForever

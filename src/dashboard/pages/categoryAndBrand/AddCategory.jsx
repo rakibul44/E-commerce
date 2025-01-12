@@ -2,10 +2,12 @@ import { useForm } from "react-hook-form";
 import { categoryApi } from "../../../redux/apis/categoryApi";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 const AddCategory = () => {
   const { register, handleSubmit, formState: { errors }, reset} = useForm();
   const [ createCategory ] = categoryApi.useCreateCategoryMutation();
+  const { baseRoute } = useBaseRoute();
 
 //  handle add category function
   const handleAddCategory = async(data) => {
@@ -31,7 +33,7 @@ const AddCategory = () => {
     <div className=" container  p-6 mt-3">
        <div className=" flex justify-between px-5">
        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add Category</h2>
-       <Link to={"/dashboard/categories"} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover rounded ">All Categories</Link>
+       <Link to={`${baseRoute}/categories`} className="text-xl font-bold text-center text-white mb-6  px-2 py-1 bg-btnbg hover:bg-btnbghover rounded ">All Categories</Link>
 
        </div>
       <form onSubmit={handleSubmit(handleAddCategory)} className=" bg-white shadow-lg p-6 rounded-lg max-w-lg mx-auto">

@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { orderApi } from "../redux/apis/orderApi";
+import useBaseRoute from "../hooks/useBaseRoute";
 
 
 const OrderSingleProduct = () => {
@@ -29,6 +30,7 @@ const OrderSingleProduct = () => {
   const [ cashOnDeliveryOrder ] = orderApi.useCashOnDeliveryOrderMutation();
   const [ createSslcommerzOrder ] = orderApi.useCreateSslcommerzOrderMutation();
   const navigate = useNavigate();
+  const { baseRoute } = useBaseRoute();
 
 
   const product = productData?.data;
@@ -99,7 +101,7 @@ const OrderSingleProduct = () => {
         if(res?.data?.success){
             reset();
             toast.success(res?.data?.message);
-            navigate("/dashboard/orders/my-orders")
+            navigate(`${baseRoute}/orders/my-orders`)
         }
     } catch(error){
         console.log(error)

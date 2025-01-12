@@ -5,6 +5,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 
 const ProductList = () => {
@@ -12,6 +13,8 @@ const ProductList = () => {
   const { data: productData, isLoading, refetch } = productApi.useGetAllProductsQuery();
   const [ deleteProductById ] = productApi.useDeleteProductByIdMutation();
   const location = useLocation();
+  const { baseRoute } = useBaseRoute();
+
 
   useEffect(() => { refetch()}, [location])
 
@@ -71,7 +74,7 @@ const ProductList = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <Link
-          to="/dashboard/update"
+          to={`${baseRoute}/update`}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           + Add new
@@ -132,7 +135,7 @@ const ProductList = () => {
                   </span>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center gap-2">
-                    <Link to={`/dashboard/update-product/${product?._id}`}>
+                    <Link to={`${baseRoute}/update-product/${product?._id}`}>
                       <FaEdit className="text-green-500 text-xl" />
                     </Link>
                     <MdOutlineDeleteForever

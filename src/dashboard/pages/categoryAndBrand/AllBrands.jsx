@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { brandApi } from "../../../redux/apis/brandApi";
 import { useEffect } from "react";
+import useBaseRoute from "../../../hooks/useBaseRoute";
 
 
 const AllBrands = () => {
@@ -13,6 +14,7 @@ const AllBrands = () => {
    const [deleteBrand ] = brandApi.useDeleteBrandMutation ();
    const location = useLocation();
    const brands = brandData?.data || [];
+   const { baseRoute } = useBaseRoute();
 
    useEffect(()=> {  refetch()}, [location])
 
@@ -54,7 +56,7 @@ const AllBrands = () => {
       <div className="flex justify-between px-4 mb-3">
         <h3 className="text-xl font-semibold">All brands</h3>
         <Link
-          to={`/dashboard/add-brand`}
+          to={`${baseRoute}/add-brand`}
           className="px-2 py-1 bg-btnbg hover:bg-btnbghover rounded text-white text-[16px]"
         >
           Add New brand
@@ -85,7 +87,7 @@ const AllBrands = () => {
                       {brand?.slug}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                    <Link to={`/dashboard/edit-brand/${brand?._id}`}>
+                    <Link to={`${baseRoute}/edit-brand/${brand?._id}`}>
                       <FaEdit className="text-green-500 text-xl" />
                     </Link>
                     <MdOutlineDeleteForever
