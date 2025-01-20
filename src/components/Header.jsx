@@ -1,24 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import winter from '../assets/winter.jpg';
-import TNF from '../assets/TNF.jpg';
+import { productApi } from "../redux/apis/productApi";
 
 const HeaderSection = () => {
-  const images = [
-    {
-      id: 1,
-      src: winter ,
-      alt: "Men's Fashion",
-      link: "/men-fashion",
-    },
-    {
-      id: 2,
-      src: TNF ,
-      alt: "Women's Fashion",
-      link: "/women-fashion",
-    },
-    //USE ONLY TWO PHOTOS
-  ];
+  const { data: productData } = productApi.useGetTopSellingInStockProductImagesQuery();
+  const images =  productData?.data || [];
 
   const handleScroll = () => {
     window.scrollTo({
@@ -27,8 +12,10 @@ const HeaderSection = () => {
     });
   };
 
+  console.log("images: ", productData)
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-screen bg-white text-white">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-screen bg-white text-white ">
       {/* Left Section */}
       <div className="flex flex-col justify-center items-center bg-midnight px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -54,15 +41,15 @@ const HeaderSection = () => {
 
       {/* Right Section */}
       <div className="grid grid-cols-2 gap-2 items-center">
-        {images.map((image) => (
+        {images?.map((image) => (
           <Link
-            key={image.id}
-            to={image.link}
+            key={image?.id}
+            to={`/${image?.id}`}
             className="hover:opacity-80 transition"
           >
             <img
-              src={image.src}
-              alt={image.alt}
+              src={image?.image}
+              alt={'product'}
               className="w-full h-full object-cover rounded-lg"
             />
           </Link>

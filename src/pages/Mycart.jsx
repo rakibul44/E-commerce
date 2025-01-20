@@ -1,44 +1,28 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
+// import { FaEdit } from "react-icons/fa";
+import { cartsApi } from "../redux/apis/cartsApi";
+import useFunc from "../hooks/useFunc";
+import useAuth from "../hooks/useAuth";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Denim Regular Fit Shorts",
-      price: 15.0,
-      size: "S",
-      color: "Outer Space",
-      material: "Denim",
-      quantity: 1,
-      image: "https://via.placeholder.com/80x80", // Replace with actual image link
-    },
-  ]);
+  const { loggedInUser } = useAuth()
+  const { data: cartsData, isLoading } = cartsApi.useGetAllCartsByUserIdQuery(loggedInUser?._id);
+  const { handleCartProductQuantityChange , handleDeleteCart} = useFunc();
 
-  const handleQuantityChange = (id, delta) => {
-    const updatedCart = cartItems.map((item) => {
-      if (item.id === id) {
-        const newQuantity = item.quantity + delta;
-        return { ...item, quantity: newQuantity > 0 ? newQuantity : 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCart);
-  };
+   
+  //  handle carts loading
+  if(isLoading){
+    return <p>Loading..</p>
+  }
 
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  const carts = cartsData?.data?.result || [];
+  const subTotalPrice = cartsData?.data?.subTotalPrice;
 
-  const calculateSubtotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
+
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-4 container mx-auto">
       <div className="container mx-auto">
         <h2 className="text-2xl sm:text-3xl font-bold mb-20 text-center">
           Your Shopping Cart
@@ -53,26 +37,27 @@ const Cart = () => {
         </div>
 
         {/* Cart Items */}
-        {cartItems.map((item) => (
+        {carts?.map((cart) => (
           <div
-            key={item.id}
+            key={cart?._id}
             className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border-b py-4"
           >
             {/* Product Image & Details */}
             <div className="col-span-2 flex flex-col md:flex-row items-center">
               <img
-                src={item.image}
-                alt={item.name}
+                src={cart?.images[0]}
+                alt={cart?.productName}
                 className="w-24 h-24 object-cover rounded mb-2 md:mb-0 md:mr-4"
               />
               <div className="text-center md:text-left">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <h3 className="text-lg font-semibold">{cart?.productName}</h3>
                 <p className="text-gray-600 text-sm">
-                  ${item.price.toFixed(2)}
+                  ${cart?.price?.toFixed(2)}
                 </p>
                 <p className="text-gray-500 text-sm">
-                  Size: {item.size} | Color: {item.color} | Material:{" "}
-                  {item.material}
+                  Size: {cart?.size} | Color: {cart?.color} 
+                  { cart?.material &&  `| Material:
+                  ${cart?.material}`}
                 </p>
               </div>
             </div>
@@ -80,14 +65,14 @@ const Cart = () => {
             {/* Quantity */}
             <div className="flex justify-center md:justify-start items-center">
               <button
-                onClick={() => handleQuantityChange(item.id, -1)}
+                onClick={() => handleCartProductQuantityChange(cart?._id, cart?.quantity > 1 && -1)}
                 className="border px-2 py-1 text-lg"
               >
                 -
               </button>
-              <span className="mx-2">{item.quantity}</span>
+              <span className="mx-2">{cart?.quantity}</span>
               <button
-                onClick={() => handleQuantityChange(item.id, 1)}
+                onClick={() => handleCartProductQuantityChange(cart?._id, 1)}
                 className="border px-2 py-1 text-lg"
               >
                 +
@@ -96,12 +81,16 @@ const Cart = () => {
 
             {/* Total */}
             <div className="text-center md:text-left text-gray-800 font-semibold">
-              ${item.price * item.quantity}
+              ${cart?.totalPrice?.toFixed(2)}
             </div>
 
             {/* Remove Button */}
+            {/* <button onClick={() }>
+            <FaEdit  className="text-green-500 text-xl" />
+            </button> */}
+        
             <button
-              onClick={() => handleRemove(item.id)}
+              onClick={() => handleDeleteCart(cart?._id)}
               className="text-red-500 hover:text-red-700 text-center"
             >
               🗑️
@@ -120,9 +109,9 @@ const Cart = () => {
             </Link>
           </div>
           <div className="text-center md:text-right">
-            <p className="text-lg font-semibold">
+            <p className="text-lg font-semibold flex gap-1">
               Subtotal:{" "}
-              <span className="text-gray-800">${calculateSubtotal()} USD</span>
+              <span className="text-gray-800 flex gap-1 items-center"> <FaBangladeshiTakaSign className=" text-sm"/> {subTotalPrice?.toFixed(2)} BDT</span>
             </p>
             <p className="text-sm mb-4 text-gray-500">
               Taxes and shipping calculated at checkout

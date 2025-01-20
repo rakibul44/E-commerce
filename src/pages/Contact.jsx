@@ -1,12 +1,30 @@
-import React from "react";
+import { toast } from "react-toastify";
+import { contactApi } from "../redux/apis/contactApi";
+import { useForm } from "react-hook-form";
 
 const ContactUs = () => {
+    const { register, handleSubmit, reset } = useForm();
+    const id = "677b8349bffc6154a5094933"
+    const {data: contactData } = contactApi.useGetContactByIdQuery(id);
+    const [ sendSupportEmail ] = contactApi.useSendSupportEmailMutation();
+
+    const contact = contactData?.data;
+
+    // handle send email 
+    const handleSendSupportEmail = async(data) => {
+      const res = await sendSupportEmail(data);
+      if(res?.data?.success){
+        toast.success(res?.data?.message);
+         reset();
+      }
+    };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header Section */}
       <div className="bg-gray-800 text-white py-10 text-center">
         <h1 className="text-4xl font-bold">Contact Us</h1>
-        <p className="mt-2 text-gray-300">We'd love to hear from you!</p>
+        <p className="mt-2 text-gray-300">{`We'd love to hear from you!`}</p>
       </div>
 
       <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -14,15 +32,16 @@ const ContactUs = () => {
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-semibold text-gray-800">Send Us a Message</h2>
           <p className="text-gray-600 mt-2 mb-6">
-            Have any questions or concerns? Fill out the form below and we'll get back to you shortly.
+            {`Have any questions or concerns? Fill out the form below and we'll get back to you shortly.`}
           </p>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(handleSendSupportEmail)} className="space-y-4">
             <div>
               <label className="block text-gray-700 font-medium">Name</label>
               <input
                 type="text"
                 placeholder="Your Name"
+                {...register("name")}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
@@ -31,12 +50,14 @@ const ContactUs = () => {
               <input
                 type="email"
                 placeholder="Your Email"
+                {...register("email")}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
             <div>
               <label className="block text-gray-700 font-medium">Message</label>
               <textarea
+               {...register("message")}
                 placeholder="Your Message"
                 rows="5"
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -55,17 +76,17 @@ const ContactUs = () => {
         <div className="space-y-6">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-semibold text-gray-800">Our Address</h2>
-            <p className="text-gray-600 mt-2">123 Main Street, City, State, 12345</p>
+            <p className="text-gray-600 mt-2">{contact?.address}</p>
           </div>
 
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-semibold text-gray-800">Call Us</h2>
-            <p className="text-gray-600 mt-2">+1 (123) 456-7890</p>
+            <p className="text-gray-600 mt-2">{contact?.phone}</p>
           </div>
 
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-semibold text-gray-800">Email Us</h2>
-            <p className="text-gray-600 mt-2">support@example.com</p>
+            <p className="text-gray-600 mt-2">{contact?.email}</p>
           </div>
 
           {/* Google Map Embed */}

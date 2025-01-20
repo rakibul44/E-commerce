@@ -1,4 +1,3 @@
-import React from "react";
 // import Slider from "./components/Slider";
 import BenefitsSection from "./components/BenefitsSection";
 import Collections from "./components/Collections";
@@ -9,7 +8,6 @@ import ProductSection from "./components/ProductSection";
 import Quote from "./components/Quote";
 import CustomMarquee from "./components/CustomMarquee";
 import TrandSection from "./components/TrandSection";
-
 
 const App = () => {
   return (

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaTruck } from "react-icons/fa";
 import { GiShoppingCart } from "react-icons/gi";

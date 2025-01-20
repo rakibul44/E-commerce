@@ -1,13 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 
 import withMT from "@material-tailwind/react/utils/withMT";
- 
+
 export default withMT({
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     colors: {
       'midnight': '#101111',
       'midmorning': '#212F3C',
+      'btnbg': '#ff9800',
+      'btnbghover':'#f57c00',
+      'inputfocus':'#ffcc80',
+      'primarytext':'#ff9800',
     },
     extend: {
       screens: {

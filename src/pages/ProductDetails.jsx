@@ -1,23 +1,25 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import  { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa6";
 import { BsInstagram } from "react-icons/bs";
-import denim from "../assets/denim.jpg";
 import DescriptionTabs from "../components/DescriptionTabs";
+import { productApi } from "../redux/apis/productApi";
 
 const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState(null);
-  const images = Array(4).fill(denim);
-//   const texts = [
-//     { label: "Tags:", value: "Accessories, Burberry, Jacket, Men, Vendor Levi's, Women" },
-//     { label: "SKU:", value: "YX160-15" },
-//     { label: "Category:", value: "Featured Products, Jackets, Outerwear (For him)" },
-//     { label: "Size:", value: "S , M , L , XL , XXL" },
-//   ];
-  const sizes = ["S", "M", "L", "XL", "XXL"];
+  const [selectedColor, setSelectedColor] = useState(null);
+  const { id } = useParams();
+  const { data: productData } = productApi.useGetProductByIdQuery(id);
+
+  const product = productData?.data;
+
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
+  };
+
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
   };
 
   return (
@@ -26,12 +28,12 @@ const ProductDetails = () => {
         {/* Image Section */}
         <div className="w-full lg:w-1/2 flex flex-col items-center">
           <img
-            src={denim}
+            src={product?.images[0]}
             alt="Black Denim Jacket"
             className="w-full rounded-lg shadow-lg mb-4"
           />
           <div className="flex gap-2">
-            {images.map((src, index) => (
+            {product?.images?.map((src, index) => (
               <img
                 key={index}
                 src={src}
@@ -44,17 +46,18 @@ const ProductDetails = () => {
 
         {/* Details Section */}
         <div className="w-full lg:w-1/2 lg:pl-8">
-          <h1 className="text-2xl font-bold mb-4">Black Denim Jacket</h1>
-          <p className="text-xl text-gray-700 mb-4">$85.00</p>
+          <h1 className="text-2xl font-bold mb-4">{product?.name}</h1>
+          <p className="text-xl text-gray-700 mb-4">${product?.price}</p>
           <p className="text-gray-600 mb-6">
-            Captivate with this shirt's versatile urban look that works as well at happy hour as
-            it does in the backyard. The real mother of pearl buttons and embroidered crocodile...
+            {`Captivate with this shirt's versatile urban look that works as well at happy hour as
+            it does in the backyard. The real mother of pearl buttons and embroidered crocodile...`}
           </p>
 
+          {/* Size Selection */}
           <div className="mb-6">
             <span className="text-sm text-gray-500 block mb-2">Select Size:</span>
             <div className="flex gap-2">
-              {sizes.map((size) => (
+              {product?.sizes?.map((size) => (
                 <button
                   key={size}
                   onClick={() => handleSizeClick(size)}
@@ -69,6 +72,31 @@ const ProductDetails = () => {
             {selectedSize && (
               <p className="text-sm text-gray-600 mt-2">
                 Selected Size: <span className="font-bold">{selectedSize}</span>
+              </p>
+            )}
+          </div>
+
+          {/* Color Selection */}
+          <div className="mb-6">
+            <span className="text-sm text-gray-500 block mb-2">Select Color:</span>
+            <div className="flex gap-2">
+              {product?.colors?.map((color) => (
+                <div
+                  key={color}
+                  onClick={() => handleColorClick(color)}
+                  className={`w-10 h-10 rounded-full border-2 cursor-pointer ${
+                    selectedColor === color
+                      ? "border-orange-600"
+                      : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color }}
+                ></div>
+              ))}
+            </div>
+            {selectedColor && (
+              <p className="text-sm text-gray-600 mt-2">
+                Selected Color:{" "}
+                <span className="font-bold">{selectedColor?.name}</span>
               </p>
             )}
           </div>
@@ -91,8 +119,8 @@ const ProductDetails = () => {
           </div>
 
           <Link
-            to="/payment"
-            className="bg-orange-500 text-white px-6 py-2 rounded w-full animate-pulse hover:bg-orange-700"
+            to={`/buy-now/${product?._id}`}
+            className="bg-orange-500 text-white px-6 py-2 inline-block text-center rounded w-full animate-pulse hover:bg-orange-700"
           >
             Buy Now
           </Link>
@@ -114,7 +142,6 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      
       <DescriptionTabs />
     </div>
   );
